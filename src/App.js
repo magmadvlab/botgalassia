@@ -1,9 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, Clock, MapPin, Mountain, Book } from 'lucide-react';
-import { marked } from 'marked';
+
+// Database delle FAQ
+const FAQ_DATA = {
+  'Wellness e Relax': {
+    'Dove si trova la piscina?': 'Al Piano -1 (prendere ascensore o scendere per le scale).',
+    'Quali sono gli orari della piscina?': 'Dalle 16:00 alle 19:00. Prenotazione obbligatoria in reception. È obbligatorio indossare costume, cuffia e accappatoio.',
+    'La piscina è riscaldata?': 'Sì, la temperatura dell\'acqua è di circa 30°C.',
+    'È incluso l\'accesso alla piscina?': 'Sì, è incluso nel prezzo della camera.',
+    'C\'è un\'area wellness?': 'Sì, c\'è una vasca idromassaggio annessa alla piscina.'
+  },
+  'Check-in/Check-out': {
+    'Qual è l\'orario del check-in?': 'Dalle 10:30, con consegna camere garantita dopo le 16:30.',
+    'Qual è l\'orario del check-out?': 'Entro le 10:00. Possibilità di lasciare bagagli in custodia.',
+    'Dove posso lasciare i bagagli?': 'In reception al piano uno è disponibile una sala dedicata.'
+  },
+  'Servizi Sci': {
+    'Come si raggiungono le piste?': 'Dal piano -1, attraverso un tunnel che porta direttamente alla pista blu nr. 1 "Pista del Prel".',
+    'Dove sono gli ski box?': 'Al piano -1, lungo il tunnel. Ogni box è numerato.',
+    'Come funziona la navetta?': 'Servizio gratuito dalle 08:30 alle 12:30 e dalle 14:30 alle 17:30. Prenotazione necessaria.'
+  },
+  'Ristorazione': {
+    'Dove viene servita la colazione?': 'Nel ristorante al piano terra (piano 0), raggiungibile con scale o ascensore.',
+    'Quali sono gli orari?': 'Colazione: 7:30-9:30\nCena: 19:30-20:30',
+    'È necessario prenotare la cena?': 'Sì, prenotazione obbligatoria in reception con scelta del menu.'
+  }
+};
+
+// Keywords per la ricerca
+const KEYWORDS = {
+  'piscina': ['piscina', 'nuotare', 'bagno', 'wellness', 'spa', 'idromassaggio'],
+  'check': ['check', 'bagagli', 'arrivo', 'partenza'],
+  'sci': ['sci', 'pista', 'skibox', 'ski box', 'tunnel', 'neve'],
+  'ristorazione': ['mangiare', 'colazione', 'cena', 'pranzo', 'ristorante', 'bar']
+};
 
 const App = () => {
-  const [faqData, setFaqData] = useState({});
   const [messages, setMessages] = useState([
     {
       type: 'bot',
@@ -11,72 +43,7 @@ const App = () => {
     }
   ]);
   const [input, setInput] = useState('');
-  const chatEndRef = React.useRef(null);
-
-  useEffect(() => {
-    const loadFAQ = async () => {
-      try {
-        const response = await fetch('/hotel-galassia-info.md');
-        const text = await response.text();
-        const sections = parseMdToSections(text);
-        setFaqData(sections);
-      } catch (error) {
-        console.error('Errore nel caricamento delle FAQ:', error);
-      }
-    };
-    loadFAQ();
-  }, []);
-
-  const parseMdToSections = (markdown) => {
-    const sections = {};
-    const lines = markdown.split('\n');
-    let currentSection = '';
-    let currentQuestion = '';
-    
-    lines.forEach(line => {
-      if (line.startsWith('## ')) {
-        currentSection = line.replace('## ', '').trim();
-        sections[currentSection] = {};
-      } else if (line.startsWith('**') && line.includes('?')) {
-        currentQuestion = line.replace(/\*\*/g, '').trim();
-      } else if (line.includes('*Risposta:*') && currentQuestion) {
-        const answer = line.split('*Risposta:*')[1].trim();
-        if (currentSection && currentQuestion) {
-          sections[currentSection][currentQuestion] = answer;
-        }
-      }
-    });
-
-    return sections;
-  };
-
-  const findBestResponse = (input) => {
-    input = input.toLowerCase();
-    let bestMatch = {
-      title: "Contatta la Reception",
-      content: "Mi dispiace, non ho trovato una risposta specifica. Per assistenza immediata:\n\n📞 Reception (24/7): 0174 334183"
-    };
-
-    // Cerca in tutte le sezioni
-    Object.entries(faqData).forEach(([section, questions]) => {
-      Object.entries(questions).forEach(([question, answer]) => {
-        const questionLower = question.toLowerCase();
-        const words = input.split(' ');
-        
-        // Cerca corrispondenze tra le parole della domanda e l'input
-        words.forEach(word => {
-          if (word.length > 3 && questionLower.includes(word)) {
-            bestMatch = {
-              title: section,
-              content: `${question}\n\n${answer}`
-            };
-          }
-        });
-      });
-    });
-
-    return bestMatch;
-  };
+  const chatEndRef = useRef(null);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -85,6 +52,51 @@ const App = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const findBestResponse = (userInput) => {
+    const input = userInput.toLowerCase();
+
+    // Cerca corrispondenze nelle keywords
+    let category = null;
+    
+    // Cerca nelle keywords
+    for (const [cat, words] of Object.entries(KEYWORDS)) {
+      if (words.some(word => input.includes(word))) {
+        category = cat;
+        break;
+      }
+    }
+
+    // Mappa le categorie di keywords alle sezioni FAQ
+    const categoryMapping = {
+      'piscina': 'Wellness e Relax',
+      'check': 'Check-in/Check-out',
+      'sci': 'Servizi Sci',
+      'ristorazione': 'Ristorazione'
+    };
+
+    if (category && categoryMapping[category]) {
+      const section = categoryMapping[category];
+      const questions = FAQ_DATA[section];
+      
+      // Costruisci una risposta con tutte le informazioni rilevanti
+      let content = '';
+      for (const [question, answer] of Object.entries(questions)) {
+        content += `${answer}\n\n`;
+      }
+
+      return {
+        title: section,
+        content: content.trim()
+      };
+    }
+
+    // Risposta di default
+    return {
+      title: "Contatta la Reception",
+      content: "Mi dispiace, non ho trovato una risposta specifica. Per assistenza immediata:\n\n📞 Reception (24/7): 0174 334183"
+    };
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();

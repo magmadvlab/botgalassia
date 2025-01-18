@@ -204,4 +204,6 @@
 5. **È disponibile un numero di emergenza alternativo per contattare lo staff?** Il numero della reception ha il trasferimento di chiamata su un numero di cellulare 
 
 6. **Fornite una mappa o guida delle attività e dei servizi nella zona?** Purtroppo No ma è un servizio che presto serviremo
-![Uploading image.png…]()
+
+Wellness e Relax La piscina si trova al Piano -1. Per raggiungerla, prendi l'ascensore o scendi per le scale. Orario: dalle 16:00 alle 19:00 con prenotazione obbligatoria. È necessario indossare costume, cuffia e accappatoio.
+![image](https://github.com/user-attachments/assets/cf017dae-f08d-416e-a924-5f57b7586065)

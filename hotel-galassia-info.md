@@ -17,8 +17,10 @@
    *Risposta:* In reception, al piano uno, è disponibile una sala dedicata.
 
 6. **Il check-in è possibile in modalità self-service?**
+   *Risposta: * No, Non è possibile.
 
-7. **Offrite un servizio di sveglia?**
+8. **Offrite un servizio di sveglia?**
+  Risposta:* No L'Hotel Non offre questo servizio
 
 ---
 
@@ -52,12 +54,16 @@
    *Risposta:* Sì, nella sala panoramica con vista sulle montagne.
 
 10. **È disponibile il servizio in camera?**
+   *Risposta: * No, Non è disponibile.
 
-11. **Sono disponibili opzioni per diete speciali (vegane, senza glutine, ecc.)?**
+12. **Sono disponibili opzioni per diete speciali (vegane, senza glutine, ecc.)?**
+    *Risposta: * Si ma con largo preavviso.
 
-12. **È possibile organizzare pranzi al sacco per escursioni?**
+14. **È possibile organizzare pranzi al sacco per escursioni?**
+    *Risposta: * Si, Possiamo Organizzarli in accordo con lo staff della ccuina.
 
-13. **Il bar offre drink o piatti tipici locali?**
+16. **Il bar offre drink o piatti tipici locali?**
+    *Risposta: Si il Bar può fare drink ed ha una nutrita sezione di Liquori, Grappe e d Amari, Inoltre al bar si posso consumare acnhe Cocktail.
 
 ---
 

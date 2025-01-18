@@ -4,32 +4,93 @@ import { Send, Clock, MapPin, Mountain, Book } from 'lucide-react';
 const responses = {
   checkin: {
     title: "Check-in e Check-out",
-    content: "📅 Check-in: dalle 10:30 (camere garantite dopo le 16:30)\n📅 Check-out: entro le 10:00\n\n🎒 Bagagli: possibilità di depositarli in apposita sala alla reception (piano 1)\n\n📞 Per arrivi tardivi: contattare la reception al 0174334183"
+    content: "📅 Check-in: dalle 10:30 (camere garantite dopo le 16:30)\n📅 Check-out: entro le 10:00\n\n🎒 Deposito bagagli disponibile in apposita sala al piano 1 (salire due rampe di scale dall'ingresso del parcheggio lato pista)\n\nSe arrivi tardi, avvisa la reception dell'orario previsto."
   },
   ristorazione: {
     title: "Ristorazione e Bar",
-    content: "🍳 Colazione: 7:30-9:30 al piano 0\n🍽️ Cena: 19:30-20:30\n🍷 Bar: 10:00-14:00 e 16:00-23:00\n\n⚡ Prenotazione cena obbligatoria in reception con scelta menu\n🍷 Disponibile fornita cantina vini e birre"
-  },
-  ski: {
-    title: "Informazioni Sci",
-    content: "🎿 Accesso piste: tunnel al piano -1 (prendere ascensore)\n🚐 Navetta gratuita:\n- Mattino: 8:30-12:30\n- Pomeriggio: 14:30-17:30\n\n🌙 Sci notturno: martedì, venerdì e sabato 20:00-23:00\n\n📞 Noleggio: Bepe Ski (0174334474) con tariffe speciali"
+    content: "🍳 Colazione: 7:30-9:30 al piano 0\n🍽️ Cena: 19:30-20:30 (prenotazione obbligatoria)\n🍷 Bar: 10:00-14:00 e 16:00-23:00\n\nRistorante al piano terra (piano 0): scendi le scale o prendi l'ascensore.\nCena servita al tavolo con scelta menu e cantina vini."
   },
   piscina: {
     title: "Piscina e Wellness",
-    content: "🏊‍♂️ Ubicazione: Piano -1 (ascensore)\n⏰ Orario: 16:00-19:00\n🌡️ Temperatura: circa 30°C\n\n⚠️ Obbligatori:\n- Prenotazione in reception\n- Costume\n- Cuffia\n- Accappatoio\n\n💆‍♂️ Disponibile vasca idromassaggio"
+    content: "🏊‍♂️ Piano -1 (prendi l'ascensore o scendi le scale)\n⏰ Orario: 16:00-19:00\n🌡️ Temperatura acqua: circa 30°C\n\n⚠️ Obbligatori:\n- Prenotazione in reception\n- Costume\n- Cuffia\n- Accappatoio\n\n💆‍♂️ Disponibile vasca idromassaggio"
+  },
+  sci: {
+    title: "Servizi Sci",
+    content: "🎿 Accesso piste: tunnel al piano -1\n📦 Ski box: piano -1 lungo il tunnel (numerati e riscaldati)\n🚐 Navetta gratuita: 8:30-12:30 e 14:30-17:30\n\n🏂 Noleggio: Bepe Ski (0174334474) con tariffe speciali\n🌙 Sci notturno: martedì, venerdì e sabato 20:00-23:00"
   },
   wifi: {
     title: "Wi-Fi",
-    content: "📶 Rete e password per zone:\n- Reception/Bar: 'Wifi Galassia'\n- Piano 1 (camere 101-116): 'Wifi_Galassia 1P Dx/Sx'\n- Piano 2: 'Wifi_Galassia 2P Dx/Sx'\n\n🔑 Password sempre: Galassia2023\n\n💡 Scegliere la rete con segnale più forte"
+    content: "📶 Reti disponibili:\n- Reception/Bar: 'Wifi Galassia'\n- Piano 1 (camere 101-116): 'Wifi_Galassia 1P Dx/Sx'\n- Piano 2: 'Wifi_Galassia 2P Dx/Sx'\n\n🔑 Password sempre: Galassia2023\n\n💡 Scegli la rete con segnale più forte"
+  },
+  intrattenimento: {
+    title: "Intrattenimento",
+    content: "🎮 Sala giochi: dopo la reception, proseguire dritti\n- Biliardo e calcio balilla disponibili\n\n👶 Servizio animazione per bambini con attività e giochi organizzati"
   },
   animali: {
     title: "Animali",
-    content: "🐾 Animali ammessi con supplemento\n⚠️ Aree non consentite:\n- Ristoranti\n- Piscina\n\n📞 Per animali di grossa taglia: contattare la reception"
+    content: "🐾 Ammessi con supplemento\n⚠️ Aree non consentite:\n- Ristoranti\n- Piscina\n\nPer animali di grossa taglia: concordare in reception"
   },
-  servizi: {
-    title: "Servizi e Attività",
-    content: "🎮 Sala giochi con biliardo e calcio balilla\n👶 Animazione per bambini\n🚌 Navetta gratuita per il centro\n🅿️ Parcheggio: esterno gratuito o interno (€15/giorno)\n📶 Wi-Fi gratuito in tutto l'hotel"
+  attivita: {
+    title: "Attività Extra",
+    content: "🛵 Motoslitte: +39 349 144 4433\n🏔️ Ciaspolate/Snowtubing: +39 0174 334 151\n\n🎡 Prato Nevoso Village raggiungibile con navetta gratuita su chiamata"
+  },
+  emergenze: {
+    title: "Emergenze e Assistenza",
+    content: "📞 Reception (24/7): +39 0174 334183\n👨‍⚕️ Guardia medica disponibile a Prato Nevoso\n💊 Farmacia in Conca a Pratonevoso\n\nPer emergenze notturne: chiamare sempre la reception"
+  },
+  default: {
+    title: "Contatta la Reception",
+    content: "Mi dispiace, non ho trovato una risposta specifica. Per assistenza immediata:\n\n📞 Reception (24/7): 0174 334183"
   }
+};
+
+const findBestResponse = (input) => {
+  input = input.toLowerCase();
+  
+  // Check-in/out
+  if (input.includes('check') || input.includes('bagagl') || input.includes('arrival') || 
+      input.includes('arriv')) return responses.checkin;
+  
+  // Ristorazione
+  if (input.includes('mangi') || input.includes('colazion') || input.includes('cena') || 
+      input.includes('bar') || input.includes('ristorante') || input.includes('pranzo')) 
+    return responses.ristorazione;
+  
+  // Piscina
+  if (input.includes('piscina') || input.includes('nuot') || input.includes('wellness') || 
+      input.includes('idromassaggio') || input.includes('spa')) 
+    return responses.piscina;
+  
+  // Sci
+  if (input.includes('sci') || input.includes('pista') || input.includes('skibox') || 
+      input.includes('ski box') || input.includes('tunnel')) 
+    return responses.sci;
+  
+  // WiFi
+  if (input.includes('wifi') || input.includes('internet') || input.includes('password') || 
+      input.includes('connessione')) 
+    return responses.wifi;
+
+  // Intrattenimento
+  if (input.includes('gioch') || input.includes('biliard') || input.includes('calcio') || 
+      input.includes('animazione') || input.includes('bambin')) 
+    return responses.intrattenimento;
+
+  // Animali
+  if (input.includes('animal') || input.includes('cane') || input.includes('gatto')) 
+    return responses.animali;
+
+  // Attività extra
+  if (input.includes('motosl') || input.includes('ciaspol') || input.includes('snow') || 
+      input.includes('village')) 
+    return responses.attivita;
+
+  // Emergenze
+  if (input.includes('emergenz') || input.includes('medic') || input.includes('farmac') || 
+      input.includes('aiuto')) 
+    return responses.emergenze;
+
+  return responses.default;
 };
 
 const App = () => {
@@ -49,23 +110,6 @@ const App = () => {
   React.useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const findBestResponse = (input) => {
-    input = input.toLowerCase();
-    
-    if (input.includes('check')) return responses.checkin;
-    if (input.includes('colazione') || input.includes('cena') || input.includes('mangiare') || input.includes('ristorante')) return responses.ristorazione;
-    if (input.includes('sci') || input.includes('pista') || input.includes('neve')) return responses.ski;
-    if (input.includes('piscina') || input.includes('nuotare')) return responses.piscina;
-    if (input.includes('wifi') || input.includes('internet') || input.includes('password')) return responses.wifi;
-    if (input.includes('animal') || input.includes('cane') || input.includes('gatto')) return responses.animali;
-    if (input.includes('servizi') || input.includes('giochi') || input.includes('animazione')) return responses.servizi;
-    
-    return {
-      title: "Contatta la Reception",
-      content: "Mi dispiace, non ho trovato una risposta specifica alla tua domanda. Per assistenza immediata:\n\n📞 Chiama la reception: 0174 334183\n\nSaremo lieti di aiutarti personalmente!"
-    };
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();

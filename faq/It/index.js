@@ -7,6 +7,8 @@ import { entertainmentFAQ_IT } from './entertainment_it';
 import { petsFAQ_IT } from './pets_it';
 import { activitiesFAQ_IT } from './activities_it';
 import { emergencyFAQ_IT } from './emergency_it';
+import { techServicesFAQ_IT } from './tech_services_it';
+import { attractionsFAQ_IT } from './attractions_it';
 
 // Esporta tutte le FAQ in un unico oggetto
 export const ALL_FAQ_IT = {
@@ -18,7 +20,9 @@ export const ALL_FAQ_IT = {
   entertainment: entertainmentFAQ_IT,
   pets: petsFAQ_IT,
   activities: activitiesFAQ_IT,
-  emergency: emergencyFAQ_IT
+  emergency: emergencyFAQ_IT,
+  techServices: techServicesFAQ_IT,
+  attractions: attractionsFAQ_IT
 };
 
 // Raccoglie tutte le keywords in un unico oggetto
@@ -31,7 +35,9 @@ export const ALL_KEYWORDS_IT = {
   ...entertainmentFAQ_IT.keywords,
   ...petsFAQ_IT.keywords,
   ...activitiesFAQ_IT.keywords,
-  ...emergencyFAQ_IT.keywords
+  ...emergencyFAQ_IT.keywords,
+  ...techServicesFAQ_IT.keywords,
+  ...attractionsFAQ_IT.keywords
 };
 
 // Esporta anche le singole FAQ per uso individuale
@@ -44,5 +50,7 @@ export {
   entertainmentFAQ_IT,
   petsFAQ_IT,
   activitiesFAQ_IT,
-  emergencyFAQ_IT
+  emergencyFAQ_IT,
+  techServicesFAQ_IT,
+  attractionsFAQ_IT
 };

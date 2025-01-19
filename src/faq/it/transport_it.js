@@ -1,14 +1,14 @@
 export const transportFAQ_IT = {
   title: 'Trasporti e Navetta',
-  keywords: ['navetta', 'trasporto', 'bus', 'parcheggio', 'auto', 'conca'],
+  keywords: ['navetta', 'trasporto', 'bus', 'parcheggio', 'auto', 'conca', 'prenotazione', 'telefono', 'orari'],
   questions: {
-    'Come funziona la navetta per il centro?': {
-      answer: 'L\'hotel ha un servizio navetta gratuito che accompagna gli ospiti in conca a Prato Nevoso e li riaccompagna in albergo su chiamata. Per prenotare il servizio basta chiamare il numero dell\'hotel.',
-      tags: ['navetta', 'centro', 'conca']
+    'Navetta': {
+      answer: 'L\'hotel offre un servizio navetta gratuito da e per la conca di Prato Nevoso. Il servizio è attivo dalle 08:30 alle 12:30 e dalle 14:30 alle 17:30. Gli ospiti possono richiedere il servizio contattando la reception al +39 0174 334183.',
+      tags: ['navetta', 'conca', 'prenotazione', 'orari']
     },
-    'Come funziona la navetta per le piste?': {
-      answer: 'Servizio gratuito dalle 08:30 alle 12:30 e dalle 14:30 alle 17:30. È necessario chiamare l\'hotel per prenotare.',
-      tags: ['navetta', 'piste', 'sci']
+    'Come funziona la navetta?': {
+      answer: 'L\'hotel offre un servizio navetta gratuito da e per la conca di Prato Nevoso. Il servizio è attivo dalle 08:30 alle 12:30 e dalle 14:30 alle 17:30. Gli ospiti possono richiedere il servizio contattando la reception al +39 0174 334183.',
+      tags: ['navetta', 'conca', 'prenotazione', 'orari']
     },
     'C\'è un parcheggio disponibile?': {
       answer: 'Sì, mettiamo a disposizione un ampio parcheggio esterno gratuito. Su richiesta, è possibile usufruire del parcheggio coperto a €15 al giorno.',

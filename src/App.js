@@ -20,6 +20,14 @@ const SUPPORTED_LANGUAGES = {
   }
 };
 
+const preprocessInput = (input) => {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/[.,!?]/g, '') // rimuove punteggiatura
+    .replace(/\s+/g, ' ');  // normalizza spazi multipli
+};
+
 const App = () => {
   // Rileva la lingua del browser
   const detectLanguage = () => {
@@ -46,24 +54,65 @@ const App = () => {
   }, [messages]);
 
   const findBestResponse = (userInput) => {
-    const input = userInput.toLowerCase();
+    const input = userInput.toLowerCase().trim();
     const faq = ALL_FAQ_IT;
+    let bestMatch = null;
+    let bestScore = 0;
+    
+    // Dividi l'input in parole
+    const inputWords = input.split(/\s+/);
     
     // Cerca nelle FAQ della lingua corrente
     for (const [category, categoryData] of Object.entries(faq)) {
+      // Controlla prima le keywords della categoria
+      const categoryKeywords = categoryData.keywords || [];
+      const hasKeyword = categoryKeywords.some(keyword => 
+        input.includes(keyword.toLowerCase())
+      );
+
       for (const [question, data] of Object.entries(categoryData.questions)) {
+        let score = 0;
         const questionLower = question.toLowerCase();
-        const { tags = [] } = data;
+        const { tags = [], answer = '' } = data;
         
-        // Controlla se l'input contiene parole chiave dalla domanda o dai tag
-        if (tags.some(tag => input.includes(tag.toLowerCase())) ||
-            input.includes(questionLower)) {
+        // Controlla corrispondenza esatta
+        if (input === questionLower) {
           return {
             title: categoryData.title,
             content: data.answer
           };
         }
+
+        // Punteggio per parole chiave della categoria
+        if (hasKeyword) score += 1;
+
+        // Punteggio per tags
+        const matchingTags = tags.filter(tag => 
+          input.includes(tag.toLowerCase())
+        );
+        score += matchingTags.length * 2;
+
+        // Punteggio per parole della domanda
+        const questionWords = questionLower.split(/\s+/);
+        const matchingWords = inputWords.filter(word => 
+          questionWords.includes(word)
+        );
+        score += matchingWords.length;
+
+        // Se questo match è migliore dei precedenti, salvalo
+        if (score > bestScore) {
+          bestScore = score;
+          bestMatch = {
+            title: categoryData.title,
+            content: data.answer
+          };
+        }
       }
+    }
+
+    // Se abbiamo trovato un match con score > 0, usalo
+    if (bestMatch && bestScore > 1) {
+      return bestMatch;
     }
 
     // Risposta di default nella lingua corrente
@@ -77,8 +126,9 @@ const App = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
+    const processedInput = preprocessInput(input);
     const userMessage = { type: 'user', content: input };
-    const response = findBestResponse(input);
+    const response = findBestResponse(processedInput);
     const botMessage = {
       type: 'bot',
       title: response.title,

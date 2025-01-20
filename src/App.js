@@ -397,4 +397,16 @@ const App = () => {
             type="submit"
             className="bg-[#B8860B] text-white p-2 rounded-lg hover:bg-[#DAA520] focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
           >
-            <Send className="w-5 h-5
+           <button
+  type="submit"
+  className="bg-[#B8860B] text-white p-2 rounded-lg hover:bg-[#DAA520] focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
+>
+  <Send className="w-5 h-5" />
+</button>          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;

@@ -20,16 +20,44 @@ const SUPPORTED_LANGUAGES = {
   }
 };
 
+// Definizione dei termini comuni e sinonimi
+const COMMON_TERMS = {
+  synonyms: {
+    'piscina': ['vasca', 'nuoto', 'bagno', 'nuotare'],
+    'navetta': ['shuttle', 'bus', 'trasporto', 'autobus'],
+    'ristorante': ['pranzo', 'cena', 'colazione', 'mangiare', 'menu', 'cibo'],
+    'parcheggio': ['garage', 'auto', 'macchina', 'posteggio'],
+    'sci': ['sciare', 'piste', 'neve', 'skipass'],
+    'animali': ['cane', 'gatto', 'cani', 'gatti', 'pet'],
+    'internet': ['wifi', 'wi-fi', 'connessione', 'wireless'],
+    'camera': ['stanza', 'alloggio', 'appartamento']
+  }
+};
+
+// Miglioramento del preprocessing dell'input
 const preprocessInput = (input) => {
   return input
     .toLowerCase()
     .trim()
-    .replace(/[.,!?]/g, '') // rimuove punteggiatura
-    .replace(/\s+/g, ' ');  // normalizza spazi multipli
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // rimuove accenti
+    .replace(/[^\w\s]/g, ' ') // rimuove punteggiatura
+    .replace(/\s+/g, ' ')     // normalizza spazi
+    .split(' ')               // divide in parole
+    .filter(word => word.length > 2) // rimuove parole troppo corte
+    .join(' ');
+};
+
+// Funzione per verificare i sinonimi
+const checkSynonyms = (word) => {
+  for (const [mainTerm, synonyms] of Object.entries(COMMON_TERMS.synonyms)) {
+    if (word === mainTerm || synonyms.includes(word)) {
+      return mainTerm;
+    }
+  }
+  return word;
 };
 
 const App = () => {
-  // Rileva la lingua del browser
   const detectLanguage = () => {
     const browserLang = navigator.language.split('-')[0];
     return SUPPORTED_LANGUAGES[browserLang] ? browserLang : 'it';
@@ -54,52 +82,54 @@ const App = () => {
   }, [messages]);
 
   const findBestResponse = (userInput) => {
-    const input = userInput.toLowerCase().trim();
+    const input = preprocessInput(userInput);
+    const inputWords = input.split(' ').map(word => checkSynonyms(word));
     const faq = ALL_FAQ_IT;
     let bestMatch = null;
     let bestScore = 0;
-    
-    // Dividi l'input in parole
-    const inputWords = input.split(/\s+/);
-    
-    // Cerca nelle FAQ della lingua corrente
+
     for (const [category, categoryData] of Object.entries(faq)) {
-      // Controlla prima le keywords della categoria
-      const categoryKeywords = categoryData.keywords || [];
-      const hasKeyword = categoryKeywords.some(keyword => 
-        input.includes(keyword.toLowerCase())
-      );
+      // Verifica keywords della categoria
+      const categoryScore = categoryData.keywords?.some(keyword => 
+        inputWords.includes(checkSynonyms(keyword.toLowerCase()))
+      ) ? 2 : 0;
 
       for (const [question, data] of Object.entries(categoryData.questions)) {
-        let score = 0;
-        const questionLower = question.toLowerCase();
-        const { tags = [], answer = '' } = data;
-        
-        // Controlla corrispondenza esatta
-        if (input === questionLower) {
+        let score = categoryScore;
+        const questionWords = preprocessInput(question).split(' ').map(word => checkSynonyms(word));
+        const { tags = [] } = data;
+
+        // Corrispondenza esatta
+        if (input === preprocessInput(question)) {
           return {
             title: categoryData.title,
             content: data.answer
           };
         }
 
-        // Punteggio per parole chiave della categoria
-        if (hasKeyword) score += 1;
-
         // Punteggio per tags
-        const matchingTags = tags.filter(tag => 
-          input.includes(tag.toLowerCase())
-        );
-        score += matchingTags.length * 2;
+        for (const tag of tags) {
+          const processedTag = checkSynonyms(tag.toLowerCase());
+          if (inputWords.includes(processedTag)) {
+            score += 3;
+          }
+        }
 
         // Punteggio per parole della domanda
-        const questionWords = questionLower.split(/\s+/);
-        const matchingWords = inputWords.filter(word => 
-          questionWords.includes(word)
-        );
-        score += matchingWords.length;
+        for (const word of inputWords) {
+          if (questionWords.includes(word)) {
+            score += 1;
+          }
+        }
 
-        // Se questo match è migliore dei precedenti, salvalo
+        // Controlla sinonimi nelle parole chiave
+        const processedTags = tags.map(tag => checkSynonyms(tag.toLowerCase()));
+        for (const word of inputWords) {
+          if (processedTags.includes(word)) {
+            score += 2;
+          }
+        }
+
         if (score > bestScore) {
           bestScore = score;
           bestMatch = {
@@ -110,12 +140,11 @@ const App = () => {
       }
     }
 
-    // Se abbiamo trovato un match con score > 0, usalo
-    if (bestMatch && bestScore > 1) {
+    // Ritorna il match migliore solo se ha un punteggio sufficiente
+    if (bestMatch && bestScore > 2) {
       return bestMatch;
     }
 
-    // Risposta di default nella lingua corrente
     return {
       title: "Reception",
       content: SUPPORTED_LANGUAGES[currentLang].defaultResponse
@@ -126,9 +155,8 @@ const App = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    const processedInput = preprocessInput(input);
     const userMessage = { type: 'user', content: input };
-    const response = findBestResponse(processedInput);
+    const response = findBestResponse(input);
     const botMessage = {
       type: 'bot',
       title: response.title,

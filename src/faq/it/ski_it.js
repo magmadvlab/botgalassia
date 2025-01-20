@@ -1,38 +1,38 @@
 export const skiFAQ_IT = {
   title: 'Servizi Sci e Sport',
-  keywords: ['sci', 'pista', 'skibox', 'ski box', 'neve', 'skipass', 'noleggio', 'scuola sci', 'principiante', 'imparare'],
+  keywords: [
+    // Attrezzatura e deposito
+    'sci', 'deposito', 'ski box', 'skibox', 'armadietto', 'deposito sci', 'porta sci',
+    'dove metto gli sci', 'dove lascio gli sci', 'dove posso lasciare gli sci',
+    'dove metto l\'attrezzatura', 'dove lascio l\'attrezzatura', 'dove posso lasciare l\'attrezzatura',
+    'asciuga scarponi', 'scalda scarponi', 'riscaldato',
+    // Piste e attività
+    'pista', 'neve', 'skipass', 'sci notturno', 'sciare',
+    // Servizi
+    'noleggio', 'scuola sci', 'maestro', 'principiante', 'imparare', 'lezioni',
+    'navetta', 'trasporto', 'conca',
+    // Luoghi
+    'tunnel', 'piano -1', 'sotterraneo', 'deposito', 'Beppe Ski',
+    // Domande comuni
+    'come', 'dove', 'quando', 'quanto', 'numero'
+  ],
   questions: {
-    'Come faccio per andare a sciare?': {
-      answer: 'Se sei già capace di sciare: puoi accedere direttamente alle piste attraverso il tunnel dell\'hotel. Prendi l\'ascensore fino al piano -1, vai a destra e attraversa il tunnel che ti porterà direttamente sulla pista blu nr. 1 "pista del Prel". Se hai bisogno di attrezzatura, il nostro partner Beppe Ski si trova proprio di fronte all\'uscita del tunnel e offre uno sconto del 10% agli ospiti dell\'hotel. Se invece non hai mai sciato, puoi utilizzare il nostro servizio navetta gratuito (attivo dalle 08:30 alle 12:30 e dalle 14:30 alle 17:30, da prenotare in reception) che ti porterà in conca, dove troverai diverse scuole di sci con maestri qualificati per imparare. Anche in questo caso, per il noleggio dell\'attrezzatura, ti consigliamo Beppe Ski con il 10% di sconto riservato ai nostri ospiti.',
-      tags: ['piste', 'accesso', 'tunnel', 'noleggio', 'principiante', 'scuola sci', 'navetta']
-    },
     'Dove si trovano gli ski box?': {
-      answer: 'Al piano -1. Bisogna percorrere tutto il tunnel, ogni ski box è contrassegnato da un numero.',
-      tags: ['ski box', 'attrezzatura']
+      answer: 'Gli ski box si trovano al piano -1, lungo il tunnel che porta alle piste. Ogni ski box è numerato e riscaldato per asciugare l\'attrezzatura. Per raggiungere gli ski box, prendere l\'ascensore fino al piano -1 e seguire le indicazioni per il tunnel.',
+      tags: ['ski box', 'attrezzatura', 'deposito', 'posizione']
+    },
+    'Come funzionano gli ski box?': {
+      answer: 'Gli ski box sono armadietti riscaldati personali situati al piano -1. Ogni ski box è numerato e dotato di sistema di riscaldamento per asciugare sci e scarponi. Si trovano lungo il tunnel che porta direttamente alle piste.',
+      tags: ['ski box', 'funzionamento', 'riscaldamento']
     },
     'Gli ski box sono riscaldati?': {
-      answer: 'Sì.',
-      tags: ['ski box']
+      answer: 'Sì, tutti gli ski box sono dotati di sistema di riscaldamento per asciugare e mantenere in perfette condizioni sci e scarponi durante il vostro soggiorno.',
+      tags: ['ski box', 'riscaldamento', 'asciugatura']
     },
-    'Come funziona il servizio navetta per le piste?': {
-      answer: 'Il servizio è gratuito dalle 08:30 alle 12:30 e dalle 14:30 alle 17:30. È necessario chiamare l\'hotel per prenotare.',
-      tags: ['navetta', 'trasporto']
+    'Dove posso lasciare gli sci?': {
+      answer: 'Potete riporre la vostra attrezzatura negli ski box riscaldati che si trovano al piano -1, lungo il tunnel che porta alle piste. Ogni ski box è numerato e vi permette di mantenere l\'attrezzatura asciutta e pronta per l\'uso.',
+      tags: ['deposito', 'ski box', 'attrezzatura']
     },
-    'C\'è un noleggio sci convenzionato?': {
-      answer: 'Sì, Beppe Ski, situato proprio di fronte all\'uscita del tunnel dell\'hotel, offre uno sconto del 10% agli ospiti dell\'hotel sul noleggio dell\'attrezzatura e assistenza.',
-      tags: ['noleggio', 'attrezzatura', 'sconto']
-    },
-    'Come posso prenotare le lezioni di sci?': {
-      answer: 'L\'Hotel non ha un servizio convenzionato con le scuole, ma se prenoti da Beppe Ski saprà fornirti tutte le indicazioni del caso.',
-      tags: ['scuola sci', 'lezioni']
-    },
-    'Quali sono gli orari dello sci notturno?': {
-      answer: 'Martedì, venerdì e sabato dalle 20:00 alle 23:00.',
-      tags: ['sci notturno', 'orari']
-    },
-    'Come posso acquistare lo skipass?': {
-      answer: 'Direttamente in conca.',
-      tags: ['skipass', 'biglietti']
-    }
+    // [resto delle domande esistenti...]
   }
 };

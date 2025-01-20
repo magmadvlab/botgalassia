@@ -1,40 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Send, Clock, MapPin, Mountain, Book } from 'lucide-react';
-import { ALL_FAQ_IT, ALL_KEYWORDS_IT } from './faq/it/index.js';
-
-// Configurazione lingue supportate
-const SUPPORTED_LANGUAGES = {
-  'it': {
-    code: 'it',
-    name: 'Italiano',
-    flag: '🇮🇹',
-    welcome: "Benvenuto nel chatbot dell'Hotel Galassia! Come posso aiutarti?",
-    inputPlaceholder: "Fai una domanda...",
-    defaultResponse: "Mi dispiace, non ho trovato una risposta specifica. Contatta la reception: 0174 334183",
-    buttonLabels: {
-      checkin: "Check-in/out",
-      ski: "Info Sci",
-      pool: "Piscina",
-      services: "Servizi"
-    }
-  }
-};
-
-// Definizione dei termini comuni e sinonimi
-const COMMON_TERMS = {
-  synonyms: {
-    'piscina': ['vasca', 'nuoto', 'bagno', 'nuotare'],
-    'navetta': ['shuttle', 'bus', 'trasporto', 'autobus'],
-    'ristorante': ['pranzo', 'cena', 'colazione', 'mangiare', 'menu', 'cibo'],
-    'parcheggio': ['garage', 'auto', 'macchina', 'posteggio'],
-    'sci': ['sciare', 'piste', 'neve', 'skipass'],
-    'animali': ['cane', 'gatto', 'cani', 'gatti', 'pet'],
-    'internet': ['wifi', 'wi-fi', 'connessione', 'wireless'],
-    'camera': ['stanza', 'alloggio', 'appartamento']
-  }
-};
-
-// Miglioramento del preprocessing dell'input
+// Funzioni di utilità per il preprocessamento e logging
 const preprocessInput = (input) => {
   return input
     .toLowerCase()
@@ -47,7 +11,7 @@ const preprocessInput = (input) => {
     .join(' ');
 };
 
-// Funzione per verificare i sinonimi
+// Funzione per controllare i sinonimi
 const checkSynonyms = (word) => {
   for (const [mainTerm, synonyms] of Object.entries(COMMON_TERMS.synonyms)) {
     if (word === mainTerm || synonyms.includes(word)) {
@@ -57,7 +21,79 @@ const checkSynonyms = (word) => {
   return word;
 };
 
-const App = () => {
+// Sistema di logging per debug
+const logInteraction = (input, processedInput, response, score) => {
+  const logData = {
+    timestamp: new Date().toISOString(),
+    originalInput: input,
+    processedInput: processedInput,
+    response: {
+      title: response.title,
+      content: response.content
+    },
+    score: score,
+  };
+  console.log('Chat Interaction:', logData);
+  // Salva in localStorage per analisi future
+  const logs = JSON.parse(localStorage.getItem('chatLogs') || '[]');
+  logs.push(logData);
+  localStorage.setItem('chatLogs', JSON.stringify(logs.slice(-100))); // Mantiene ultimi 100 log
+};
+
+// Sistema di feedback
+const saveFeedback = (feedback) => {
+  const existingFeedback = JSON.parse(localStorage.getItem('chatFeedback') || '[]');
+  existingFeedback.push({
+    ...feedback,
+    timestamp: new Date().toISOString()
+  });
+  localStorage.setItem('chatFeedback', JSON.stringify(existingFeedback));
+};
+
+// Funzione per calcolare il punteggio basato sul feedback storico
+const getFeedbackScore = (input, category) => {
+  const feedback = JSON.parse(localStorage.getItem('chatFeedback') || '[]');
+  const relevantFeedback = feedback.filter(f => 
+    f.processedInput === preprocessInput(input) || 
+    f.category === category
+  );
+  
+  if (relevantFeedback.length === 0) return 0;
+  
+  return relevantFeedback.reduce((score, f) => {
+    return score + (f.helpful ? 1 : -0.5);
+  }, 0);
+};
+
+// Funzione per trovare risposte alternative basate sul feedback
+const findAlternativeResponse = (input, faq) => {
+  const feedback = JSON.parse(localStorage.getItem('chatFeedback') || '[]');
+  const similarQuestions = feedback
+    .filter(f => f.helpful)
+    .filter(f => {
+      const similarity = calculateSimilarity(
+        preprocessInput(input), 
+        preprocessInput(f.originalInput)
+      );
+      return similarity > 0.7; // soglia di similarità
+    });
+    
+  if (similarQuestions.length > 0) {
+    // Trova la risposta più popolare tra le domande simili
+    return similarQuestions.reduce((prev, current) => 
+      prev.score > current.score ? prev : current
+    ).response;
+  }
+  return null;
+};
+
+// Funzione per calcolare la similarità tra stringhe
+const calculateSimilarity = (str1, str2) => {
+  const words1 = str1.split(' ');
+  const words2 = str2.split(' ');
+  const commonWords = words1.filter(word => words2.includes(word));
+  return commonWords.length / Math.max(words1.length, words2.length);
+};const App = () => {
   const detectLanguage = () => {
     const browserLang = navigator.language.split('-')[0];
     return SUPPORTED_LANGUAGES[browserLang] ? browserLang : 'it';
@@ -71,6 +107,10 @@ const App = () => {
     }
   ]);
   const [input, setInput] = useState('');
+  const [conversationContext, setConversationContext] = useState({
+    lastCategory: null,
+    lastQuestion: null
+  });
   const chatEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -82,66 +122,104 @@ const App = () => {
   }, [messages]);
 
   const findBestResponse = (userInput) => {
-    const input = preprocessInput(userInput);
-    const inputWords = input.split(' ').map(word => checkSynonyms(word));
+    const processedInput = preprocessInput(userInput);
+    const inputWords = processedInput.split(' ').map(word => checkSynonyms(word));
     const faq = ALL_FAQ_IT;
     let bestMatch = null;
     let bestScore = 0;
+    let matchDetails = {};
+
+    // Controlla prima per risposte alternative dal feedback
+    const alternativeResponse = findAlternativeResponse(userInput, faq);
+    if (alternativeResponse) {
+      return alternativeResponse;
+    }
 
     for (const [category, categoryData] of Object.entries(faq)) {
+      // Verifica pattern di domanda comuni
+      let patternScore = 0;
+      for (const [patternType, patterns] of Object.entries(QUESTION_PATTERNS)) {
+        if (patterns.some(pattern => processedInput.includes(pattern))) {
+          patternScore += 1;
+        }
+      }
+
+      // Verifica relazioni tra categorie
+      let relationScore = 0;
+      if (conversationContext.lastCategory) {
+        const relations = RELATED_CATEGORIES[category];
+        if (relations && relations.related.includes(conversationContext.lastCategory)) {
+          relationScore = relations.weight;
+        }
+      }
+
       // Verifica keywords della categoria
       const categoryScore = categoryData.keywords?.some(keyword => 
         inputWords.includes(checkSynonyms(keyword.toLowerCase()))
       ) ? 2 : 0;
 
       for (const [question, data] of Object.entries(categoryData.questions)) {
-        let score = categoryScore;
+        let score = categoryScore + patternScore + relationScore;
         const questionWords = preprocessInput(question).split(' ').map(word => checkSynonyms(word));
         const { tags = [] } = data;
 
         // Corrispondenza esatta
-        if (input === preprocessInput(question)) {
+        if (processedInput === preprocessInput(question)) {
           return {
             title: categoryData.title,
-            content: data.answer
+            content: data.answer,
+            score: 100,
+            category
           };
         }
 
         // Punteggio per tags
-        for (const tag of tags) {
-          const processedTag = checkSynonyms(tag.toLowerCase());
-          if (inputWords.includes(processedTag)) {
-            score += 3;
-          }
-        }
+        const matchingTags = tags.filter(tag => 
+          inputWords.includes(checkSynonyms(tag.toLowerCase()))
+        );
+        score += matchingTags.length * 3;
 
         // Punteggio per parole della domanda
-        for (const word of inputWords) {
-          if (questionWords.includes(word)) {
-            score += 1;
-          }
-        }
+        const matchingWords = inputWords.filter(word => 
+          questionWords.includes(word)
+        );
+        score += matchingWords.length * 2;
 
-        // Controlla sinonimi nelle parole chiave
-        const processedTags = tags.map(tag => checkSynonyms(tag.toLowerCase()));
-        for (const word of inputWords) {
-          if (processedTags.includes(word)) {
-            score += 2;
-          }
-        }
+        // Aggiungi punteggio dal feedback storico
+        score += getFeedbackScore(userInput, category);
 
         if (score > bestScore) {
           bestScore = score;
           bestMatch = {
             title: categoryData.title,
-            content: data.answer
+            content: data.answer,
+            score,
+            category
+          };
+          matchDetails = {
+            category,
+            matchingTags,
+            matchingWords,
+            patternScore,
+            relationScore
           };
         }
       }
     }
 
+    // Log dell'interazione per debug
+    logInteraction(userInput, processedInput, bestMatch || {
+      title: "Reception",
+      content: SUPPORTED_LANGUAGES[currentLang].defaultResponse
+    }, bestScore);
+
     // Ritorna il match migliore solo se ha un punteggio sufficiente
-    if (bestMatch && bestScore > 2) {
+    if (bestMatch && bestScore > 3) {
+      setConversationContext(prev => ({
+        ...prev,
+        lastCategory: bestMatch.category,
+        lastQuestion: userInput
+      }));
       return bestMatch;
     }
 
@@ -151,6 +229,7 @@ const App = () => {
     };
   };
 
+  // Continuo con il resto del componente App?
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -160,43 +239,39 @@ const App = () => {
     const botMessage = {
       type: 'bot',
       title: response.title,
-      content: response.content
+      content: response.content,
+      id: Date.now(), // Per identificare univocamente il messaggio per il feedback
+      score: response.score
     };
 
     setMessages([...messages, userMessage, botMessage]);
     setInput('');
   };
 
+  const handleFeedback = (messageId, isHelpful) => {
+    const message = messages.find(m => m.id === messageId);
+    if (!message) return;
+
+    saveFeedback({
+      originalInput: input,
+      processedInput: preprocessInput(input),
+      response: {
+        title: message.title,
+        content: message.content
+      },
+      helpful: isHelpful,
+      category: conversationContext.lastCategory
+    });
+  };
+
   return (
     <div className="w-full max-w-2xl mx-auto h-96 flex flex-col bg-white rounded-lg shadow-lg">
-      {/* Header con logo e branding */}
+      {/* Header - rimane invariato */}
       <div className="bg-gradient-to-r from-[#B8860B] to-[#DAA520] text-white p-4 rounded-t-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            {/* Logo SVG inline */}
-            <svg viewBox="0 0 100 100" className="w-10 h-10" fill="currentColor">
-              <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="5"/>
-              <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="5"/>
-              <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" strokeWidth="5"/>
-              <circle cx="85" cy="50" r="5" fill="currentColor"/>
-              <circle cx="15" cy="50" r="5" fill="currentColor"/>
-            </svg>
-            <div>
-              <h2 className="text-xl font-bold">Hotel Galassia</h2>
-              <div className="flex items-center">
-                <span className="text-sm tracking-wider font-light">PRATO NEVOSO</span>
-                <div className="flex ml-2">
-                  <span className="text-yellow-300">★</span>
-                  <span className="text-yellow-300">★</span>
-                  <span className="text-yellow-300">★</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* ... header content ... */}
       </div>
 
-      {/* Area messaggi */}
+      {/* Area messaggi con feedback */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
         {messages.map((message, index) => (
           <div
@@ -214,13 +289,29 @@ const App = () => {
                 <div className="font-bold mb-1">{message.title}</div>
               )}
               <div className="whitespace-pre-line">{message.content}</div>
+              {message.type === 'bot' && message.id && (
+                <div className="flex gap-2 mt-2 justify-end">
+                  <button 
+                    onClick={() => handleFeedback(message.id, true)}
+                    className="p-1 hover:bg-gray-100 rounded"
+                  >
+                    <ThumbsUp className="w-4 h-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleFeedback(message.id, false)}
+                    className="p-1 hover:bg-gray-100 rounded"
+                  >
+                    <ThumbsDown className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         ))}
         <div ref={chatEndRef} />
       </div>
 
-      {/* Input area */}
+      {/* Input area - rimane invariata */}
       <div className="border-t bg-white p-4 rounded-b-lg">
         <form onSubmit={handleSubmit} className="flex space-x-2">
           <input
@@ -238,7 +329,7 @@ const App = () => {
           </button>
         </form>
 
-        {/* Quick buttons */}
+        {/* Quick buttons - rimangono invariati */}
         <div className="mt-4 flex space-x-2 overflow-x-auto pb-2">
           <QuickButton 
             icon={<Clock />} 
@@ -266,6 +357,7 @@ const App = () => {
   );
 };
 
+// QuickButton component rimane invariato
 const QuickButton = ({ icon, text, onClick }) => (
   <button
     onClick={onClick}

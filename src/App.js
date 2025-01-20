@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
+import { transportFAQ_IT } from './faq/it/transportFAQ_IT';
 
-// Constants per le FAQ
+// Importa le FAQ
 const ALL_FAQ_IT = {
+  trasporti: transportFAQ_IT,
   piscina: {
     title: 'Piscina',
     keywords: ['piscina', 'nuoto', 'orari piscina'],
@@ -52,7 +54,7 @@ const App = () => {
       if (category.keywords.some(keyword => processedInput.includes(keyword))) {
         // Cerca la domanda più pertinente nella categoria
         for (const [questionKey, data] of Object.entries(category.questions)) {
-          if (processedInput.includes(questionKey) || 
+          if (processedInput.includes(questionKey.toLowerCase()) || 
               data.tags.some(tag => processedInput.includes(tag))) {
             return {
               title: category.title,

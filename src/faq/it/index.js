@@ -22,20 +22,22 @@ export const ALL_FAQ_IT = {
   activities: activitiesFAQ_IT,
   emergency: emergencyFAQ_IT,
   techServices: techServicesFAQ_IT,
-  attractions: attractionsFAQ_IT
+  attractions: attractionsFAQ_IT,
 };
 
-// Raccogli tutte le keywords da tutti i file
-export const ALL_KEYWORDS_IT = {
-  ...wellnessFAQ_IT.keywords,
-  ...checkinFAQ_IT.keywords,
-  ...diningFAQ_IT.keywords,
-  ...skiFAQ_IT.keywords,
-  ...transportFAQ_IT.keywords,
-  ...entertainmentFAQ_IT.keywords,
-  ...petsFAQ_IT.keywords,
-  ...activitiesFAQ_IT.keywords,
-  ...emergencyFAQ_IT.keywords,
-  ...techServicesFAQ_IT.keywords,
-  ...attractionsFAQ_IT.keywords
-};
+// Raccogli tutte le keywords da tutti i file in un unico array (senza duplicati)
+export const ALL_KEYWORDS_IT = [
+  ...new Set([
+    ...wellnessFAQ_IT.keywords,
+    ...checkinFAQ_IT.keywords,
+    ...diningFAQ_IT.keywords,
+    ...skiFAQ_IT.keywords,
+    ...transportFAQ_IT.keywords,
+    ...entertainmentFAQ_IT.keywords,
+    ...petsFAQ_IT.keywords,
+    ...activitiesFAQ_IT.keywords,
+    ...emergencyFAQ_IT.keywords,
+    ...techServicesFAQ_IT.keywords,
+    ...attractionsFAQ_IT.keywords,
+  ]),
+];

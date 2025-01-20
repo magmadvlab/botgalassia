@@ -30,13 +30,17 @@ export const diningFAQ_IT = {
       answer: 'Sì, è necessario prenotare la cena in reception dove verrà illustrato il menu del giorno e ci sarà la possibilità di scelta. La cena è servita al tavolo (non è un buffet). È possibile scegliere da una fornita cantina di vini e delle ottime birre. Il personale di sala saprà fornire tutte le indicazioni del caso.',
       tags: ['cena', 'prenotazione', 'menu']
     },
-    'Quali sono gli orari del bar?': {
-      answer: 'Dalle 10:00 alle 14:00 e dalle 16:00 alle 23:00. Il bar è nella sala panoramica di fronte alla reception ed è ben fornito.',
-      tags: ['bar', 'orari']
+   'Quali sono gli orari del bar?': {
+      answer: 'Dalle 10:00 alle 14:00 e dalle 16:00 alle 23:00. Il bar è situato nella sala panoramica di fronte alla reception, con accesso al terrazzo panoramico con vista sulle piste da sci.',
+      tags: ['bar', 'orari', 'posizione']
     },
-    'Il bar serve aperitivi?': {
-      answer: 'Sì, nella sala panoramica con vista sulle montagne.',
-      tags: ['bar', 'aperitivo']
+'Cosa posso consumare al bar?': {
+      answer: 'Il bar offre un\'ampia selezione di bevande calde e fredde, cocktail, vini e birre. Durante l\'aperitivo è possibile accompagnare le bevande con stuzzichini. Sono disponibili anche snack e piccoli pasti veloci. Nelle belle giornate è possibile godersi le consumazioni sul terrazzo panoramico con vista diretta sulle piste da sci.',
+      tags: ['bar', 'bevande', 'aperitivo', 'snack', 'terrazzo']
+    },
+'Il bar serve aperitivi?': {
+      answer: 'Sì, potete gustare il vostro aperitivo nella sala panoramica o, nelle belle giornate, sul terrazzo esterno con vista diretta sulle piste da sci.',
+      tags: ['bar', 'aperitivo', 'terrazzo']
     }
   }
 };

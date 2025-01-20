@@ -1,3 +1,73 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { ThumbsUp, ThumbsDown, Send, Clock, Mountain, MapPin, Book } from 'lucide-react';
+
+// Constants
+const SUPPORTED_LANGUAGES = {
+  it: {
+    welcome: 'Benvenuto! Come posso aiutarti?',
+    defaultResponse: 'Mi dispiace, non ho capito. Potresti riformulare la domanda?',
+    inputPlaceholder: 'Scrivi un messaggio...',
+    buttonLabels: {
+      checkin: 'Check-in',
+      ski: 'Sci',
+      pool: 'Piscina',
+      services: 'Servizi'
+    }
+  },
+  en: {
+    welcome: 'Welcome! How can I help you?',
+    defaultResponse: 'I\'m sorry, I didn\'t understand. Could you rephrase that?',
+    inputPlaceholder: 'Type a message...',
+    buttonLabels: {
+      checkin: 'Check-in',
+      ski: 'Ski',
+      pool: 'Pool',
+      services: 'Services'
+    }
+  }
+};
+
+const COMMON_TERMS = {
+  synonyms: {
+    'orario': ['ora', 'tempo', 'quando'],
+    'piscina': ['nuoto', 'bagno'],
+    'ski': ['sciare', 'neve', 'piste']
+    // Add more synonyms as needed
+  }
+};
+
+const QUESTION_PATTERNS = {
+  time: ['quando', 'orario', 'ora'],
+  location: ['dove', 'posto', 'luogo'],
+  how: ['come', 'modo', 'maniera']
+};
+
+const RELATED_CATEGORIES = {
+  checkin: {
+    related: ['services', 'rooms'],
+    weight: 0.5
+  },
+  ski: {
+    related: ['activities', 'transport'],
+    weight: 0.5
+  }
+};
+
+const ALL_FAQ_IT = {
+  reception: {
+    title: 'Reception',
+    keywords: ['orario', 'check-in', 'check-out'],
+    questions: {
+      'Qual è l\'orario del check-in?': {
+        answer: 'Il check-in è disponibile dalle 15:00 alle 22:00.',
+        tags: ['orario', 'check-in']
+      }
+      // Add more questions as needed
+    }
+  }
+  // Add more categories as needed
+};
+
 // Funzioni di utilità per il preprocessamento e logging
 const preprocessInput = (input) => {
   return input
@@ -93,7 +163,9 @@ const calculateSimilarity = (str1, str2) => {
   const words2 = str2.split(' ');
   const commonWords = words1.filter(word => words2.includes(word));
   return commonWords.length / Math.max(words1.length, words2.length);
-};const App = () => {
+};
+
+const App = () => {
   const detectLanguage = () => {
     const browserLang = navigator.language.split('-')[0];
     return SUPPORTED_LANGUAGES[browserLang] ? browserLang : 'it';
@@ -229,7 +301,6 @@ const calculateSimilarity = (str1, str2) => {
     };
   };
 
-  // Continuo con il resto del componente App?
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -266,9 +337,10 @@ const calculateSimilarity = (str1, str2) => {
 
   return (
     <div className="w-full max-w-2xl mx-auto h-96 flex flex-col bg-white rounded-lg shadow-lg">
-      {/* Header - rimane invariato */}
+      {/* Header */}
       <div className="bg-gradient-to-r from-[#B8860B] to-[#DAA520] text-white p-4 rounded-t-lg">
-        {/* ... header content ... */}
+        <h1 className="text-xl font-bold">Hotel Galassia</h1>
+        <p className="text-sm">Assistente Virtuale</p>
       </div>
 
       {/* Area messaggi con feedback */}
@@ -311,7 +383,7 @@ const calculateSimilarity = (str1, str2) => {
         <div ref={chatEndRef} />
       </div>
 
-      {/* Input area - rimane invariata */}
+      {/* Input area */}
       <div className="border-t bg-white p-4 rounded-b-lg">
         <form onSubmit={handleSubmit} className="flex space-x-2">
           <input
@@ -325,47 +397,4 @@ const calculateSimilarity = (str1, str2) => {
             type="submit"
             className="bg-[#B8860B] text-white p-2 rounded-lg hover:bg-[#DAA520] focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
           >
-            <Send className="w-5 h-5" />
-          </button>
-        </form>
-
-        {/* Quick buttons - rimangono invariati */}
-        <div className="mt-4 flex space-x-2 overflow-x-auto pb-2">
-          <QuickButton 
-            icon={<Clock />} 
-            text={SUPPORTED_LANGUAGES[currentLang].buttonLabels.checkin} 
-            onClick={() => setInput('Orari check-in')} 
-          />
-          <QuickButton 
-            icon={<Mountain />} 
-            text={SUPPORTED_LANGUAGES[currentLang].buttonLabels.ski} 
-            onClick={() => setInput('Come arrivo alle piste?')} 
-          />
-          <QuickButton 
-            icon={<MapPin />} 
-            text={SUPPORTED_LANGUAGES[currentLang].buttonLabels.pool} 
-            onClick={() => setInput('Dove è la piscina?')} 
-          />
-          <QuickButton 
-            icon={<Book />} 
-            text={SUPPORTED_LANGUAGES[currentLang].buttonLabels.services} 
-            onClick={() => setInput('Quali servizi offrite?')} 
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// QuickButton component rimane invariato
-const QuickButton = ({ icon, text, onClick }) => (
-  <button
-    onClick={onClick}
-    className="flex items-center space-x-2 px-3 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#B8860B] whitespace-nowrap"
-  >
-    {icon}
-    <span>{text}</span>
-  </button>
-);
-
-export default App;
+            <Send className="w-5 h-5

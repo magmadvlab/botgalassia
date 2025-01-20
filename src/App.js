@@ -50,11 +50,8 @@ const App = () => {
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
     
-    // Cerca nelle FAQ
     for (const [categoryKey, category] of Object.entries(ALL_FAQ_IT)) {
-      // Controlla le keywords della categoria
       if (category.keywords.some(keyword => processedInput.includes(keyword))) {
-        // Cerca la domanda più pertinente nella categoria
         for (const [questionKey, data] of Object.entries(category.questions)) {
           if (processedInput.includes(questionKey.toLowerCase()) || 
               data.tags.some(tag => processedInput.includes(tag))) {
@@ -64,7 +61,6 @@ const App = () => {
             };
           }
         }
-        // Se trova la categoria ma non una domanda specifica
         const firstQuestion = Object.values(category.questions)[0];
         return {
           title: category.title,
@@ -97,10 +93,8 @@ const App = () => {
 
   return (
     <div className="fixed inset-0 flex flex-col bg-gray-50">
-      {/* Header con logo e info hotel */}
-      <div className="bg-white border-b shadow-sm p-4">
+      <header className="bg-white border-b shadow-sm p-4">
         <div className="flex flex-col items-center max-w-4xl mx-auto">
-          {/* Logo container */}
           <div className="w-full max-w-[200px] sm:max-w-[250px] mb-2">
             <img 
               src="/logo-galassia.png" 
@@ -108,14 +102,14 @@ const App = () => {
               className="w-full h-auto"
             />
           </div>
-          {/* Stelle e location */}
           <div className="flex items-center space-x-1 text-[#B8860B] mb-1">
-            <span>★</span><span>★</span><span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
           </div>
           <div className="text-gray-600 text-sm font-medium mb-1">
             PRATO NEVOSO
           </div>
-          {/* Link al sito */}
           <a 
             href="https://pratonevoso.it" 
             target="_blank" 
@@ -125,10 +119,9 @@ const App = () => {
             pratonevoso.it
           </a>
         </div>
-      </div>
+      </header>
 
-      {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
+      <main className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
         {messages.map((message, index) => (
           <div
             key={index}
@@ -149,6 +142,27 @@ const App = () => {
           </div>
         ))}
         <div ref={messagesEndRef} />
-      </div>
+      </main>
 
-      {/* Input area */}
+      <footer className="border-t bg-white p-3 sm:p-4">
+        <form onSubmit={handleSubmit} className="flex space-x-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Scrivi un messaggio..."
+            className="flex-1 p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:border-transparent text-sm sm:text-base"
+          />
+          <button
+            type="submit"
+            className="bg-[#B8860B] text-white p-3 sm:p-4 rounded-lg hover:bg-[#DAA520] focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
+          >
+            <Send className="w-5 h-5 sm:w-6 sm:h-6" />
+          </button>
+        </form>
+      </footer>
+    </div>
+  );
+};
+
+export default App;

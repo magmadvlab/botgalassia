@@ -1,9 +1,9 @@
 export const diningFAQ_IT = {
   title: 'Ristorazione',
-  keywords: ['ristorante', 'colazione', 'cena', 'pranzo', 'bar', 'mangiare', 'bere', 'aperitivo'],
+  keywords: ['ristorante', 'colazione', 'cena', 'pranzo', 'bar', 'mangiare', 'bere', 'aperitivo', 'buffet'],
   questions: {
     'Dove viene servita la colazione?': {
-      answer: 'Nel ristorante al piano terra (piano 0). Per arrivarci bisogna scendere le scale fino al piano 0 o prendere l\'ascensore e premere il tasto 0.',
+      answer: 'Nel ristorante al piano terra (piano 0). Per arrivarci bisogna scendere le scale fino al piano 0 o prendere l\'ascensore e premere il tasto 0. La colazione è servita a buffet con una ricca selezione internazionale dolce e salata.',
       tags: ['colazione', 'ristorante', 'posizione']
     },
     'Quali sono gli orari della colazione?': {
@@ -11,7 +11,7 @@ export const diningFAQ_IT = {
       tags: ['colazione', 'orari']
     },
     'Cosa include il buffet della colazione?': {
-      answer: 'Un ricco buffet con affettati, formaggi locali, croissant, frutta fresca, yogurt, latte, uova, caffè.',
+      answer: 'Un ricco buffet internazionale che include: croissant, brioche, torte fatte in casa, pane fresco, yogurt, cereali, frutta fresca, affettati, formaggi locali, uova, marmellate, miele, Nutella, burro, succhi di frutta, latte, caffè espresso, cappuccino, tè e tisane.',
       tags: ['colazione', 'buffet', 'menu']
     },
     'Dove viene servita la cena?': {

@@ -3,31 +3,23 @@ import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 
 // Constants per le FAQ
 const ALL_FAQ_IT = {
-  reception: {
-    title: 'Reception',
-    keywords: ['orario', 'check-in', 'check-out'],
+  piscina: {
+    title: 'Piscina',
+    keywords: ['piscina', 'nuoto', 'orari piscina'],
     questions: {
-      'Qual è l\'orario del check-in?': {
-        answer: 'Il check-in è disponibile dalle 15:00 alle 22:00.',
-        tags: ['orario', 'check-in']
-      },
-      'A che ora è il check-out?': {
-        answer: 'Il check-out deve essere effettuato entro le 10:00.',
-        tags: ['orario', 'check-out']
+      'orari piscina': {
+        answer: 'La piscina è aperta tutti i giorni dalle 9:00 alle 20:00. Per i bambini sotto i 12 anni è necessaria la presenza di un adulto.',
+        tags: ['piscina', 'orari']
       }
     }
   },
-  ski: {
+  sci: {
     title: 'Sci',
     keywords: ['sci', 'piste', 'skipass'],
     questions: {
-      'Come raggiungo le piste da sci?': {
-        answer: 'Le piste sono raggiungibili a piedi dall\'hotel in 5 minuti.',
+      'piste': {
+        answer: 'Le piste sono raggiungibili a piedi dall\'hotel in 5 minuti. Abbiamo accesso diretto alle piste blu e rosse.',
         tags: ['sci', 'piste']
-      },
-      'Dove posso acquistare lo skipass?': {
-        answer: 'Lo skipass può essere acquistato direttamente alla reception dell\'hotel.',
-        tags: ['sci', 'skipass']
       }
     }
   }
@@ -55,19 +47,28 @@ const App = () => {
     const processedInput = userInput.toLowerCase().trim();
     
     // Cerca nelle FAQ
-    for (const category of Object.values(ALL_FAQ_IT)) {
-      for (const [question, data] of Object.entries(category.questions)) {
-        if (processedInput.includes(question.toLowerCase()) ||
-            data.tags.some(tag => processedInput.includes(tag))) {
-          return {
-            title: category.title,
-            content: data.answer
-          };
+    for (const [categoryKey, category] of Object.entries(ALL_FAQ_IT)) {
+      // Controlla le keywords della categoria
+      if (category.keywords.some(keyword => processedInput.includes(keyword))) {
+        // Cerca la domanda più pertinente nella categoria
+        for (const [questionKey, data] of Object.entries(category.questions)) {
+          if (processedInput.includes(questionKey) || 
+              data.tags.some(tag => processedInput.includes(tag))) {
+            return {
+              title: category.title,
+              content: data.answer
+            };
+          }
         }
+        // Se trova la categoria ma non una domanda specifica
+        const firstQuestion = Object.values(category.questions)[0];
+        return {
+          title: category.title,
+          content: firstQuestion.answer
+        };
       }
     }
     
-    // Risposta default se non trova match
     return {
       title: 'Info',
       content: 'Mi dispiace, non ho capito. Potresti riformulare la domanda?'
@@ -91,11 +92,11 @@ const App = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto h-screen flex flex-col bg-white rounded-lg shadow-lg">
+    <div className="fixed inset-0 flex flex-col bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#B8860B] to-[#DAA520] text-white p-4 rounded-t-lg">
-        <h1 className="text-xl font-bold">Hotel Galassia</h1>
-        <p className="text-sm">Assistente Virtuale</p>
+      <div className="bg-gradient-to-r from-[#B8860B] to-[#DAA520] text-white p-4">
+        <h1 className="text-2xl font-bold">Hotel Galassia</h1>
+        <p className="text-lg">Assistente Virtuale</p>
       </div>
 
       {/* Messages area */}
@@ -106,16 +107,16 @@ const App = () => {
             className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-3/4 p-3 rounded-lg ${
+              className={`max-w-[80%] p-3 rounded-lg ${
                 message.type === 'user'
                   ? 'bg-[#B8860B] text-white'
-                  : 'bg-white shadow-sm border border-gray-100'
+                  : 'bg-white shadow-md'
               }`}
             >
               {message.title && (
-                <div className="font-bold mb-1">{message.title}</div>
+                <div className="font-bold text-lg mb-1">{message.title}</div>
               )}
-              {message.content}
+              <div className="text-base">{message.content}</div>
             </div>
           </div>
         ))}
@@ -123,20 +124,20 @@ const App = () => {
       </div>
 
       {/* Input area */}
-      <div className="border-t bg-white p-4 rounded-b-lg">
+      <div className="border-t bg-white p-4">
         <form onSubmit={handleSubmit} className="flex space-x-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Scrivi un messaggio..."
-            className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:border-transparent"
+            className="flex-1 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:border-transparent text-base"
           />
           <button
             type="submit"
-            className="bg-[#B8860B] text-white p-2 rounded-lg hover:bg-[#DAA520] focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
+            className="bg-[#B8860B] text-white p-4 rounded-lg hover:bg-[#DAA520] focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-6 h-6" />
           </button>
         </form>
       </div>

@@ -1,6 +1,6 @@
 export const transportFAQ_IT = {
   title: 'Trasporti e Navetta',
-  keywords: ['navetta', 'trasporto', 'bus', 'parcheggio', 'auto', 'conca', 'prenotazione', 'telefono', 'orari'],
+  keywords: ['navetta', 'trasporto', 'bus', 'parcheggio', 'auto', 'conca', 'prenotazione', 'telefono', 'orari', 'coperto', 'garage'],
   questions: {
     'Navetta': {
       answer: 'L\'hotel offre un servizio navetta gratuito da e per la conca di Prato Nevoso. Il servizio è attivo dalle 08:30 alle 12:30 e dalle 14:30 alle 17:30. Gli ospiti possono richiedere il servizio contattando la reception al +39 0174 334183.',
@@ -11,8 +11,16 @@ export const transportFAQ_IT = {
       tags: ['navetta', 'conca', 'prenotazione', 'orari']
     },
     'C\'è un parcheggio disponibile?': {
-      answer: 'Sì, mettiamo a disposizione un ampio parcheggio esterno gratuito. Su richiesta, è possibile usufruire del parcheggio coperto a €15 al giorno.',
+      answer: 'Sì, l\'hotel dispone di un parcheggio esterno gratuito e di un parcheggio coperto a pagamento.',
       tags: ['parcheggio', 'auto']
+    },
+    'È disponibile un parcheggio coperto?': {
+      answer: 'Sì, è disponibile un parcheggio coperto che ha un costo di 15€ al giorno. Il parcheggio coperto mette al riparo l\'auto da neve, gelo e intemperie.',
+      tags: ['parcheggio', 'coperto', 'auto', 'neve', 'costi']
+    },
+    'Quanto costa il parcheggio coperto?': {
+      answer: 'Il parcheggio coperto ha un costo di 15€ al giorno e protegge l\'auto da neve, gelo e intemperie.',
+      tags: ['parcheggio', 'coperto', 'costi', 'prezzo']
     },
     'Il parcheggio coperto è custodito?': {
       answer: 'No, il parcheggio coperto non è custodito.',

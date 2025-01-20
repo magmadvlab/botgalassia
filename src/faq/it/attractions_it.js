@@ -1,7 +1,15 @@
 export const attractionsFAQ_IT = {
   title: 'Attrazioni Locali e Territorio',
-  keywords: ['attrazioni', 'visitare', 'turismo', 'prato nevoso', 'escursioni', 'gite', 'attività'],
+  keywords: [
+    'attrazioni', 'visitare', 'turismo', 'prato nevoso', 'escursioni', 'gite', 'attività',
+    'conca', 'centro', 'cosa fare', 'intrattenimento', 'svago', 'tempo libero',
+    'divertimento', 'servizi', 'negozi', 'shopping', 'sport', 'inverno', 'estate'
+  ],
   questions: {
+    'Cosa faccio in conca?': {
+      answer: 'La conca di Prato Nevoso offre numerose attrazioni e attività:\n- Prato Nevoso Village, parco divertimenti ideale per famiglie\n- 12 impianti di risalita e 16 piste da sci per tutti i livelli\n- Pista di pattinaggio sul ghiaccio\n- Snowtubing e giri in motoslitta\n- Negozi di abbigliamento e articoli sportivi\n- Bar, ristoranti e locali per l\'après-ski\n- Scuole di sci e noleggio attrezzature\n- Eventi e animazione\nIn estate: percorsi mountain bike, trekking, arrampicata e parco avventura. La reception può fornirvi informazioni dettagliate su ogni attività e aiutarvi con le prenotazioni.',
+      tags: ['conca', 'attività', 'divertimento', 'sport', 'servizi']
+    },
     'Cosa offre Prato Nevoso Village?': {
       answer: 'Prato Nevoso Village è un parco divertimenti perfetto per i bambini, con numerose attività e attrazioni. Raggiungibile facilmente con la nostra navetta gratuita.',
       tags: ['village', 'bambini', 'divertimento']

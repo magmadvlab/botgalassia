@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 import logo from './logo-galassia-prato-nevoso.png';
-import Fuse from 'fuse.js'; // Importa Fuse.js per fuzzy matching
+import Fuse from 'fuse.js';
 
 // Importa le FAQ
 import { transportFAQ_IT } from './faq/it/transport_it';
@@ -45,13 +45,27 @@ const App = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Nuova logica per trovare la migliore risposta con Fuse.js
+  // Funzione per generare follow-up dinamici
+  const generateFollowUp = (categoryKey, questionKey) => {
+    const followUpTemplates = {
+      wellness: 'Hai già il necessario per accedere alla piscina? Servono costume, cuffia (acquistabile in reception a 2€), ciabatte e accappatoio.',
+      transport: 'Hai bisogno di ulteriori informazioni sui trasporti? Contatta la reception per prenotare la navetta.',
+      dining: 'Hai già prenotato il tuo tavolo? Per cena, è obbligatorio prenotare entro le 16:00.',
+      ski: 'Hai già noleggiato la tua attrezzatura? Contattaci per informazioni su scuole di sci o maestri disponibili.',
+      checkin: 'Hai bisogno di assistenza con il check-in o il check-out? La reception è operativa dalle 08:00 alle 22:00.',
+    };
+
+    return followUpTemplates[categoryKey] || 'Hai bisogno di ulteriori dettagli? Contatta la reception per assistenza.';
+  };
+
+  // Funzione per trovare la migliore risposta
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
 
     // Trasforma le FAQ in un array per il fuzzy matching
     const faqArray = Object.entries(ALL_FAQ_IT).flatMap(([categoryKey, category]) =>
       Object.entries(category.questions).map(([questionKey, data]) => ({
+        categoryKey,
         category: category.title,
         question: questionKey,
         answer: data.answer,
@@ -59,10 +73,9 @@ const App = () => {
       }))
     );
 
-    // Configura Fuse.js
     const fuse = new Fuse(faqArray, {
-      keys: ['question', 'tags'], // Cerca sia nelle domande che nei tag
-      threshold: 0.4, // Precisione fuzzy
+      keys: ['question', 'tags'],
+      threshold: 0.4,
     });
 
     const results = fuse.search(processedInput);
@@ -72,6 +85,7 @@ const App = () => {
       return {
         title: bestMatch.category,
         content: bestMatch.answer,
+        followUp: generateFollowUp(bestMatch.categoryKey, bestMatch.question),
       };
     }
 
@@ -84,7 +98,6 @@ const App = () => {
   // Registra il feedback per analisi
   const handleFeedback = (index, feedbackType, userInput) => {
     console.log(`Feedback ricevuto per il messaggio ${index}: ${feedbackType}`);
-    // Simula l'invio del feedback (ad esempio, a un endpoint API)
     fetch('/save-feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -105,6 +118,7 @@ const App = () => {
       type: 'bot',
       title: response.title,
       content: response.content,
+      followUp: response.followUp,
     };
 
     setMessages([...messages, userMessage, botMessage]);
@@ -141,6 +155,11 @@ const App = () => {
                 <div className="font-bold text-base sm:text-lg mb-1">{message.title}</div>
               )}
               <div className="text-sm sm:text-base">{message.content}</div>
+              {message.followUp && (
+                <div className="text-sm sm:text-base mt-2 text-gray-600 italic">
+                  {message.followUp}
+                </div>
+              )}
 
               {message.type === 'bot' && (
                 <div className="flex space-x-2 mt-2">
@@ -184,5 +203,5 @@ const App = () => {
     </div>
   );
 };
-
+  a
 export default App;

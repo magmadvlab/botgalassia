@@ -50,7 +50,15 @@ const App = () => {
 
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
-    
+
+    // Aggiunta di un controllo specifico per il "centro"
+    if (processedInput.includes('cosa posso fare in centro') || processedInput.includes('centro') || processedInput.includes('prato nevoso')) {
+      return {
+        title: attractionsFAQ_IT.title,
+        content: attractionsFAQ_IT.questions['attività'].answer
+      };
+    }
+
     for (const [categoryKey, category] of Object.entries(ALL_FAQ_IT)) {
       if (category.keywords.some(keyword => processedInput.includes(keyword))) {
         for (const [questionKey, data] of Object.entries(category.questions)) {

@@ -41,7 +41,7 @@ export const transportFAQ_IT = {
       tags: ['parcheggio', 'custodia', 'sicurezza']
     },
 
-    // SEZIONE COME ARRIVARE
+    // SEZIONE COME RAGGIUNGERE
     'Come si raggiunge l\'hotel in auto?': {
       answer: 'Per raggiungere l\'hotel in auto:\n- Da Torino: Prendere l\'A6 Torino-Savona, uscire a Mondovì e seguire per Prato Nevoso.\n- Da Genova: Prendere l\'A10, immettersi sulla A6 direzione Torino, uscire a Mondovì e seguire per Prato Nevoso.',
       tags: ['direzioni', 'auto', 'strada']

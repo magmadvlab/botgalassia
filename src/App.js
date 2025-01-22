@@ -38,11 +38,11 @@ const App = () => {
 
     // Configura Fuse.js
     const fuse = new Fuse(faqArray, {
-      keys: [
-        { name: 'tags', weight: 0.7 },
-        { name: 'question', weight: 0.3 },
-      ],
-      threshold: 0.4,
+  keys: [
+    { name: 'tags', weight: 0.9 }, // Maggiore priorità ai tag
+    { name: 'question', weight: 0.1 }, // Minore priorità alle domande
+  ],
+  threshold: 0.25, // Ridotto per maggiore precisione
     });
 
     const results = fuse.search(processedInput);

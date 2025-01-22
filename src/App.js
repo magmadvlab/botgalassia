@@ -49,20 +49,6 @@ const App = () => {
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
 
-    // Controllo diretto per domande chiave relative al check-in
-    if (processedInput.includes('check-in') && processedInput.includes('ora')) {
-      const checkinFAQ = ALL_FAQ_IT.checkin;
-      const questionKey = 'A che ora posso fare il check-in?';
-      const answer = checkinFAQ.questions[questionKey]?.answer;
-
-      if (answer) {
-        return {
-          title: checkinFAQ.title,
-          content: answer,
-        };
-      }
-    }
-
     // Trasforma le FAQ in un array per il fuzzy matching
     const faqArray = Object.entries(ALL_FAQ_IT).flatMap(([categoryKey, category]) =>
       Object.entries(category.questions).map(([questionKey, data]) => ({
@@ -97,7 +83,7 @@ const App = () => {
 
   // Registra il feedback per analisi
   const handleFeedback = (index, feedbackType, userInput) => {
-    console.log(Feedback ricevuto per il messaggio ${index}: ${feedbackType});
+    console.log(`Feedback ricevuto per il messaggio ${index}: ${feedbackType}`);
     // Simula l'invio del feedback (ad esempio, a un endpoint API)
     fetch('/save-feedback', {
       method: 'POST',
@@ -144,12 +130,12 @@ const App = () => {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}}
+            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={max-w-[85%] sm:max-w-[80%] p-3 rounded-lg ${
+              className={`max-w-[85%] sm:max-w-[80%] p-3 rounded-lg ${
                 message.type === 'user' ? 'bg-[#B8860B] text-white' : 'bg-white shadow-md'
-              }}
+              }`}
             >
               {message.title && (
                 <div className="font-bold text-base sm:text-lg mb-1">{message.title}</div>

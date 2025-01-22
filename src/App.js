@@ -49,7 +49,21 @@ const App = () => {
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
 
-    // Trasforma le FAQ in un array per la ricerca fuzzy
+    // Controllo diretto per domande chiave relative al check-in
+    if (processedInput.includes('check-in') && processedInput.includes('ora')) {
+      const checkinFAQ = ALL_FAQ_IT.checkin;
+      const questionKey = 'A che ora posso fare il check-in?';
+      const answer = checkinFAQ.questions[questionKey]?.answer;
+
+      if (answer) {
+        return {
+          title: checkinFAQ.title,
+          content: answer,
+        };
+      }
+    }
+
+    // Trasforma le FAQ in un array per il fuzzy matching
     const faqArray = Object.entries(ALL_FAQ_IT).flatMap(([categoryKey, category]) =>
       Object.entries(category.questions).map(([questionKey, data]) => ({
         category: category.title,

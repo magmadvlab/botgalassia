@@ -7,7 +7,7 @@ export const skiFAQ_IT = {
     'dove metto l\'attrezzatura', 'dove lascio l\'attrezzatura', 'dove posso lasciare l\'attrezzatura',
     'asciuga scarponi', 'scalda scarponi', 'riscaldato',
     // Piste e attività
-    'pista', 'neve', 'skipass', 'sci notturno', 'sciare',
+    'pista', 'neve', 'skipass', 'sci notturno', 'sciare', 'piste illuminate',
     // Servizi
     'noleggio', 'scuola sci', 'maestro', 'principiante', 'imparare', 'lezioni',
     'navetta', 'trasporto', 'conca',
@@ -33,6 +33,21 @@ export const skiFAQ_IT = {
       answer: 'Potete riporre la vostra attrezzatura negli ski box riscaldati che si trovano al piano -1, lungo il tunnel che porta alle piste. Ogni ski box è numerato e vi permette di mantenere l\'attrezzatura asciutta e pronta per l\'uso.',
       tags: ['deposito', 'ski box', 'attrezzatura']
     },
-    // [resto delle domande esistenti...]
+    'Dove posso noleggiare l\'attrezzatura da sci?': {
+      answer: 'Puoi noleggiare l\'attrezzatura da sci e snowboard presso Beppe Ski, situato subito di fronte all\'uscita del tunnel del nostro hotel che conduce alle piste. Grazie alla nostra convenzione pluriennale, i nostri ospiti possono usufruire di uno sconto minimo del 10% sul noleggio. Per ulteriori dettagli, contatta la reception.',
+      tags: ['noleggio', 'sci', 'snowboard', 'attrezzatura', 'sconto']
+    },
+    'Ci sono scuole di sci disponibili?': {
+      answer: 'Sì, in conca troverai diverse scuole di sci con maestri professionisti pronti ad aiutarti, sia che tu sia un principiante che un esperto. La reception può fornire informazioni e prenotare le lezioni per te.',
+      tags: ['scuola sci', 'lezioni', 'maestri', 'imparare', 'principianti']
+    },
+    'È possibile acquistare lo skipass in hotel?': {
+      answer: 'Sì, la reception dell\'hotel può aiutarti ad acquistare lo skipass per accedere alle piste del comprensorio Mondolè Ski. Contatta il personale per maggiori dettagli.',
+      tags: ['skipass', 'piste', 'acquisto']
+    },
+    'Ci sono piste illuminate per lo sci notturno?': {
+      answer: 'Sì, Prato Nevoso offre la possibilità di sciare in notturna su piste illuminate. Lo sci notturno è disponibile il martedì, venerdì e sabato dalle 20:00 alle 23:00.',
+      tags: ['sci notturno', 'piste illuminate', 'orari']
+    }
   }
 };

@@ -76,6 +76,11 @@ const App = () => {
     };
   };
 
+  const handleFeedback = (index, feedbackType) => {
+    console.log(`Feedback ricevuto per il messaggio ${index}: ${feedbackType}`);
+    // Qui potresti salvare il feedback in un database o file per ulteriori analisi
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -135,6 +140,23 @@ const App = () => {
                 <div className="font-bold text-base sm:text-lg mb-1">{message.title}</div>
               )}
               <div className="text-sm sm:text-base">{message.content}</div>
+
+              {message.type === 'bot' && (
+                <div className="flex space-x-2 mt-2">
+                  <button
+                    onClick={() => handleFeedback(index, 'positive')}
+                    className="flex items-center text-[#B8860B] hover:opacity-75"
+                  >
+                    <ThumbsUp className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => handleFeedback(index, 'negative')}
+                    className="flex items-center text-red-500 hover:opacity-75"
+                  >
+                    <ThumbsDown className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         ))}

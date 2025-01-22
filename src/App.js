@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 import logo from './logo-galassia-prato-nevoso.png';
-import Fuse from 'fuse.js';
+import Fuse from 'fuse.js'; // Importa Fuse.js per fuzzy matching
 
 // Importa le FAQ
 import { transportFAQ_IT } from './faq/it/transport_it';
@@ -27,29 +27,29 @@ const ALL_FAQ_IT = {
   entertainment: entertainmentFAQ_IT,
   techServices: techServicesFAQ_IT,
   activities: activitiesFAQ_IT,
-  attractions: attractionsFAQ_IT
+  attractions: attractionsFAQ_IT,
 };
 
 const App = () => {
   const [messages, setMessages] = useState([
-    { type: 'bot', content: 'Benvenuto! Come posso aiutarti?' }
+    { type: 'bot', content: 'Benvenuto! Come posso aiutarti?' },
   ]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // Nuova logica per trovare la migliore risposta
+  // Nuova logica per trovare la migliore risposta con Fuse.js
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
 
-    // Configura Fuse.js per fuzzy matching
+    // Trasforma le FAQ in un array per la ricerca fuzzy
     const faqArray = Object.entries(ALL_FAQ_IT).flatMap(([categoryKey, category]) =>
       Object.entries(category.questions).map(([questionKey, data]) => ({
         category: category.title,
@@ -59,8 +59,9 @@ const App = () => {
       }))
     );
 
+    // Configura Fuse.js
     const fuse = new Fuse(faqArray, {
-      keys: ['question', 'tags'],
+      keys: ['question', 'tags'], // Cerca sia nelle domande che nei tag
       threshold: 0.4, // Precisione fuzzy
     });
 
@@ -70,27 +71,26 @@ const App = () => {
       const bestMatch = results[0].item;
       return {
         title: bestMatch.category,
-        content: bestMatch.answer
+        content: bestMatch.answer,
       };
     }
 
     return {
       title: 'Info',
-      content: 'Mi dispiace, non ho capito. Potresti riformulare la domanda?'
+      content: 'Mi dispiace, non ho capito. Potresti riformulare la domanda?',
     };
   };
 
   // Registra il feedback per analisi
   const handleFeedback = (index, feedbackType, userInput) => {
     console.log(`Feedback ricevuto per il messaggio ${index}: ${feedbackType}`);
-
-    // Invio a un endpoint API o file
+    // Simula l'invio del feedback (ad esempio, a un endpoint API)
     fetch('/save-feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         question: userInput,
-        feedback: feedbackType
+        feedback: feedbackType,
       }),
     });
   };
@@ -104,7 +104,7 @@ const App = () => {
     const botMessage = {
       type: 'bot',
       title: response.title,
-      content: response.content
+      content: response.content,
     };
 
     setMessages([...messages, userMessage, botMessage]);
@@ -134,9 +134,7 @@ const App = () => {
           >
             <div
               className={`max-w-[85%] sm:max-w-[80%] p-3 rounded-lg ${
-                message.type === 'user'
-                  ? 'bg-[#B8860B] text-white'
-                  : 'bg-white shadow-md'
+                message.type === 'user' ? 'bg-[#B8860B] text-white' : 'bg-white shadow-md'
               }`}
             >
               {message.title && (

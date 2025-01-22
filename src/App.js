@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send, Globe } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import logo from './logo-galassia-prato-nevoso.png';
 
 const languages = {
@@ -96,11 +95,9 @@ const App = () => {
 
   if (!isJsEnabled) {
     return (
-      <Alert variant="destructive" className="m-4">
-        <AlertDescription>
-          {languages[language].jsError}
-        </AlertDescription>
-      </Alert>
+      <div className="m-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+        {languages[language].jsError}
+      </div>
     );
   }
 

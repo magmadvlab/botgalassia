@@ -1,34 +1,11 @@
+// FILE: App.js
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 import logo from './logo-galassia-prato-nevoso.png';
 import Fuse from 'fuse.js'; // Importa Fuse.js per fuzzy matching
 
-// Importa le FAQ
-import { transportFAQ_IT } from './faq/it/transport_it';
-import { wellnessFAQ_IT } from './faq/it/wellness_it';
-import { skiFAQ_IT } from './faq/it/ski_it';
-import { petsFAQ_IT } from './faq/it/pets_it';
-import { checkinFAQ_IT } from './faq/it/checkin_it';
-import { diningFAQ_IT } from './faq/it/dining_it';
-import { emergencyFAQ_IT } from './faq/it/emergency_it';
-import { entertainmentFAQ_IT } from './faq/it/entertainment_it';
-import { techServicesFAQ_IT } from './faq/it/tech_services_it';
-import { activitiesFAQ_IT } from './faq/it/activities_it';
-import { attractionsFAQ_IT } from './faq/it/attractions_it';
-
-const ALL_FAQ_IT = {
-  trasporti: transportFAQ_IT,
-  wellness: wellnessFAQ_IT,
-  sci: skiFAQ_IT,
-  pets: petsFAQ_IT,
-  checkin: checkinFAQ_IT,
-  dining: diningFAQ_IT,
-  emergency: emergencyFAQ_IT,
-  entertainment: entertainmentFAQ_IT,
-  techServices: techServicesFAQ_IT,
-  activities: activitiesFAQ_IT,
-  attractions: attractionsFAQ_IT,
-};
+// Importa le FAQ aggiornate
+import { ALL_FAQ_IT } from './faq/it';
 
 const App = () => {
   const [messages, setMessages] = useState([
@@ -61,30 +38,37 @@ const App = () => {
 
     // Configura Fuse.js
     const fuse = new Fuse(faqArray, {
-      keys: ['question', 'tags'], // Cerca sia nelle domande che nei tag
-      threshold: 0.3, // Precisione fuzzy
+      keys: [
+        { name: 'tags', weight: 0.7 },
+        { name: 'question', weight: 0.3 },
+      ],
+      threshold: 0.4,
     });
 
     const results = fuse.search(processedInput);
 
     if (results.length > 0) {
-      const bestMatch = results[0].item;
-      return {
-        title: bestMatch.category,
-        content: bestMatch.answer,
-      };
+      return results.slice(0, 3).map((result) => ({
+        title: result.item.category,
+        content: result.item.answer,
+      }));
     }
 
-    return {
+    // Log delle domande non corrisposte
+    fetch('/log-missing-question', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: userInput }),
+    });
+
+    return [{
       title: 'Info',
       content: 'Mi dispiace, non ho capito. Potresti riformulare la domanda?',
-    };
+    }];
   };
 
-  // Registra il feedback per analisi
   const handleFeedback = (index, feedbackType, userInput) => {
     console.log(`Feedback ricevuto per il messaggio ${index}: ${feedbackType}`);
-    // Simula l'invio del feedback (ad esempio, a un endpoint API)
     fetch('/save-feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -101,13 +85,14 @@ const App = () => {
 
     const userMessage = { type: 'user', content: input };
     const response = findBestResponse(input);
-    const botMessage = {
-      type: 'bot',
-      title: response.title,
-      content: response.content,
-    };
 
-    setMessages([...messages, userMessage, botMessage]);
+    const botMessages = response.map((res) => ({
+      type: 'bot',
+      title: res.title,
+      content: res.content,
+    }));
+
+    setMessages([...messages, userMessage, ...botMessages]);
     setInput('');
   };
 

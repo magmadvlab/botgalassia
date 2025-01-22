@@ -6,7 +6,7 @@ export const checkinFAQ_IT = {
     'valigie', 'borse', 'deposito', 'oggetti', 'arrivo', 'partenza', 
     'lasciare', 'ritirare', 'depositare', 'camera', 'stanza', 'reception', 
     'hall', 'dove', 'come', 'quale', 'quanto', 'possibile', 'prima', 'dopo', 
-    'anticipato', 'ritardo', 'uscita', 'tardi', 'ritardo', 'prenotazione'
+    'anticipato', 'ritardo', 'uscita', 'tardi', 'prenotazione'
   ],
   questions: {
     'A che ora posso fare il check-in?': {
@@ -30,7 +30,7 @@ export const checkinFAQ_IT = {
       tags: ['arrivo', 'anticipato', 'bagagli', 'check-in', 'prima', 'inizio']
     },
     'Cosa devo fare se arrivo tardi?': {
-      answer: 'Non c\'è problema! Basta informare la reception del vostro orario di arrivo previsto. La reception è sempre aperta e sarà lieta di accogliervi anche in orario serale.',
+      answer: 'Se arrivate dopo le 22:00, vi preghiamo di informare in anticipo la reception, che è operativa dalle 08:00 alle 22:00, 7 giorni su 7. Saremo lieti di organizzare un check-in notturno su richiesta.',
       tags: ['arrivo', 'tardi', 'ritardo', 'check-in', 'registrazione']
     },
     'Dove posso lasciare i bagagli?': {
@@ -46,7 +46,7 @@ export const checkinFAQ_IT = {
       tags: ['check-out', 'auto', 'parcheggio', 'uscita', 'fine']
     },
     'La reception è sempre aperta?': {
-      answer: 'Sì, la nostra reception è operativa 24 ore su 24, 7 giorni su 7, per garantirvi assistenza in qualsiasi momento.',
+      answer: 'No, la nostra reception è operativa dalle 08:00 alle 22:00, 7 giorni su 7. Per necessità fuori orario, vi preghiamo di contattarci in anticipo.',
       tags: ['reception', 'orari', 'assistenza', 'sempre', 'aperta']
     }
   }

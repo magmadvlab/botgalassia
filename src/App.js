@@ -22,13 +22,11 @@ const App = () => {
 
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
-    
-    // Aggiungi sinonimi comuni per la ricerca
-    const synonyms = {
-      'come arrivo': ['dove si trova', 'dove è', 'come raggiungere'],
-      'piscina': ['vasca', 'nuoto', 'bagno']
-    };
-    
+   const synonyms = {
+  'come arrivo': ['dove si trova', 'dove è', 'come raggiungere', 'come arrivare', 'dove trovo'],
+  'piscina': ['vasca', 'nuoto', 'bagno', 'wellness', 'spa', 'idromassaggio']
+};
+  
     // Espandi la query con i sinonimi
     let expandedQuery = processedInput;
     Object.entries(synonyms).forEach(([word, alternatives]) => {
@@ -50,8 +48,8 @@ const App = () => {
 
     const fuse = new Fuse(faqArray, {
       keys: [
-        { name: 'tags', weight: 0.4 },
-        { name: 'question', weight: 0.6 }
+        { name: 'tags', weight: 0.6 },
+        { name: 'question', weight: 0.4 }
       ],
       threshold: 0.3,
       minMatchCharLength: 2,

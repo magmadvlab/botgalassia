@@ -93,28 +93,41 @@ const App = () => {
 
   return (
     <div className="fixed inset-0 flex flex-col bg-gray-50">
-      <header className="bg-white border-b shadow-sm p-4">
+      <header className="bg-gradient-to-r from-[#B8860B] to-[#DAA520] p-4 border-b shadow-sm">
         <div className="flex flex-col items-center max-w-4xl mx-auto">
-          <div className="w-full max-w-[200px] sm:max-w-[250px] mb-2">
-            <img 
-              src="/logo-galassia.png" 
-              alt="Hotel Galassia" 
-              className="w-full h-auto"
-            />
+          {/* Logo Section */}
+          <div className="w-full flex justify-center items-center relative mb-2">
+            {/* Circle with dots */}
+            <div className="w-8 h-8 border-2 border-white rounded-full absolute left-[calc(50%-125px)] flex items-center justify-center">
+              <div className="flex space-x-1">
+                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+              </div>
+            </div>
+            {/* Hotel Name */}
+            <h1 className="text-3xl sm:text-4xl font-bold text-white">
+              Hotel Galassia
+            </h1>
           </div>
-          <div className="flex items-center space-x-1 text-[#B8860B] mb-1">
-            <span>★</span>
-            <span>★</span>
-            <span>★</span>
+
+          {/* Stars */}
+          <div className="flex items-center justify-center space-x-2 mb-1">
+            <span className="text-white text-lg">★</span>
+            <span className="text-white text-lg">★</span>
+            <span className="text-white text-lg">★</span>
           </div>
-          <div className="text-gray-600 text-sm font-medium mb-1">
+
+          {/* Location */}
+          <div className="text-white text-sm font-medium tracking-wide mb-1">
             PRATO NEVOSO
           </div>
+
+          {/* Website */}
           <a 
             href="https://pratonevoso.it" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-[#B8860B] text-sm hover:underline"
+            className="text-white text-sm hover:underline transition-colors"
           >
             pratonevoso.it
           </a>

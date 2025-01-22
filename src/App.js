@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 import logo from './logo-galassia-prato-nevoso.png';
+import Fuse from 'fuse.js';
 
-// Importa le FAQ dalle categorie esistenti
+// Importa le FAQ
 import { transportFAQ_IT } from './faq/it/transport_it';
 import { wellnessFAQ_IT } from './faq/it/wellness_it';
 import { skiFAQ_IT } from './faq/it/ski_it';
@@ -15,7 +16,6 @@ import { techServicesFAQ_IT } from './faq/it/tech_services_it';
 import { activitiesFAQ_IT } from './faq/it/activities_it';
 import { attractionsFAQ_IT } from './faq/it/attractions_it';
 
-// Combina tutte le FAQ in un oggetto
 const ALL_FAQ_IT = {
   trasporti: transportFAQ_IT,
   wellness: wellnessFAQ_IT,
@@ -32,10 +32,7 @@ const ALL_FAQ_IT = {
 
 const App = () => {
   const [messages, setMessages] = useState([
-    {
-      type: 'bot',
-      content: 'Benvenuto! Come posso aiutarti?',
-    }
+    { type: 'bot', content: 'Benvenuto! Come posso aiutarti?' }
   ]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
@@ -48,45 +45,54 @@ const App = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Nuova logica per trovare la migliore risposta
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
 
-    // Aggiunta di un controllo specifico per il "centro"
-    if (processedInput.includes('cosa posso fare in centro') || processedInput.includes('centro') || processedInput.includes('prato nevoso')) {
+    // Configura Fuse.js per fuzzy matching
+    const faqArray = Object.entries(ALL_FAQ_IT).flatMap(([categoryKey, category]) =>
+      Object.entries(category.questions).map(([questionKey, data]) => ({
+        category: category.title,
+        question: questionKey,
+        answer: data.answer,
+        tags: data.tags,
+      }))
+    );
+
+    const fuse = new Fuse(faqArray, {
+      keys: ['question', 'tags'],
+      threshold: 0.4, // Precisione fuzzy
+    });
+
+    const results = fuse.search(processedInput);
+
+    if (results.length > 0) {
+      const bestMatch = results[0].item;
       return {
-        title: attractionsFAQ_IT.title,
-        content: attractionsFAQ_IT.questions['attività'].answer
+        title: bestMatch.category,
+        content: bestMatch.answer
       };
     }
 
-    for (const [categoryKey, category] of Object.entries(ALL_FAQ_IT)) {
-      if (category.keywords.some(keyword => processedInput.includes(keyword))) {
-        for (const [questionKey, data] of Object.entries(category.questions)) {
-          if (processedInput.includes(questionKey.toLowerCase()) || 
-              data.tags.some(tag => processedInput.includes(tag))) {
-            return {
-              title: category.title,
-              content: data.answer
-            };
-          }
-        }
-        const firstQuestion = Object.values(category.questions)[0];
-        return {
-          title: category.title,
-          content: firstQuestion.answer
-        };
-      }
-    }
-    
     return {
       title: 'Info',
       content: 'Mi dispiace, non ho capito. Potresti riformulare la domanda?'
     };
   };
 
-  const handleFeedback = (index, feedbackType) => {
+  // Registra il feedback per analisi
+  const handleFeedback = (index, feedbackType, userInput) => {
     console.log(`Feedback ricevuto per il messaggio ${index}: ${feedbackType}`);
-    // Qui potresti salvare il feedback in un database o file per ulteriori analisi
+
+    // Invio a un endpoint API o file
+    fetch('/save-feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: userInput,
+        feedback: feedbackType
+      }),
+    });
   };
 
   const handleSubmit = (e) => {
@@ -109,25 +115,14 @@ const App = () => {
     <div className="fixed inset-0 flex flex-col bg-gray-50">
       <header className="bg-white p-4 border-b shadow-sm">
         <div className="flex flex-col items-center max-w-4xl mx-auto">
-          {/* Logo Section */}
           <img src={logo} alt="Hotel Galassia Logo" className="w-32 mb-3" />
-
-          {/* Hotel Name */}
-          <h1 className="text-3xl sm:text-4xl font-bold text-[#B8860B]">
-            Hotel Galassia
-          </h1>
-
-          {/* Stars */}
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#B8860B]">Hotel Galassia</h1>
           <div className="flex items-center justify-center space-x-2 mb-1">
             <span className="text-[#B8860B] text-lg">★</span>
             <span className="text-[#B8860B] text-lg">★</span>
             <span className="text-[#B8860B] text-lg">★</span>
           </div>
-
-          {/* Location */}
-          <div className="text-[#B8860B] text-sm font-medium tracking-wide mb-1">
-            PRATO NEVOSO
-          </div>
+          <div className="text-[#B8860B] text-sm font-medium tracking-wide mb-1">PRATO NEVOSO</div>
         </div>
       </header>
 
@@ -152,13 +147,13 @@ const App = () => {
               {message.type === 'bot' && (
                 <div className="flex space-x-2 mt-2">
                   <button
-                    onClick={() => handleFeedback(index, 'positive')}
+                    onClick={() => handleFeedback(index, 'positive', message.content)}
                     className="flex items-center text-[#B8860B] hover:opacity-75"
                   >
                     <ThumbsUp className="w-5 h-5" />
                   </button>
                   <button
-                    onClick={() => handleFeedback(index, 'negative')}
+                    onClick={() => handleFeedback(index, 'negative', message.content)}
                     className="flex items-center text-red-500 hover:opacity-75"
                   >
                     <ThumbsDown className="w-5 h-5" />

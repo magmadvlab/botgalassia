@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send, Globe } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import logo from './src/logo-galassia-prato-nevoso.png';
+import logo from './logo-galassia-prato-nevoso.png';
 
 const languages = {
   it: {

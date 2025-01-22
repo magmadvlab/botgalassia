@@ -62,7 +62,7 @@ const App = () => {
     // Configura Fuse.js
     const fuse = new Fuse(faqArray, {
       keys: ['question', 'tags'], // Cerca sia nelle domande che nei tag
-      threshold: 0.4, // Precisione fuzzy
+      threshold: 0.3, // Precisione fuzzy
     });
 
     const results = fuse.search(processedInput);

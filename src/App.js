@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
+import logo from './logo-galassia-prato-nevoso.png';
 
 // Importa le FAQ dalle categorie esistenti
 import { transportFAQ_IT } from './faq/it/transport_it';
@@ -93,44 +94,27 @@ const App = () => {
 
   return (
     <div className="fixed inset-0 flex flex-col bg-gray-50">
-      <header className="bg-gradient-to-r from-[#B8860B] to-[#DAA520] p-4 border-b shadow-sm">
+      <header className="bg-white p-4 border-b shadow-sm">
         <div className="flex flex-col items-center max-w-4xl mx-auto">
           {/* Logo Section */}
-          <div className="w-full flex justify-center items-center relative mb-2">
-            {/* Circle with dots */}
-            <div className="w-8 h-8 border-2 border-white rounded-full absolute left-[calc(50%-125px)] flex items-center justify-center">
-              <div className="flex space-x-1">
-                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-              </div>
-            </div>
-            {/* Hotel Name */}
-            <h1 className="text-3xl sm:text-4xl font-bold text-white">
-              Hotel Galassia
-            </h1>
-          </div>
+          <img src={logo} alt="Hotel Galassia Logo" className="w-32 mb-3" />
+
+          {/* Hotel Name */}
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#B8860B]">
+            Hotel Galassia
+          </h1>
 
           {/* Stars */}
           <div className="flex items-center justify-center space-x-2 mb-1">
-            <span className="text-white text-lg">★</span>
-            <span className="text-white text-lg">★</span>
-            <span className="text-white text-lg">★</span>
+            <span className="text-[#B8860B] text-lg">★</span>
+            <span className="text-[#B8860B] text-lg">★</span>
+            <span className="text-[#B8860B] text-lg">★</span>
           </div>
 
           {/* Location */}
-          <div className="text-white text-sm font-medium tracking-wide mb-1">
+          <div className="text-[#B8860B] text-sm font-medium tracking-wide mb-1">
             PRATO NEVOSO
           </div>
-
-          {/* Website */}
-          <a 
-            href="https://pratonevoso.it" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-white text-sm hover:underline transition-colors"
-          >
-            pratonevoso.it
-          </a>
         </div>
       </header>
 

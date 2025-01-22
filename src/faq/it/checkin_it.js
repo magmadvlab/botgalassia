@@ -46,4 +46,8 @@ export const checkinFAQ_IT = {
       tags: ['check-out', 'auto', 'parcheggio', 'uscita', 'fine']
     },
     'La reception è sempre aperta?': {
-      answer: 'Sì, la nostra reception è operativa 24 ore su 24, 7 giorni su 7, per garantirvi assistenza in qualsiasi momento. No
+      answer: 'Sì, la nostra reception è operativa 24 ore su 24, 7 giorni su 7, per garantirvi assistenza in qualsiasi momento.',
+      tags: ['reception', 'orari', 'assistenza', 'sempre', 'aperta']
+    }
+  }
+};

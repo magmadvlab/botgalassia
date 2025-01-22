@@ -2,9 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 import logo from './logo-galassia-prato-nevoso.png';
-import Fuse from 'fuse.js'; // Importa Fuse.js per fuzzy matching
-
-// Importa le FAQ aggiornate
+import Fuse from 'fuse.js';
 import { ALL_FAQ_IT } from './faq/it';
 
 const App = () => {
@@ -22,46 +20,64 @@ const App = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Nuova logica per trovare la migliore risposta con Fuse.js
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
 
-    // Trasforma le FAQ in un array per il fuzzy matching
+    // Prepara array di FAQ con keywords della categoria
     const faqArray = Object.entries(ALL_FAQ_IT).flatMap(([categoryKey, category]) =>
       Object.entries(category.questions).map(([questionKey, data]) => ({
         category: category.title,
         question: questionKey,
         answer: data.answer,
-        tags: data.tags,
+        tags: [...(data.tags || []), ...(category.keywords || [])],
+        keywords: category.keywords || []
       }))
     );
 
-    // Configura Fuse.js
+    // Configura Fuse.js con parametri ottimizzati
     const fuse = new Fuse(faqArray, {
       keys: [
-        { name: 'tags', weight: 0.9 },
-        { name: 'question', weight: 0.1 },
+        { name: 'tags', weight: 0.5 },
+        { name: 'question', weight: 0.3 },
+        { name: 'keywords', weight: 0.2 }
       ],
-      threshold: 0.25,
+      includeScore: true,
+      threshold: 0.4,
+      minMatchCharLength: 3,
+      ignoreLocation: true,
+      useExtendedSearch: true
     });
 
+    // Cerca nelle FAQ
     const results = fuse.search(processedInput);
-
+    
     console.log("Input utente:", userInput);
     console.log("Risultati Fuse.js:", results);
 
     if (results.length > 0) {
-      return results.slice(0, 3).map((result) => ({
-        title: result.item.category,
-        content: result.item.answer,
-      }));
+      // Filtra risultati per score e prendi i migliori 3
+      const bestResults = results
+        .filter(result => result.score < 0.6)
+        .slice(0, 3)
+        .map((result) => ({
+          title: result.item.category,
+          content: result.item.answer,
+          score: result.score
+        }));
+
+      if (bestResults.length > 0) {
+        return bestResults;
+      }
     }
 
-    // Log delle domande non corrisposte
+    // Log domande senza risposta
     fetch('/log-missing-question', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: userInput }),
+      body: JSON.stringify({ 
+        question: userInput,
+        timestamp: new Date().toISOString()
+      }),
     });
 
     return [{
@@ -78,6 +94,7 @@ const App = () => {
       body: JSON.stringify({
         question: userInput,
         feedback: feedbackType,
+        timestamp: new Date().toISOString()
       }),
     });
   };

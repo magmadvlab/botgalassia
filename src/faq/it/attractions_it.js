@@ -9,7 +9,7 @@ export const attractionsFAQ_IT = {
   ],
   questions: {
     'Cosa posso fare in conca?': {
-      answer: 'La conca di Prato Nevoso offre numerose attrazioni e attività:
+      answer: 'La conca di Prato Nevoso offre numerose attrazioni e attività':
 - Prato Nevoso Village, parco divertimenti ideale per famiglie
 - 12 impianti di risalita e 16 piste da sci per tutti i livelli
 - Pista di pattinaggio sul ghiaccio

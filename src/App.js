@@ -23,7 +23,9 @@ const App = () => {
     const processedInput = userInput.toLowerCase().trim();
     const synonyms = {
       'come arrivo': ['dove si trova', 'dove è', 'come raggiungere', 'come arrivare', 'dove trovo'],
-      'piscina': ['vasca', 'nuoto', 'bagno', 'wellness', 'spa', 'idromassaggio']
+      'piscina': ['vasca', 'nuoto', 'bagno', 'wellness', 'spa', 'idromassaggio'],
+      'check-in': ['arrivo', 'checkin', 'inizio soggiorno', 'entrata'],
+      'check-out': ['partenza', 'checkout', 'fine soggiorno', 'uscita'],
     };
 
     // Espandi la query con i sinonimi
@@ -42,15 +44,16 @@ const App = () => {
         question: questionKey,
         answer: data.answer,
         tags: [...(data.tags || []), ...(category.keywords || [])],
+        originalCategoryKey: categoryKey, // Per identificare la categoria originale
       }))
     );
 
     const fuse = new Fuse(faqArray, {
       keys: [
-        { name: 'tags', weight: 0.6 },
-        { name: 'question', weight: 0.4 },
+        { name: 'tags', weight: 0.7 },
+        { name: 'question', weight: 0.3 },
       ],
-      threshold: 0.3,
+      threshold: 0.2, // Matching più rigoroso
       minMatchCharLength: 2,
       ignoreLocation: true,
     });
@@ -61,7 +64,35 @@ const App = () => {
     console.log('Query espansa:', expandedQuery);
     console.log('Risultati Fuse.js:', results);
 
+    // Filtra i risultati per categoria se è specificata nell'input
     if (results.length > 0) {
+      if (processedInput.includes('check-in')) {
+        const checkInResult = results.find((result) =>
+          result.item.originalCategoryKey === 'checkin'
+        );
+        if (checkInResult) {
+          return [
+            {
+              title: checkInResult.item.category,
+              content: checkInResult.item.answer,
+            },
+          ];
+        }
+      } else if (processedInput.includes('check-out')) {
+        const checkOutResult = results.find((result) =>
+          result.item.originalCategoryKey === 'checkout'
+        );
+        if (checkOutResult) {
+          return [
+            {
+              title: checkOutResult.item.category,
+              content: checkOutResult.item.answer,
+            },
+          ];
+        }
+      }
+
+      // Restituisce il miglior risultato generico
       return results.slice(0, 1).map((result) => ({
         title: result.item.category,
         content: result.item.answer,

@@ -8,7 +8,14 @@ export const checkinFAQ_IT = {
     'hall', 'dove', 'come', 'quale', 'quanto', 'possibile', 'prima', 'dopo', 
     'anticipato', 'ritardo', 'uscita', 'tardi', 'prenotazione', 'posso', 'c\'è tempo',
     'ritardare', 'prolungare', 'lasciare tardi', 'venire presto', 'partire dopo',
-    'a che ora', 'quanto tempo', 'orari reception', 'checkin prima', 'checkout dopo'
+    'a che ora', 'quanto tempo', 'orari reception', 'checkin prima', 'checkout dopo',
+    'a che ora si entra', 'a che ora si esce', 'orario ingresso', 'orario uscita', 'quando uscire', 
+    'quando entrare', 'quando partire', 'a che ora lasciare', 'camera pronta quando', 'fine soggiorno', 
+    'rimanere tardi', 'venire presto', 'camera libera', 'a che ora devo lasciare', 'quando lasciare stanza', 
+    'quando posso partire', 'a che ora devo andare via', 'lasciare camera tardi', 'tenere stanza di più',
+    'ritardare uscita', 'prolungare soggiorno', 'andare via', 'stare di più', 'uscire presto', 'uscire tardi',
+    'camera disponibile quando', 'uscire prima', 'restare di più', 'dormire più a lungo', 'partire dopo l\'orario',
+    'camera quando disponibile', 'quando devo andare via', 'posso restare di più', 'posso ritardare uscita'
   ],
   questions: {
     'A che ora posso fare il check-in?': {
@@ -21,7 +28,7 @@ export const checkinFAQ_IT = {
     },
     'A che ora devo lasciare la stanza?': {
       answer: 'La camera deve essere liberata entro le 10:00 del giorno di partenza. Se avete necessità di tenere i bagagli più a lungo, la reception offre un servizio gratuito di deposito. Contattateci per organizzare un late check-out, se necessario.',
-      tags: ['check-out', 'camera', 'orari', 'partenza', 'uscita', 'fine', 'quando devo lasciare?', 'posso lasciare dopo?', 'lasciare stanza tardi?', 'checkout ritardato?', 'a che ora lasciare camera?']
+      tags: ['check-out', 'checkout', 'camera', 'orari', 'a che ora', 'uscita', 'lasciare stanza', 'quando devo lasciare', 'partenza', 'fine soggiorno', 'devo uscire', 'orario check-out', 'uscire camera', 'a che ora è il check-out', 'lasciare tardi', 'uscire dopo']
     },
     'Posso tenere la camera più a lungo?': {
       answer: 'Il check-out standard è alle 10:00. Per late check-out, verificate la disponibilità con la reception - potrebbe essere applicato un supplemento in base all\'orario richiesto.',

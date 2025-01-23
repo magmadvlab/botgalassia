@@ -1,4 +1,3 @@
-// FILE: App.js
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 import logo from './logo-galassia-prato-nevoso.png';
@@ -22,15 +21,15 @@ const App = () => {
 
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
-   const synonyms = {
-  'come arrivo': ['dove si trova', 'dove è', 'come raggiungere', 'come arrivare', 'dove trovo'],
-  'piscina': ['vasca', 'nuoto', 'bagno', 'wellness', 'spa', 'idromassaggio']
-};
-  
+    const synonyms = {
+      'come arrivo': ['dove si trova', 'dove è', 'come raggiungere', 'come arrivare', 'dove trovo'],
+      'piscina': ['vasca', 'nuoto', 'bagno', 'wellness', 'spa', 'idromassaggio']
+    };
+
     // Espandi la query con i sinonimi
     let expandedQuery = processedInput;
     Object.entries(synonyms).forEach(([word, alternatives]) => {
-      alternatives.forEach(alt => {
+      alternatives.forEach((alt) => {
         if (processedInput.includes(alt)) {
           expandedQuery = expandedQuery.replace(alt, word);
         }
@@ -42,30 +41,30 @@ const App = () => {
         category: category.title,
         question: questionKey,
         answer: data.answer,
-        tags: [...(data.tags || []), ...(category.keywords || [])]
+        tags: [...(data.tags || []), ...(category.keywords || [])],
       }))
     );
 
     const fuse = new Fuse(faqArray, {
       keys: [
         { name: 'tags', weight: 0.6 },
-        { name: 'question', weight: 0.4 }
+        { name: 'question', weight: 0.4 },
       ],
       threshold: 0.3,
       minMatchCharLength: 2,
-      ignoreLocation: true
+      ignoreLocation: true,
     });
 
     const results = fuse.search(expandedQuery);
-    
-    console.log("Input utente:", userInput);
-    console.log("Query espansa:", expandedQuery);
-    console.log("Risultati Fuse.js:", results);
-    
+
+    console.log('Input utente:', userInput);
+    console.log('Query espansa:', expandedQuery);
+    console.log('Risultati Fuse.js:', results);
+
     if (results.length > 0) {
-      return results.slice(0, 1).map(result => ({
+      return results.slice(0, 1).map((result) => ({
         title: result.item.category,
-        content: result.item.answer
+        content: result.item.answer,
       }));
     }
 
@@ -73,16 +72,18 @@ const App = () => {
     fetch('/log-missing-question', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         question: userInput,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       }),
     });
 
-    return [{
-      title: 'Info',
-      content: 'Mi dispiace, non ho capito. Potresti riformulare la domanda?',
-    }];
+    return [
+      {
+        title: 'Info',
+        content: 'Mi dispiace, non ho capito. Potresti riformulare la domanda?',
+      },
+    ];
   };
 
   const handleFeedback = (index, feedbackType, userInput) => {
@@ -93,7 +94,7 @@ const App = () => {
       body: JSON.stringify({
         question: userInput,
         feedback: feedbackType,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       }),
     });
   };

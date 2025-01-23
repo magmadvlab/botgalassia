@@ -1,49 +1,59 @@
-export const activitiesFAQ_IT = {
-  title: 'Attività e Servizi Extra',
+export const attractionsFAQ_IT = {
+  title: 'Attrazioni Locali, Attività e Servizi Extra',
   keywords: [
-    'motoslitta', 'ciaspole', 'village', 'snowtubing', 'attività', 'sala giochi',
-    'biliardo', 'calcio balilla', 'animazione', 'bambini', 'intrattenimento', 
-    'escursioni', 'prenotazioni', 'divertimento', 'tempo libero', 'servizi',
-    'hotel', 'offerte', 'discoteca', 'eventi', 'animatori', 'feste',
-    'relax', 'vista', 'monti innevati', 'piste da sci', 'divanetti', 'bar',
-    'giochi', 'spettacoli', 'serate', 'cose da fare', 'dove giocare', 'svago'
+    'attrazioni', 'visitare', 'turismo', 'prato nevoso', 'escursioni', 'gite', 'attività',
+    'conca', 'centro', 'cosa fare', 'intrattenimento', 'svago', 'tempo libero', 'divertimento', 
+    'servizi', 'negozi', 'shopping', 'sport', 'inverno', 'estate',
+    'motoslitta', 'ciaspole', 'village', 'snowtubing', 'sala giochi', 'biliardo', 'calcio balilla', 
+    'animazione', 'bambini', 'piste', 'eventi', 'gastronomia', 'prodotti tipici', 'spettacoli', 'serate', 'dove andare', 'cose da vedere'
   ],
   questions: {
-    'Quali attività sono disponibili in hotel?': {
-      answer: 'L\'hotel dispone di una sala giochi subito dopo la reception con biliardo e calcio balilla, una sala discoteca e una sala relax con vista sui monti innevati. Inoltre, è presente un servizio di animazione per bambini con attività organizzate.',
-      tags: ['attività', 'sala giochi', 'animazione', 'intrattenimento', 'biliardo', 'calcio balilla', 'hotel', 'relax', 'vista', 'giochi', 'cosa posso fare?', 'dove giocare?', 'cose da fare in hotel?']
+    'Cosa posso fare in conca?': {
+      answer: 'La conca di Prato Nevoso offre numerose attrazioni e attività:
+- Prato Nevoso Village, parco divertimenti ideale per famiglie
+- 12 impianti di risalita e 16 piste da sci per tutti i livelli
+- Pista di pattinaggio sul ghiaccio
+- Snowtubing e giri in motoslitta
+- Negozi di abbigliamento e articoli sportivi
+- Bar, ristoranti e locali per l\'après-ski
+- Scuole di sci e noleggio attrezzature
+- Eventi e animazione
+In estate: percorsi mountain bike, trekking, arrampicata e parco avventura. La reception può fornirvi informazioni dettagliate su ogni attività e aiutarvi con le prenotazioni.',
+      tags: ['conca', 'centro', 'attività', 'divertimento', 'sport', 'servizi', 'tempo libero', 'cosa fare in conca?', 'attività in conca', 'dove andare in conca?']
     },
-    'Cosa offre la sala relax?': {
-      answer: 'La sala relax dell\'hotel è uno spazio ampio con divanetti rossi e una splendida vista sui monti innevati e sulle piste da sci. È dotata di un bar annesso, dove potrete gustare drink in un ambiente tranquillo e accogliente.',
-      tags: ['relax', 'vista', 'monti innevati', 'piste da sci', 'divanetti', 'bar', 'tempo libero', 'spazio relax', 'dove rilassarsi?', 'dove trovo la sala relax?', 'posso bere qualcosa al relax?']
+    'Cosa posso fare in centro?': {
+      answer: 'In centro a Prato Nevoso troverete:
+- Negozi di articoli sportivi e abbigliamento
+- Prato Nevoso Village, perfetto per i bambini
+- Piste di pattinaggio e snowtubing
+- Bar e ristoranti per l\'après-ski
+- Eventi e spettacoli. Per ulteriori informazioni, rivolgetevi alla reception.',
+      tags: ['centro', 'conca', 'attività', 'divertimento', 'tempo libero', 'shopping', 'cosa c\'è in centro?', 'cosa fare in centro?', 'dove andare in centro?']
     },
-    'Dove si trova la sala giochi?': {
-      answer: 'La sala giochi si trova subito dopo la reception ed è dotata di biliardo e calcio balilla.',
-      tags: ['sala giochi', 'biliardo', 'calcio balilla', 'intrattenimento', 'giochi', 'dove si gioca?', 'dove trovo la sala giochi?', 'dove stanno i giochi?', 'posso giocare al biliardo?', 'gioco al calcio balilla?']
+    'Cosa offre Prato Nevoso Village?': {
+      answer: 'Prato Nevoso Village è un parco divertimenti perfetto per i bambini, con attrazioni come snowtubing e animazione. È raggiungibile facilmente con la nostra navetta gratuita. Contattate la reception per informazioni e orari.',
+      tags: ['village', 'bambini', 'divertimento', 'attività', 'centro', 'dove sta il village?', 'cosa c\'è al village?', 'come arrivare al village?']
     },
-    'Ci sono attività per i bambini?': {
-      answer: 'Sì, l\'hotel offre un servizio di animazione per bambini con attività organizzate per il loro divertimento.',
-      tags: ['bambini', 'animazione', 'intrattenimento', 'famiglie', 'giochi', 'attività per bimbi', 'cosa fanno i bambini?', 'cosa c\'è per i piccoli?', 'giochi per bambini?']
+    'Ci sono eventi speciali durante l\'anno?': {
+      answer: 'Prato Nevoso organizza eventi durante tutto l\'anno:
+- Eventi sportivi in inverno
+- Festival musicali in estate
+- Sagre gastronomiche
+- Eventi per bambini
+Contattate la reception per il calendario aggiornato.',
+      tags: ['eventi', 'manifestazioni', 'festival', 'bambini', 'cosa c\'è oggi?', 'eventi in corso?', 'ci sono manifestazioni?']
     },
-    'Come posso prenotare un giro in motoslitta?': {
-      answer: 'Puoi chiamare il numero +39 349 144 4433.',
-      tags: ['motoslitta', 'prenotazioni', 'escursioni', 'sport', 'giro in motoslitta', 'come prenotare motoslitta?', 'dove trovo motoslitta?', 'motoslitta disponibile?']
+    'Dove posso fare shopping di prodotti tipici?': {
+      answer: 'In conca troverete negozi di prodotti tipici locali e articoli sportivi. Per ulteriori prodotti, visitate i mercati locali o le botteghe nei paesi vicini come Mondovì.',
+      tags: ['prodotti tipici', 'shopping', 'gastronomia', 'negozi', 'dove compro roba tipica?', 'shopping prodotti locali?', 'dove si trovano prodotti tipici?']
     },
-    'Dove si organizzano le ciaspolate?': {
-      answer: 'Puoi chiamare il numero +39 0174 334 151.',
-      tags: ['ciaspole', 'escursioni', 'inverno', 'sport', 'prenotazioni', 'dove fare ciaspole?', 'ciaspolata organizzata?', 'come prenotare ciaspolata?', 'ciaspole dove stanno?']
+    'Dove posso rilassarmi dopo una giornata sulle piste?': {
+      answer: 'La sala relax dell\'hotel, con vista sui monti innevati, è perfetta per rilassarsi. Potete gustare un drink al bar annesso o semplicemente godervi la vista.',
+      tags: ['relax', 'hotel', 'piste', 'bar', 'dove rilassarsi?', 'cosa fare dopo sci?', 'spazio relax?']
     },
-    'Come posso prenotare attività extra come snowtubing?': {
-      answer: 'Puoi chiamare il numero +39 0174 334 151.',
-      tags: ['snowtubing', 'prenotazioni', 'attività', 'sport', 'dove fare snowtubing?', 'prenotare snowtubing?', 'snowtubing disponibile?', 'come prenotare snowtubing?']
-    },
-    'Ci sono spettacoli o eventi serali?': {
-      answer: 'Sì, durante la settimana organizziamo serate speciali con spettacoli e intrattenimento. Verificate il programma alla reception.',
-      tags: ['spettacoli', 'eventi', 'serate', 'intrattenimento', 'cosa c\'è stasera?', 'serata speciale?', 'cosa fanno alla sera?']
-    },
-    'Cosa offre la sala discoteca?': {
-      answer: 'La sala discoteca dell\'hotel è uno spazio dedicato a feste ed eventi privati, organizzabili su richiesta con l\'assistenza dei nostri animatori. Contattate la reception per maggiori informazioni.',
-      tags: ['discoteca', 'feste', 'eventi', 'animazione', 'intrattenimento', 'discoteca privata?', 'organizzare festa?', 'cosa si fa in discoteca?']
+    'Ci sono attività serali?': {
+      answer: 'Sì, Prato Nevoso offre eventi serali come serate musicali, cinema all\'aperto (in estate) e après-ski nei locali del centro.',
+      tags: ['serate', 'divertimento', 'eventi', 'attività', 'cosa c\'è stasera?', 'eventi serali?', 'cosa fare di sera?']
     }
   }
 };

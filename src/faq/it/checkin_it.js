@@ -5,7 +5,10 @@ export const checkinFAQ_IT = {
     'registrazione', 'arrivo', 'anticipato', 'prenotazione', 'posso', 'a che ora', 
     'quanto tempo', 'checkin prima', 'a che ora si entra', 'orario ingresso', 
     'quando entrare', 'quando posso arrivare', 'venire presto', 'inizio soggiorno', 
-    'check-in presto', 'checkin anticipato', 'checkin camera', 'camera pronta quando'
+    'check-in presto', 'checkin anticipato', 'checkin camera', 'camera pronta quando',
+    'orario check-in', 'a che ora è il check-in', 'quando è il check-in', 'check-in?', 
+    'quando arrivo', 'a che ora il check in', 'inizio camera', 'posso fare il check-in', 
+    'quando posso fare il check-in'
   ],
   questions: {
     'A che ora posso fare il check-in?': {

@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 import logo from './logo-galassia-prato-nevoso.png';
 import Fuse from 'fuse.js';
-import { ALL_FAQ_IT } from './faq/it';
+import { checkinFAQ_IT } from './faq/it/checkin_it';
+import { checkoutFAQ_IT } from './faq/it/checkout_it';
+import { activitiesFAQ_IT } from './faq/it/activities_it';
+import { attractionsFAQ_IT } from './faq/it/attractions_it';
+import { skiFAQ_IT } from './faq/it/ski_it';
+import { techServicesFAQ_IT } from './faq/it/tech_services_it';
+import { transportFAQ_IT } from './faq/it/transport_it';
+import { wellnessFAQ_IT } from './faq/it/wellness_it';
 
 const App = () => {
   const [messages, setMessages] = useState([
@@ -21,32 +28,59 @@ const App = () => {
 
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
+
+    const categoryMap = {
+      'check-in': checkinFAQ_IT,
+      'check-out': checkoutFAQ_IT,
+      'attività': activitiesFAQ_IT,
+      'attrazioni': attractionsFAQ_IT,
+      'sci': skiFAQ_IT,
+      'servizi tecnici': techServicesFAQ_IT,
+      'trasporti': transportFAQ_IT,
+      'benessere': wellnessFAQ_IT,
+    };
+
     const synonyms = {
-      'come arrivo': ['dove si trova', 'dove è', 'come raggiungere', 'come arrivare', 'dove trovo'],
-      'piscina': ['vasca', 'nuoto', 'bagno', 'wellness', 'spa', 'idromassaggio'],
       'check-in': ['checkin', 'inizio soggiorno', 'entrata'],
       'check-out': ['checkout', 'fine soggiorno', 'uscita'],
+      'attività': ['escursioni', 'sport', 'attività'],
+      'attrazioni': ['cosa vedere', 'luoghi', 'attrazioni'],
+      'sci': ['piste', 'sci', 'neve', 'snowboard'],
+      'servizi tecnici': ['tecnologia', 'wifi', 'internet', 'connessione', 'servizi tecnologici'],
+      'trasporti': ['trasporto', 'bus', 'navetta', 'shuttle', 'come arrivare'],
+      'benessere': ['spa', 'wellness', 'benessere', 'massaggi', 'relax'],
     };
 
     let expandedQuery = processedInput;
-    Object.entries(synonyms).forEach(([word, alternatives]) => {
+    let selectedCategory = null;
+
+    // Trova la categoria corretta
+    Object.entries(synonyms).forEach(([category, alternatives]) => {
       alternatives.forEach((alt) => {
         const regex = new RegExp(`\\b${alt}\\b`, 'gi');
         if (regex.test(processedInput)) {
-          expandedQuery = expandedQuery.replace(regex, word);
+          expandedQuery = expandedQuery.replace(regex, category);
+          selectedCategory = categoryMap[category];
         }
       });
     });
 
-    const faqArray = Object.entries(ALL_FAQ_IT).flatMap(([categoryKey, category]) =>
-      Object.entries(category.questions).map(([questionKey, data]) => ({
-        category: category.title,
-        question: questionKey,
-        answer: data.answer,
-        tags: [...(data.tags || []), ...(category.keywords || [])],
-        originalCategoryKey: categoryKey,
-      }))
-    );
+    if (!selectedCategory) {
+      return [
+        {
+          title: 'Info',
+          content: 'Mi dispiace, non ho capito. Potresti riformulare la domanda?',
+        },
+      ];
+    }
+
+    // Prepara i dati delle FAQ per la ricerca
+    const faqArray = Object.entries(selectedCategory.questions).map(([questionKey, data]) => ({
+      category: selectedCategory.title,
+      question: questionKey,
+      answer: data.answer,
+      tags: data.tags || [],
+    }));
 
     const fuse = new Fuse(faqArray, {
       keys: [
@@ -59,10 +93,6 @@ const App = () => {
     });
 
     const results = fuse.search(expandedQuery);
-
-    console.log('Input utente:', userInput);
-    console.log('Query espansa:', expandedQuery);
-    console.log('Risultati Fuse.js:', results);
 
     if (results.length > 0) {
       return results.slice(0, 1).map((result) => ({

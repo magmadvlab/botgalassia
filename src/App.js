@@ -24,15 +24,16 @@ const App = () => {
     const synonyms = {
       'come arrivo': ['dove si trova', 'dove è', 'come raggiungere', 'come arrivare', 'dove trovo'],
       'piscina': ['vasca', 'nuoto', 'bagno', 'wellness', 'spa', 'idromassaggio'],
-      'check-in': ['arrivo', 'checkin', 'inizio soggiorno', 'entrata'],
-      'check-out': ['partenza', 'checkout', 'fine soggiorno', 'uscita'],
+      'check-in': ['checkin', 'inizio soggiorno', 'entrata'],
+      'check-out': ['checkout', 'fine soggiorno', 'uscita'],
     };
 
     let expandedQuery = processedInput;
     Object.entries(synonyms).forEach(([word, alternatives]) => {
       alternatives.forEach((alt) => {
-        if (processedInput.includes(alt)) {
-          expandedQuery = expandedQuery.replace(alt, word);
+        const regex = new RegExp(`\\b${alt}\\b`, 'gi');
+        if (regex.test(processedInput)) {
+          expandedQuery = expandedQuery.replace(regex, word);
         }
       });
     });

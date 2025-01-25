@@ -1,4 +1,4 @@
-export const activities_and_attractions_faq_it = {
+export const activities_it = {
 
 };
 

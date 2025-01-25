@@ -1,5 +1,7 @@
 export const activitiesAndAttractionsFAQ_IT = {
 
+};
+
   title: 'Attività e Attrazioni',
   keywords: [
     'attività', 'servizi', 'animazione', 'eventi', 'divertimento', 

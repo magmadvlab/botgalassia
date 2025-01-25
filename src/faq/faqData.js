@@ -1,5 +1,4 @@
-// Import delle FAQ individuali
-Copyimport activitiesAndAttractions_IT from './it/activities_and_attractions_faq_it.js';
+import activitiesAndAttractions_IT from './it/activities_and_attractions_faq_it.js';
 import checkin_IT from './it/checkin_it.js';
 import checkout_IT from './it/checkout_it.js';
 import dining_IT from './it/dining_it.js';

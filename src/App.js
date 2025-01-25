@@ -36,13 +36,31 @@ const App = () => {
     scrollToBottom();
   }, [messages]);
 
+  const synonyms = {
+    "piscina": ["vasca", "nuoto", "bagno", "wellness", "spa", "idromassaggio"],
+    "check-in": ["arrivo", "registrazione", "inizio soggiorno"],
+    "check-out": ["partenza", "fine soggiorno", "uscita"],
+  };
+
+  const expandInput = (userInput) => {
+    let expandedInput = userInput;
+    Object.entries(synonyms).forEach(([key, values]) => {
+      values.forEach((synonym) => {
+        if (userInput.includes(synonym)) {
+          expandedInput = expandedInput.replace(synonym, key);
+        }
+      });
+    });
+    return expandedInput;
+  };
+
   const findBestResponse = (userInput) => {
-    const processedInput = userInput.toLowerCase().trim();
-    
+    const processedInput = expandInput(userInput.toLowerCase().trim());
+
     const findMatchingCategory = (input) => {
       for (const [category, data] of Object.entries(FAQData)) {
         const keywords = [...(data.keywords || [])];
-        if (keywords.some(keyword => input.includes(keyword.toLowerCase()))) {
+        if (keywords.some((keyword) => input.includes(keyword.toLowerCase()))) {
           return { category, data };
         }
       }
@@ -52,10 +70,10 @@ const App = () => {
     const findMatchingQuestion = (categoryData, input) => {
       for (const [question, data] of Object.entries(categoryData.questions)) {
         const tags = [...(data.tags || [])];
-        if (tags.some(tag => input.includes(tag.toLowerCase()))) {
+        if (tags.some((tag) => input.includes(tag.toLowerCase()))) {
           return {
             title: categoryData.title,
-            content: data.answer
+            content: data.answer,
           };
         }
       }
@@ -80,10 +98,12 @@ const App = () => {
       }),
     }).catch(console.error);
 
-    return [{
-      title: 'Info',
-      content: 'Mi dispiace, non ho capito. Potresti riformulare la domanda?'
-    }];
+    return [
+      {
+        title: 'Info',
+        content: 'Mi dispiace, non ho capito. Prova a chiedere usando parole chiave come "piscina", "check-in" o "navetta".',
+      },
+    ];
   };
 
   const handleFeedback = (index, feedbackType, userInput) => {
@@ -104,13 +124,13 @@ const App = () => {
 
     const userMessage = { type: 'user', content: input };
     const responses = findBestResponse(input);
-    const botMessages = responses.map(res => ({
+    const botMessages = responses.map((res) => ({
       type: 'bot',
       title: res.title,
       content: res.content,
     }));
 
-    setMessages(prev => [...prev, userMessage, ...botMessages]);
+    setMessages((prev) => [...prev, userMessage, ...botMessages]);
     setInput('');
   };
 

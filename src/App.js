@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 import logo from './logo-galassia-prato-nevoso.png';
-import { FAQData } from './faq/faqData';
+import faqData from './faq/faqData';
 
 const Header = () => {
   return (

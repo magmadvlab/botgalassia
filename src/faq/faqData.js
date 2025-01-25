@@ -10,16 +10,18 @@ import { transportFAQ_IT as transport_IT } from './it/transport_it';
 import { wellnessFAQ_IT as wellness_IT } from './it/wellness_it';
 
 const faqData = {
- activities: activities_it, // Cambiato il nome della chiave
- checkin: checkin_IT,
- checkout: checkout_IT,
- dining: dining_IT,
- emergency: emergency_IT,
- pets: pets_IT,
- ski: ski_IT,
- techServices: techServices_IT,
- transport: transport_IT,
- wellness: wellness_IT
+  activities: activities_it,
+  checkin: checkin_IT,
+  checkout: checkout_IT,
+  dining: dining_IT,
+  emergency: emergency_IT,
+  pets: pets_IT,
+  ski: ski_IT,
+  techServices: techServices_IT,
+  transport: transport_IT,
+  wellness: wellness_IT,
 };
+
+console.log('FAQ Data:', faqData); // Debug per verificare il contenuto
 
 export default faqData;

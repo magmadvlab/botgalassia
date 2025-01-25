@@ -3,60 +3,107 @@ import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 import logo from './logo-galassia-prato-nevoso.png';
 import { FAQData } from './faq/faqData';
 
-[Il resto del codice rimane identico fino alla definizione di findBestResponse]
+const Header = () => {
+  return (
+    <header className="bg-white p-4 border-b shadow-sm">
+      <div className="flex flex-col items-center max-w-4xl mx-auto">
+        <img src={logo} alt="Hotel Galassia Logo" className="w-32 mb-3" />
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#B8860B]">Hotel Galassia</h1>
+        <div className="flex items-center justify-center space-x-2 mb-1">
+          <span className="text-[#B8860B] text-lg">★</span>
+          <span className="text-[#B8860B] text-lg">★</span>
+          <span className="text-[#B8860B] text-lg">★</span>
+        </div>
+        <div className="text-[#B8860B] text-sm font-medium tracking-wide mb-1">PRATO NEVOSO</div>
+      </div>
+    </header>
+  );
+};
 
-const findBestResponse = (userInput) => {
-  const processedInput = expandInput(userInput.toLowerCase().trim());
+const App = () => {
+  const [messages, setMessages] = useState([
+    { type: 'bot', content: 'Benvenuto! Come posso aiutarti?' },
+  ]);
+  const [input, setInput] = useState('');
+  const messagesEndRef = useRef(null);
 
-  const calculateMatchScore = (input, tags) => {
-    return tags.reduce((score, tag) => {
-      if (input.includes(tag.toLowerCase())) {
-        score += tag.length / input.length;
-      }
-      return score;
-    }, 0);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  let bestMatch = null;
-  let bestScore = 0;
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-  for (const [category, data] of Object.entries(FAQData)) {
-    const allTags = [...(data.keywords || [])];
-    const categoryScore = calculateMatchScore(processedInput, allTags);
-    
-    if (categoryScore > 0) {
-      for (const [question, qData] of Object.entries(data.questions)) {
-        const score = calculateMatchScore(processedInput, [...qData.tags, ...allTags]);
-        if (score > bestScore) {
-          bestScore = score;
-          bestMatch = {
-            title: data.title,
-            content: qData.answer
-          };
+  const synonyms = {
+    "piscina": ["vasca", "nuoto", "bagno", "wellness", "spa", "idromassaggio"],
+    "check-in": ["arrivo", "registrazione", "inizio soggiorno"],
+    "check-out": ["partenza", "fine soggiorno", "uscita"],
+  };
+
+  const expandInput = (userInput) => {
+    let expandedInput = userInput;
+    Object.entries(synonyms).forEach(([key, values]) => {
+      values.forEach((synonym) => {
+        if (userInput.includes(synonym)) {
+          expandedInput = expandedInput.replace(synonym, key);
+        }
+      });
+    });
+    return expandedInput;
+  };
+
+  const findBestResponse = (userInput) => {
+    const processedInput = expandInput(userInput.toLowerCase().trim());
+
+    const calculateMatchScore = (input, tags) => {
+      return tags.reduce((score, tag) => {
+        if (input.includes(tag.toLowerCase())) {
+          score += tag.length / input.length;
+        }
+        return score;
+      }, 0);
+    };
+
+    let bestMatch = null;
+    let bestScore = 0;
+
+    for (const [category, data] of Object.entries(FAQData)) {
+      const allTags = [...(data.keywords || [])];
+      const categoryScore = calculateMatchScore(processedInput, allTags);
+      
+      if (categoryScore > 0) {
+        for (const [question, qData] of Object.entries(data.questions)) {
+          const score = calculateMatchScore(processedInput, [...qData.tags, ...allTags]);
+          if (score > bestScore) {
+            bestScore = score;
+            bestMatch = {
+              title: data.title,
+              content: qData.answer
+            };
+          }
         }
       }
     }
-  }
 
-  if (bestMatch && bestScore > 0.3) {
-    return [bestMatch];
-  }
+    if (bestMatch && bestScore > 0.3) {
+      return [bestMatch];
+    }
 
-  // Log missing questions
-  fetch('/log-missing-question', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      question: userInput,
-      timestamp: new Date().toISOString(),
-    }),
-  }).catch(console.error);
+    fetch('/log-missing-question', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: userInput,
+        timestamp: new Date().toISOString(),
+      }),
+    }).catch(console.error);
 
-  return [{
-    title: 'Info',
-    content: 'Mi dispiace, non ho capito. Prova a chiedere usando parole chiave come "piscina", "check-in" o "navetta".'
-  }];
-};
+    return [{
+      title: 'Info',
+      content: 'Mi dispiace, non ho capito. Prova a chiedere usando parole chiave come "piscina", "check-in" o "navetta".'
+    }];
+  };
 
   const handleFeedback = (index, feedbackType, userInput) => {
     fetch('/save-feedback', {
@@ -89,7 +136,6 @@ const findBestResponse = (userInput) => {
   return (
     <div className="fixed inset-0 flex flex-col bg-gray-50">
       <Header />
-
       <main className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
         {messages.map((message, index) => (
           <div

@@ -1,9 +1,6 @@
 export const activities_it = {
-
-};
-
   title: 'Attività e Attrazioni',
-   keywords: [
+  keywords: [
     'attività', 'servizi', 'animazione', 'eventi', 'divertimento', 
     'ciaspole', 'snowtubing', 'sala giochi', 'bambini', 'piste da sci',
     'prato nevoso', 'escursioni', 'shopping', 'relax', 'motoslitta', 'escursioni',

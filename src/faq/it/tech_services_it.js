@@ -7,11 +7,11 @@ export const techServicesFAQ_IT = {
   ],
   questions: {
     'È disponibile il Wi-Fi?': {
-      answer: 'Sì, il Wi-Fi è gratuito in tutto l\'hotel. La password è: **Galassia2023**.',
+      answer: 'Sì, il Wi-Fi è gratuito in tutto l\'hotel. La password è: Galassia2023.',
       tags: ['wifi', 'internet', 'disponibilità', 'password', 'rete']
     },
     'Come mi connetto al Wi-Fi?': {
-      answer: 'Ogni area dell\'hotel ha una rete Wi-Fi con un nome diverso per garantire la migliore connessione:\n\n- Reception e bar: **Wifi Galassia**\n- Piano 1 (camere 101-116): **Wifi_Galassia 1P Dx/Sx**\n- Piano 2: **Wifi_Galassia 2P Dx/Sx**\n\nUsa la password **Galassia2023** per accedere. Ti consigliamo di selezionare la rete con il segnale più forte nella tua area.',
+      answer: 'Ogni area dell\'hotel ha una rete Wi-Fi con un nome diverso per garantire la migliore connessione:\n\n- Reception e bar: **Wifi Galassia**\n- Piano 1 (camere 101-116): **Wifi_Galassia 1P Dx/Sx**\n- Piano 2: **Wifi_Galassia 2P Dx/Sx**\n\nUsa la password Galassia2023 per accedere. Ti consigliamo di selezionare la rete con il segnale più forte nella tua area.',
       tags: ['wifi', 'connessione', 'rete', 'password', 'collegamento']
     },
     'Qual è la password del Wi-Fi?': {

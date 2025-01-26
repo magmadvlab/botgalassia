@@ -74,7 +74,7 @@ const App = () => {
       
       if (categoryScore > 0) {
         for (const [question, qData] of Object.entries(data.questions)) {
-          const score = calculateMatchScore(processedInput, [...qData.tags, ...allTags]);
+          const score = calculateMatchScore(processedInput, [...(qData.tags || []).map(tag => tag.toLowerCase()), ...allTags]);
           if (score > bestScore) {
             bestScore = score;
             bestMatch = {

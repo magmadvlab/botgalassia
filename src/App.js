@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
-import logo from './logo-hotel-galassia-prato-nevoso-01.png';
+import logo from './src/logo-hotel-galassia-prato-nevoso-01.png';
 import faqData from './faq/faqData';
 
 const Header = () => {

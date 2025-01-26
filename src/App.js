@@ -68,7 +68,7 @@ const App = () => {
     let bestMatch = null;
     let bestScore = 0;
 
-    for (const [category, data] of Object.entries(FAQData)) {
+    for (const [category, data] of Object.entries(faqData)) {
       const allTags = [...(data.keywords || [])];
       const categoryScore = calculateMatchScore(processedInput, allTags);
       

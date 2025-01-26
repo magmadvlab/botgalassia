@@ -1,16 +1,17 @@
+```javascript
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
-import logo from './src/logo-hotel-galassia-prato-nevoso-01.png';
+import logo from './logo-hotel-galassia-prato-nevoso-01.png';
 import faqData from './faq/faqData';
 
 const Header = () => {
- return (
-   <header className="bg-[#B8860B] p-4">
-     <div className="flex flex-col items-center max-w-4xl mx-auto">
-       <img src={logo} alt="Hotel Galassia Logo" className="w-48 mb-2" />
-     </div>
-   </header>
- );
+  return (
+    <header className="bg-[#B8860B] p-4">
+      <div className="flex flex-col items-center max-w-4xl mx-auto">
+        <img src={logo} alt="Hotel Galassia Logo" className="w-48 mb-2" />
+      </div>
+    </header>
+  );
 };
 
 const transformations = {
@@ -48,9 +49,6 @@ const App = () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  // Il resto del tuo codice rimane invariato
-};
 
   useEffect(() => {
     scrollToBottom();
@@ -233,3 +231,4 @@ const App = () => {
 };
 
 export default App;
+```

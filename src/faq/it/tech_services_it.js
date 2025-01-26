@@ -15,7 +15,7 @@ export const techServicesFAQ_IT = {
       tags: ['wifi', 'connessione', 'rete', 'password', 'collegamento']
     },
     'Qual è la password del Wi-Fi?': {
-      answer: 'La password per tutte le reti Wi-Fi dell\'hotel è: **Galassia2023**.',
+      answer: 'La password per tutte le reti Wi-Fi dell\'hotel è: Galassia2023.',
       tags: ['wifi', 'password', 'accesso', 'rete']
     },
     'Ci sono TV nelle camere?': {

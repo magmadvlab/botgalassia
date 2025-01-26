@@ -41,16 +41,20 @@ const App = () => {
     "check-out": ["partenza", "fine soggiorno", "uscita"],
   };
 
-  const expandInput = (userInput) => {
-    let expandedInput = userInput;
-    Object.entries(synonyms).forEach(([key, values]) => {
-      values.forEach((synonym) => {
-        if (userInput.includes(synonym)) {
-          expandedInput = expandedInput.replace(synonym, key);
-        }
-      });
+ const expandInput = (userInput) => {
+  let expandedInput = userInput;
+  if (userInput.includes('check in')) {
+    expandedInput = expandedInput.replace('check in', 'check-in');
+  }
+  Object.entries(synonyms).forEach(([key, values]) => {
+    values.forEach((synonym) => {
+      if (userInput.includes(synonym)) {
+        expandedInput = expandedInput.replace(synonym, key);
+      }
     });
-    return expandedInput;
+  });
+  return expandedInput;
+};
   };
 
   const findBestResponse = (userInput) => {

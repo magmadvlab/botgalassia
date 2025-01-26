@@ -1,4 +1,3 @@
-```javascript
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send } from 'lucide-react';
 import logo from './logo-hotel-galassia-prato-nevoso-01.png';
@@ -8,7 +7,8 @@ const Header = () => {
   return (
     <header className="bg-[#B8860B] p-4">
       <div className="flex flex-col items-center max-w-4xl mx-auto">
-        <img src={logo} alt="Hotel Galassia Logo" className="w-48 mb-2" />
+        <img src={logo} alt="Hotel Galassia Logo" className="w-32 mb-2" />
+        <div className="text-white text-sm">PRATO NEVOSO ★★★</div>
       </div>
     </header>
   );
@@ -38,10 +38,7 @@ const pluralSingular = {
 
 const App = () => {
   const [messages, setMessages] = useState([
-    { 
-      type: 'bot', 
-      content: 'Ciao, sono Lumia ✨, la tua assistente virtuale dell\'Hotel Galassia! Sono qui per illuminare il tuo soggiorno e rispondere a tutte le tue domande. Come posso aiutarti oggi?' 
-    },
+    { type: 'bot', content: 'Ciao, sono Lunaria ✨, l\'assistente virtuale dell\'Hotel Galassia. Sono qui per guidarti tra le stelle alpine e rispondere a tutte le tue domande sul soggiorno. Come posso aiutarti?' },
   ]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
@@ -231,4 +228,3 @@ const App = () => {
 };
 
 export default App;
-```

@@ -41,20 +41,19 @@ const App = () => {
     "check-out": ["partenza", "fine soggiorno", "uscita"],
   };
 
- const expandInput = (userInput) => {
-  let expandedInput = userInput;
-  if (userInput.includes('check in')) {
-    expandedInput = expandedInput.replace('check in', 'check-in');
-  }
-  Object.entries(synonyms).forEach(([key, values]) => {
-    values.forEach((synonym) => {
-      if (userInput.includes(synonym)) {
-        expandedInput = expandedInput.replace(synonym, key);
-      }
+  const expandInput = (userInput) => {
+    let expandedInput = userInput;
+    if (userInput.includes('check in')) {
+      expandedInput = expandedInput.replace('check in', 'check-in');
+    }
+    Object.entries(synonyms).forEach(([key, values]) => {
+      values.forEach((synonym) => {
+        if (userInput.includes(synonym)) {
+          expandedInput = expandedInput.replace(synonym, key);
+        }
+      });
     });
-  });
-  return expandedInput;
-};
+    return expandedInput;
   };
 
   const findBestResponse = (userInput) => {
@@ -75,7 +74,7 @@ const App = () => {
     for (const [category, data] of Object.entries(faqData)) {
       const allTags = [...(data.keywords || [])];
       const categoryScore = calculateMatchScore(processedInput, allTags);
-      
+
       if (categoryScore > 0) {
         for (const [question, qData] of Object.entries(data.questions)) {
           const score = calculateMatchScore(processedInput, [...(qData.tags || []).map(tag => tag.toLowerCase()), ...allTags]);

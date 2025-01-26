@@ -20,6 +20,28 @@ const Header = () => {
   );
 };
 
+const transformations = {
+  'wifi': ['wi-fi', 'wi fi', 'internet', 'rete'],
+  'piscina': ['nuotare', 'bagno', 'vasca', 'spa', 'wellness'],
+  'check-in': ['check in', 'checkin', 'registrazione', 'arrivo'],
+  'check-out': ['check out', 'checkout', 'partenza', 'uscita'],
+  'navetta': ['shuttle', 'bus', 'transfer', 'trasporto'],
+  'parcheggio': ['garage', 'posto auto', 'box auto'],
+  'skibox': ['ski box', 'deposito sci', 'porta sci'],
+  'ristorante': ['mangiare', 'ristorazione', 'cena', 'pranzo'],
+  'animale': ['pet', 'cane', 'gatto', 'animali'],
+  'piano -1': ['sotterraneo', 'sotto', 'basement'],
+  'arrivare': ['raggiungere', 'andare', 'trovare'],
+  'prenotare': ['riservare', 'richiedere', 'bisogna prenotare']
+};
+
+const pluralSingular = {
+  'emergenze': 'emergenza',
+  'attività': 'attività',
+  'servizi': 'servizio',
+  'animali': 'animale'
+};
+
 const App = () => {
   const [messages, setMessages] = useState([
     { type: 'bot', content: 'Benvenuto! Come posso aiutarti?' },
@@ -42,17 +64,33 @@ const App = () => {
   };
 
   const expandInput = (userInput) => {
-    let expandedInput = userInput;
-    if (userInput.includes('check in')) {
-      expandedInput = expandedInput.replace('check in', 'check-in');
-    }
-    Object.entries(synonyms).forEach(([key, values]) => {
-      values.forEach((synonym) => {
-        if (userInput.includes(synonym)) {
-          expandedInput = expandedInput.replace(synonym, key);
+    let expandedInput = userInput.toLowerCase();
+    
+    // Gestione trasformazioni
+    Object.entries(transformations).forEach(([key, values]) => {
+      values.forEach(value => {
+        if (expandedInput.includes(value.toLowerCase())) {
+          expandedInput = expandedInput.replace(value.toLowerCase(), key);
         }
       });
     });
+
+    // Gestione plurali
+    Object.entries(pluralSingular).forEach(([plural, singular]) => {
+      if (expandedInput.includes(plural)) {
+        expandedInput = expandedInput.replace(plural, singular);
+      }
+    });
+
+    // Gestione sinonimi esistenti
+    Object.entries(synonyms).forEach(([key, values]) => {
+      values.forEach(synonym => {
+        if (expandedInput.includes(synonym.toLowerCase())) {
+          expandedInput = expandedInput.replace(synonym.toLowerCase(), key);
+        }
+      });
+    });
+    
     return expandedInput;
   };
 
@@ -74,7 +112,7 @@ const App = () => {
     for (const [category, data] of Object.entries(faqData)) {
       const allTags = [...(data.keywords || [])];
       const categoryScore = calculateMatchScore(processedInput, allTags);
-
+      
       if (categoryScore > 0) {
         for (const [question, qData] of Object.entries(data.questions)) {
           const score = calculateMatchScore(processedInput, [...(qData.tags || []).map(tag => tag.toLowerCase()), ...allTags]);

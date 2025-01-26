@@ -7,8 +7,7 @@ const Header = () => {
   return (
     <header className="bg-[#B8860B] p-4">
       <div className="flex flex-col items-center max-w-4xl mx-auto">
-        <img src={logo} alt="Hotel Galassia Logo" className="w-16 mb-2" />
-        <h1 className="text-2xl font-bold text-white">Hotel Galassia</h1>
+        <img src={logo} alt="Hotel Galassia Logo" className="w-32 mb-2" />
         <div className="text-white text-sm">PRATO NEVOSO ★★★</div>
       </div>
     </header>

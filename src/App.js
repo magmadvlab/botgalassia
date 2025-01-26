@@ -37,7 +37,10 @@ const pluralSingular = {
 
 const App = () => {
   const [messages, setMessages] = useState([
-    { type: 'bot', content: 'Ciao, sono Lunaria ✨, l\'assistente virtuale dell\'Hotel Galassia. Sono qui per guidarti tra le stelle alpine e rispondere a tutte le tue domande sul soggiorno. Come posso aiutarti?' },
+    { 
+      type: 'bot', 
+      content: 'Ciao, sono Lumia ✨, la tua assistente virtuale dell\'Hotel Galassia! Sono qui per illuminare il tuo soggiorno e rispondere a tutte le tue domande. Come posso aiutarti oggi?' 
+    },
   ]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
@@ -45,6 +48,9 @@ const App = () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // Il resto del tuo codice rimane invariato
+};
 
   useEffect(() => {
     scrollToBottom();

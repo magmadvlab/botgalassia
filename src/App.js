@@ -5,16 +5,11 @@ import faqData from './faq/faqData';
 
 const Header = () => {
   return (
-    <header className="bg-white p-4 border-b shadow-sm">
+    <header className="bg-[#B8860B] p-4">
       <div className="flex flex-col items-center max-w-4xl mx-auto">
-        <img src={logo} alt="Hotel Galassia Logo" className="w-32 mb-3" />
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#B8860B]">Hotel Galassia</h1>
-        <div className="flex items-center justify-center space-x-2 mb-1">
-          <span className="text-[#B8860B] text-lg">★</span>
-          <span className="text-[#B8860B] text-lg">★</span>
-          <span className="text-[#B8860B] text-lg">★</span>
-        </div>
-        <div className="text-[#B8860B] text-sm font-medium tracking-wide mb-1">PRATO NEVOSO</div>
+        <img src={logo} alt="Hotel Galassia Logo" className="w-16 mb-2" />
+        <h1 className="text-2xl font-bold text-white">Hotel Galassia</h1>
+        <div className="text-white text-sm">PRATO NEVOSO ★★★</div>
       </div>
     </header>
   );
@@ -44,7 +39,7 @@ const pluralSingular = {
 
 const App = () => {
   const [messages, setMessages] = useState([
-    { type: 'bot', content: 'Benvenuto! Come posso aiutarti?' },
+    { type: 'bot', content: 'Ciao, sono Lunaria ✨, l\'assistente virtuale dell\'Hotel Galassia. Sono qui per guidarti tra le stelle alpine e rispondere a tutte le tue domande sul soggiorno. Come posso aiutarti?' },
   ]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
@@ -66,7 +61,6 @@ const App = () => {
   const expandInput = (userInput) => {
     let expandedInput = userInput.toLowerCase();
     
-    // Gestione trasformazioni
     Object.entries(transformations).forEach(([key, values]) => {
       values.forEach(value => {
         if (expandedInput.includes(value.toLowerCase())) {
@@ -75,14 +69,12 @@ const App = () => {
       });
     });
 
-    // Gestione plurali
     Object.entries(pluralSingular).forEach(([plural, singular]) => {
       if (expandedInput.includes(plural)) {
         expandedInput = expandedInput.replace(plural, singular);
       }
     });
 
-    // Gestione sinonimi esistenti
     Object.entries(synonyms).forEach(([key, values]) => {
       values.forEach(synonym => {
         if (expandedInput.includes(synonym.toLowerCase())) {
@@ -177,21 +169,21 @@ const App = () => {
   return (
     <div className="fixed inset-0 flex flex-col bg-gray-50">
       <Header />
-      <main className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
+      <main className="flex-1 overflow-y-auto p-3 space-y-3">
         {messages.map((message, index) => (
           <div
             key={index}
             className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[85%] sm:max-w-[80%] p-3 rounded-lg ${
-                message.type === 'user' ? 'bg-[#B8860B] text-white' : 'bg-white shadow-md'
+              className={`max-w-[90%] p-3 rounded-lg ${
+                message.type === 'user' ? 'bg-[#B8860B] text-white' : 'bg-white shadow-sm'
               }`}
             >
               {message.title && (
-                <div className="font-bold text-base sm:text-lg mb-1">{message.title}</div>
+                <div className="font-bold text-base mb-1">{message.title}</div>
               )}
-              <div className="text-sm sm:text-base">{message.content}</div>
+              <div className="text-sm">{message.content}</div>
 
               {message.type === 'bot' && (
                 <div className="flex space-x-2 mt-2">
@@ -199,13 +191,13 @@ const App = () => {
                     onClick={() => handleFeedback(index, 'positive', message.content)}
                     className="flex items-center text-[#B8860B] hover:opacity-75"
                   >
-                    <ThumbsUp className="w-5 h-5" />
+                    <ThumbsUp className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleFeedback(index, 'negative', message.content)}
                     className="flex items-center text-red-500 hover:opacity-75"
                   >
-                    <ThumbsDown className="w-5 h-5" />
+                    <ThumbsDown className="w-4 h-4" />
                   </button>
                 </div>
               )}
@@ -215,20 +207,20 @@ const App = () => {
         <div ref={messagesEndRef} />
       </main>
 
-      <footer className="border-t bg-white p-3 sm:p-4">
+      <footer className="bg-white p-3">
         <form onSubmit={handleSubmit} className="flex space-x-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Scrivi un messaggio..."
-            className="flex-1 p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:border-transparent text-sm sm:text-base"
+            placeholder="Fai una domanda..."
+            className="flex-1 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#B8860B] text-sm"
           />
           <button
             type="submit"
-            className="bg-[#B8860B] text-white p-3 sm:p-4 rounded-lg hover:bg-[#DAA520] focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
+            className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
           >
-            <Send className="w-5 h-5 sm:w-6 sm:h-6" />
+            <Send className="w-5 h-5" />
           </button>
         </form>
       </footer>

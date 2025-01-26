@@ -4,14 +4,13 @@ import logo from './logo-hotel-galassia-prato-nevoso-01.png';
 import faqData from './faq/faqData';
 
 const Header = () => {
-  return (
-    <header className="bg-[#B8860B] p-4">
-      <div className="flex flex-col items-center max-w-4xl mx-auto">
-        <img src={logo} alt="Hotel Galassia Logo" className="w-32 mb-2" />
-        <div className="text-white text-sm">PRATO NEVOSO ★★★</div>
-      </div>
-    </header>
-  );
+ return (
+   <header className="bg-[#B8860B] p-4">
+     <div className="flex flex-col items-center max-w-4xl mx-auto">
+       <img src={logo} alt="Hotel Galassia Logo" className="w-48 mb-2" />
+     </div>
+   </header>
+ );
 };
 
 const transformations = {

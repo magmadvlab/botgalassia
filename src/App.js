@@ -37,9 +37,7 @@ const pluralSingular = {
 };
 
 const App = () => {
-  const [messages, setMessages] = useState([
-    { type: 'bot', content: 'Ciao, sono Lunaria ✨, l\'assistente virtuale dell\'Hotel Galassia. Sono qui per guidarti tra le stelle alpine e rispondere a tutte le tue domande sul soggiorno. Come posso aiutarti?' },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
 
@@ -51,11 +49,47 @@ const App = () => {
     scrollToBottom();
   }, [messages]);
 
-  const synonyms = {
-    "piscina": ["vasca", "nuoto", "bagno", "wellness", "spa", "idromassaggio"],
-    "check-in": ["arrivo", "registrazione", "inizio soggiorno"],
-    "check-out": ["partenza", "fine soggiorno", "uscita"],
+  const generateWelcomeMessage = async () => {
+    try {
+      const API_KEY = "980c870dc62110aa459671a67531a14e"; // Tua API Key
+      const lat = 44.2537; // Latitudine Hotel Galassia
+      const lon = 7.7915; // Longitudine Hotel Galassia
+      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=it&appid=${API_KEY}`;
+
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+
+      const temperature = data.main.temp;
+      const feelsLike = data.main.feels_like;
+      const conditions = data.weather[0].description;
+
+      let message = `Benvenuto all'Hotel Galassia! `;
+      if (conditions.includes("neve")) {
+        message += `❄ Sta nevicando a Prato Nevoso e la temperatura è di **${temperature}°C**. Perfetto per gli amanti della neve fresca! 🎿`;
+      } else if (conditions.includes("sole")) {
+        message += `☀ Oggi il sole splende su Prato Nevoso con una temperatura di **${temperature}°C**. Ideale per una giornata indimenticabile!`;
+      } else {
+        message += `☁ Oggi il cielo è ${conditions} e la temperatura è di **${temperature}°C**. Rilassati e goditi la vista mozzafiato sulle montagne.`;
+      }
+
+      return message;
+    } catch (error) {
+      console.error("Errore nel recupero del meteo:", error);
+      return "Benvenuto all'Hotel Galassia! 🌄 Non sono riuscito a recuperare il meteo, ma sono qui per aiutarti con tutte le tue domande.";
+    }
   };
+
+  useEffect(() => {
+    const loadWelcomeMessage = async () => {
+      const welcomeMessage = await generateWelcomeMessage();
+      setMessages((prev) => [
+        { type: 'bot', content: welcomeMessage },
+        { type: 'bot', content: 'Ciao, sono Lunaria ✨, l\'assistente virtuale dell\'Hotel Galassia. Sono qui per guidarti tra le stelle alpine e rispondere a tutte le tue domande sul soggiorno. Come posso aiutarti?' }
+      ]);
+    };
+
+    loadWelcomeMessage();
+  }, []);
 
   const expandInput = (userInput) => {
     let expandedInput = userInput.toLowerCase();
@@ -73,14 +107,6 @@ const App = () => {
         expandedInput = expandedInput.replace(plural, singular);
       }
     });
-
-    Object.entries(synonyms).forEach(([key, values]) => {
-      values.forEach(synonym => {
-        if (expandedInput.includes(synonym.toLowerCase())) {
-          expandedInput = expandedInput.replace(synonym.toLowerCase(), key);
-        }
-      });
-    });
     
     return expandedInput;
   };
@@ -88,80 +114,32 @@ const App = () => {
   const findBestResponse = (userInput) => {
     const processedInput = expandInput(userInput.toLowerCase().trim());
 
-    const calculateMatchScore = (input, tags) => {
-      return tags.reduce((score, tag) => {
-        if (input.includes(tag.toLowerCase())) {
-          score += tag.length / input.length;
-        }
-        return score;
-      }, 0);
-    };
-
     let bestMatch = null;
-    let bestScore = 0;
-
     for (const [category, data] of Object.entries(faqData)) {
-      const allTags = [...(data.keywords || [])];
-      const categoryScore = calculateMatchScore(processedInput, allTags);
-      
-      if (categoryScore > 0) {
-        for (const [question, qData] of Object.entries(data.questions)) {
-          const score = calculateMatchScore(processedInput, [...(qData.tags || []).map(tag => tag.toLowerCase()), ...allTags]);
-          if (score > bestScore) {
-            bestScore = score;
-            bestMatch = {
-              title: data.title,
-              content: qData.answer
-            };
-          }
+      for (const [question, qData] of Object.entries(data.questions)) {
+        if (qData.tags.some(tag => processedInput.includes(tag))) {
+          bestMatch = {
+            title: data.title,
+            content: qData.answer
+          };
+          break;
         }
       }
     }
 
-    if (bestMatch && bestScore > 0.3) {
-      return [bestMatch];
-    }
-
-    fetch('/log-missing-question', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        question: userInput,
-        timestamp: new Date().toISOString(),
-      }),
-    }).catch(console.error);
-
-    return [{
+    return bestMatch || {
       title: 'Info',
       content: 'Mi dispiace, non ho capito. Prova a chiedere usando parole chiave come "piscina", "check-in" o "navetta".'
-    }];
+    };
   };
 
-  const handleFeedback = (index, feedbackType, userInput) => {
-    fetch('/save-feedback', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        question: userInput,
-        feedback: feedbackType,
-        timestamp: new Date().toISOString(),
-      }),
-    }).catch(console.error);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
     const userMessage = { type: 'user', content: input };
-    const responses = findBestResponse(input);
-    const botMessages = responses.map((res) => ({
-      type: 'bot',
-      title: res.title,
-      content: res.content,
-    }));
-
-    setMessages((prev) => [...prev, userMessage, ...botMessages]);
+    const response = findBestResponse(input);
+    setMessages((prev) => [...prev, userMessage, { type: 'bot', title: response.title, content: response.content }]);
     setInput('');
   };
 
@@ -183,23 +161,6 @@ const App = () => {
                 <div className="font-bold text-base mb-1">{message.title}</div>
               )}
               <div className="text-sm">{message.content}</div>
-
-              {message.type === 'bot' && (
-                <div className="flex space-x-2 mt-2">
-                  <button
-                    onClick={() => handleFeedback(index, 'positive', message.content)}
-                    className="flex items-center text-[#B8860B] hover:opacity-75"
-                  >
-                    <ThumbsUp className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleFeedback(index, 'negative', message.content)}
-                    className="flex items-center text-red-500 hover:opacity-75"
-                  >
-                    <ThumbsDown className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         ))}

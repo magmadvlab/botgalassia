@@ -5,9 +5,10 @@ function WeatherInfo() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_KEY = "ca9757a704c11e39451877ca42fb9ec1"; // La tua API Key
-  const city = "Cesana Torinese";
-  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=it&appid=${API_KEY}`;
+  const API_KEY = "980c870dc62110aa459671a67531a14e"; // API Key di Hotel Galassia
+  const lat = 44.2537; // Latitudine Hotel Galassia
+  const lon = 7.7915; // Longitudine Hotel Galassia
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=it&appid=${API_KEY}`;
 
   useEffect(() => {
     fetch(apiUrl)
@@ -27,15 +28,29 @@ function WeatherInfo() {
       });
   }, [apiUrl]);
 
-  if (loading) return <p>Caricamento in corso...</p>;
-  if (error) return <p>Errore: {error}</p>;
+  if (loading) return <p>🌍 Recupero dati meteo...</p>;
+  if (error) return <p>❌ Errore: {error}</p>;
+
+  // Estrarre i dati meteo dalla risposta API
+  const temperature = weather.main.temp;
+  const feelsLike = weather.main.feels_like;
+  const conditions = weather.weather[0].description;
+  const windSpeed = weather.wind.speed;
+
+  // Generare il messaggio dinamico
+  let welcomeMessage = `🌡️ Attualmente ci sono ${temperature}°C (percepiti ${feelsLike}°C).`;
+  if (conditions.includes("neve")) {
+    welcomeMessage += " ❄ Sta nevicando, se viaggi in auto assicurati di avere le catene da neve!";
+  } else if (windSpeed > 10) {
+    welcomeMessage += " 💨 Il vento è forte, copriti bene!";
+  } else {
+    welcomeMessage += ` ☀️ Condizioni attuali: ${conditions}.`;
+  }
 
   return (
     <div>
-      <h3>Meteo a {weather.name}</h3>
-      <p>Temperatura: {weather.main.temp}°C</p>
-      <p>Percepita: {weather.main.feels_like}°C</p>
-      <p>Condizioni: {weather.weather[0].description}</p>
+      <h3>📍 Meteo Hotel Galassia</h3>
+      <p>{welcomeMessage}</p>
     </div>
   );
 }

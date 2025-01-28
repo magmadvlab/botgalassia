@@ -25,71 +25,33 @@ const fetchWeatherMessage = async () => {
 
     const temperature = data.main.temp;
     const conditions = data.weather[0].description;
-
+    
     let emoji = '🌄';
     if (conditions.includes("neve")) emoji = "❄";
     else if (conditions.includes("pioggia")) emoji = "🌧";
     else if (conditions.includes("sole")) emoji = "☀";
     else if (conditions.includes("nuvol")) emoji = "☁";
 
-    return `Il meteo è ${conditions} con una temperatura di **${temperature}°C**. ${emoji}`;
+    return `Buongiorno! ☀ Oggi il meteo è ${conditions} con una temperatura di **${temperature}°C**. ${emoji} Goditi la tua giornata a Prato Nevoso!`;
   } catch (error) {
     console.error("Errore nel recupero del meteo:", error);
-    return "Non sono riuscito a recuperare le informazioni meteo.";
-  }
-};
-
-const translateText = async (text, targetLang) => {
-  const API_KEY = "aa81a80c-4e29-483e-8755-85af12f3d54c";
-  const url = "https://api-free.deepl.com/v2/translate";
-
-  const params = new URLSearchParams();
-  params.append("auth_key", API_KEY);
-  params.append("text", text);
-  params.append("target_lang", targetLang);
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      body: params
-    });
-
-    const data = await response.json();
-    return data.translations[0].text;
-  } catch (error) {
-    console.error("Errore nella traduzione:", error);
-    return text; // Restituisci il testo originale in caso di errore
+    return "Buongiorno! Non sono riuscito a recuperare le informazioni meteo, ma sono qui per aiutarti con qualsiasi altra domanda.";
   }
 };
 
 const App = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [language, setLanguage] = useState('IT'); // Lingua di default
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const loadInitialMessages = async () => {
-      const userLang = navigator.language || "it";
-      const detectedLang = userLang.startsWith("en") ? "EN" :
-                           userLang.startsWith("fr") ? "FR" :
-                           userLang.startsWith("es") ? "ES" : "IT";
-
-      setLanguage(detectedLang);
-
       const weatherMessage = await fetchWeatherMessage();
-      const translatedWeatherMessage = await translateText(weatherMessage, detectedLang);
-      const translatedWelcomeMessage = await translateText(
-        "Ciao, sono Lumia ✨, l'assistente virtuale dell'Hotel Galassia. Sono qui per aiutarti. Come posso assisterti?",
-        detectedLang
-      );
-
       setMessages([
-        { type: 'bot', content: translatedWeatherMessage },
-        { type: 'bot', content: translatedWelcomeMessage }
+        { type: 'bot', content: weatherMessage },
+        { type: 'bot', content: 'Ciao, sono Lumia ✨, l\'assistente virtuale dell\'Hotel Galassia. Sono qui per aiutarti. Come posso assisterti?' }
       ]);
     };
-
     loadInitialMessages();
   }, []);
 
@@ -105,15 +67,12 @@ const App = () => {
     setMessages((prev) => [...prev, userMessage]);
 
     const response = findBestResponse(input);
-    const translatedResponse = await translateText(response.content, language);
-
-    setMessages((prev) => [...prev, { type: 'bot', content: translatedResponse }]);
+    setMessages((prev) => [...prev, { type: 'bot', content: response.content }]);
     setInput('');
   };
 
   const findBestResponse = (userInput) => {
     const processedInput = userInput.toLowerCase().trim();
-
     let bestMatch = null;
     for (const [category, data] of Object.entries(faqData)) {
       for (const [question, qData] of Object.entries(data.questions)) {
@@ -145,6 +104,13 @@ const App = () => {
           </div>
         ))}
         <div ref={messagesEndRef} />
+        <div className="flex justify-center mt-4">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=44.2537,7.7915" target="_blank" rel="noopener noreferrer"
+             className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+            <MapPin className="w-5 h-5" />
+            <span>Indicazioni per l'Hotel</span>
+          </a>
+        </div>
       </main>
       <footer className="bg-white p-3">
         <form onSubmit={handleSubmit} className="flex space-x-2">

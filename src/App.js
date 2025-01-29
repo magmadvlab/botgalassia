@@ -24,6 +24,7 @@ const App = () => {
     // Messaggio di benvenuto di Lumia
     const welcomeMessage = `Ciao! Sono Lumia ✨, l'assistente virtuale dell'Hotel Galassia. Sono qui per aiutarti. Come posso assisterti?`;
     setMessages(prev => [...prev, { type: 'bot', content: welcomeMessage }]);
+  }, []); // Added empty dependency array to run only once
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -87,7 +88,7 @@ const App = () => {
 
       <main className="flex-1 overflow-y-auto p-3 space-y-3">
         {/* Sezione meteo */}
-       <WeatherInfo lang={userLang} addMessageToChat={setMessages} />
+        <WeatherInfo lang={userLang} addMessageToChat={setMessages} />
 
         {/* Sezione viabilità */}
         <TrafficInfo />
@@ -119,22 +120,26 @@ const App = () => {
         >
           <Map className="w-5 h-5 mr-2" /> Ottieni Indicazioni
         </button>
-{/* Form per la chat */}
-<form className="flex space-x-2" onSubmit={handleUserQuery}>
-  <input
-    type="text"
-    value={input}
-    onChange={(e) => setInput(e.target.value)}
-    placeholder="Fai una domanda..."
-    className="flex-1 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#B8860B] text-sm"
-  />
-  <button
-    type="submit"
-    className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
-  >
-    <Send className="w-5 h-5" />
-  </button>
-</form>  {/* Chiusura del form */}
-</footer>  {/* Chiusura del footer */}
-</div>  {/* Chiusura del div principale */}
-);  {/* Chiusura della funzione App */}
+
+        {/* Form per la chat */}
+        <form className="flex space-x-2" onSubmit={handleUserQuery}>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Fai una domanda..."
+            className="flex-1 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#B8860B] text-sm"
+          />
+          <button
+            type="submit"
+            className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
+          >
+            <Send className="w-5 h-5" />
+          </button>
+        </form>
+      </footer>
+    </div>
+  );
+};
+
+export default App;

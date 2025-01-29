@@ -5,6 +5,7 @@ const WeatherInfo = ({ lang, addMessageToChat }) => {
   const [weatherLoaded, setWeatherLoaded] = useState(false); // Evita duplicazioni
 
   useEffect(() => {
+    console.log("Lingua rilevata in WeatherInfo:", lang);  // Aggiungi questo per il debug
     const fetchWeather = async () => {
       try {
         const weatherData = await fetchWeatherData(lang);
@@ -22,7 +23,7 @@ const WeatherInfo = ({ lang, addMessageToChat }) => {
     fetchWeather();
   }, [lang, weatherLoaded, addMessageToChat]);
 
-  return null;
+  return null;  // Non rendere nulla perché il messaggio è già aggiunto via chat
 };
 
 export default WeatherInfo;

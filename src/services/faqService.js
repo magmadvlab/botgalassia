@@ -1,6 +1,6 @@
 // src/services/faqService.js
 
-import faqData from '../components/faq/it/faqData';  // Nuovo percorso
+import faqData from '../faq/it/faqData';  // Percorso corretto
 import { translateTextIfNeeded } from './translationService';
 
 const findBestMatch = (userQuery) => {

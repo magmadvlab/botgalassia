@@ -120,25 +120,22 @@ const App = () => {
           <Map className="w-5 h-5 mr-2" /> Ottieni Indicazioni
         </button>
 
-         {/* Form per la chat */}
-        <form className="flex space-x-2" onSubmit={handleUserQuery}>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Fai una domanda..."
-            className="flex-1 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#B8860B] text-sm"
-          />
-          <button
-            type="submit"
-            className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
-          >
-            <Send className="w-5 h-5" />
-          </button>
-        </form>
-      </footer>
-    </div>
-  );
-};
-
-export default App;
+       {/* Form per la chat */}
+<form className="flex space-x-2" onSubmit={handleUserQuery}>
+  <input
+    type="text"
+    value={input}
+    onChange={(e) => setInput(e.target.value)}
+    placeholder="Fai una domanda..."
+    className="flex-1 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#B8860B] text-sm"
+  />
+  <button
+    type="submit"
+    className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
+  >
+    <Send className="w-5 h-5" />
+  </button>
+</form>
+</footer>  {/* Chiudi il footer */}
+</div>  {/* Chiudi il div principale che avvolge tutto */}
+);  {/* Chiusura della funzione App */}

@@ -64,23 +64,40 @@ const App = () => {
         <div ref={messagesEndRef} />
       </main>
 
-      <footer className="bg-white p-3 flex flex-col space-y-2">
-        <form className="flex space-x-2" onSubmit={handleUserQuery}>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Fai una domanda..."
-            className="flex-1 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#B8860B] text-sm"
-          />
-          <button
-            type="submit"
-            className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
-          >
-            <Send className="w-5 h-5" />
-          </button>
-        </form>
-      </footer>
+    <footer className="bg-white p-3 flex flex-col space-y-2">
+  {/* Pulsante per la Viabilità della Provincia di Cuneo */}
+  <button
+    onClick={() => window.open('https://www.provincia.cuneo.it/viabilita', '_blank')}
+    className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2 flex items-center justify-center"
+  >
+    <MapPin className="w-5 h-5 mr-2" /> Verifica Viabilità Provincia di Cuneo
+  </button>
+
+  {/* Pulsante per Google Maps con indicazioni */}
+  <button
+    onClick={() => window.open('https://www.google.com/maps/dir/?api=1&destination=44.2537,7.7915', '_blank')}
+    className="bg-[#0080FF] text-white p-3 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#0080FF] focus:ring-offset-2 flex items-center justify-center"
+  >
+    <Map className="w-5 h-5 mr-2" /> Ottieni Indicazioni
+  </button>
+
+  {/* Form per la chat */}
+  <form className="flex space-x-2" onSubmit={handleUserQuery}>
+    <input
+      type="text"
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      placeholder="Fai una domanda..."
+      className="flex-1 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#B8860B] text-sm"
+    />
+    <button
+      type="submit"
+      className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:ring-offset-2"
+    >
+      <Send className="w-5 h-5" />
+    </button>
+  </form>
+</footer>
     </div>
   );
 };

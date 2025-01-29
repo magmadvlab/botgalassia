@@ -1,14 +1,34 @@
-// src/services/trafficService.js
-
-const ROADS_OF_INTEREST = [
+// Constants
+export const ROADS_OF_INTEREST = [
   'SP327', 'SS28', 'SP37', 'SP164', 'SP183', 'SP232'
 ];
 
-const RSS_URL = 'https://www.provincia.cuneo.it/aggregator/sources/4';
+export const RSS_URL = 'https://www.provincia.cuneo.it/aggregator/sources/4';
 
 /**
- * Fetches and parses traffic updates from Provincia di Cuneo RSS feed
- * @returns {Promise<Array>} Array of traffic updates
+ * Categorizes the type of traffic update
+ */
+export const categorizeUpdate = (title) => {
+  const lowerTitle = title.toLowerCase();
+  if (lowerTitle.includes('neve') || lowerTitle.includes('gelo')) return 'WEATHER';
+  if (lowerTitle.includes('incidente')) return 'ACCIDENT';
+  if (lowerTitle.includes('lavori')) return 'ROADWORK';
+  if (lowerTitle.includes('chiusura') || lowerTitle.includes('interruzione')) return 'CLOSURE';
+  return 'OTHER';
+};
+
+/**
+ * Finds affected roads in update text
+ */
+export const findAffectedRoads = (title, description) => {
+  const text = `${title} ${description}`.toLowerCase();
+  return ROADS_OF_INTEREST.filter(road => 
+    text.includes(road.toLowerCase())
+  );
+};
+
+/**
+ * Fetches and parses traffic updates
  */
 export const fetchTrafficUpdates = async () => {
   try {
@@ -25,15 +45,13 @@ export const fetchTrafficUpdates = async () => {
       const description = items[i].getElementsByTagName("description")[0].textContent;
       const pubDate = items[i].getElementsByTagName("pubDate")[0].textContent;
       
-      // Filter only relevant roads
       if (ROADS_OF_INTEREST.some(road => title.includes(road) || description.includes(road))) {
         updates.push({
           id: i,
           title,
           description,
           date: new Date(pubDate),
-          // Categorize update type
-          type: categorizeUpdate(title.toLowerCase()),
+          type: categorizeUpdate(title),
           affectedRoads: findAffectedRoads(title, description)
         });
       }
@@ -44,34 +62,4 @@ export const fetchTrafficUpdates = async () => {
     console.error('Error fetching traffic updates:', error);
     throw new Error('Failed to fetch traffic updates');
   }
-};
-
-/**
- * Categorizes the type of traffic update
- * @param {string} title 
- * @returns {string} Update category
- */
-const categorizeUpdate = (title) => {
-  if (title.includes('neve') || title.includes('gelo')) return 'WEATHER';
-  if (title.includes('incidente')) return 'ACCIDENT';
-  if (title.includes('lavori')) return 'ROADWORK';
-  if (title.includes('chiusura') || title.includes('interruzione')) return 'CLOSURE';
-  return 'OTHER';
-};
-
-/**
- * Finds affected roads mentioned in update
- * @param {string} title 
- * @param {string} description 
- * @returns {Array} List of affected roads
- */
-const findAffectedRoads = (title, description) => {
-  const text = `${title} ${description}`.toLowerCase();
-  return ROADS_OF_INTEREST.filter(road => 
-    text.includes(road.toLowerCase())
-  );
-};
-
-export default {
-  fetchTrafficUpdates
 };

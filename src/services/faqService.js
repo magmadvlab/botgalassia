@@ -1,24 +1,35 @@
+// src/services/faqService.js
+
+import faqData from '../components/faq/faqData';
 import { translateTextIfNeeded } from './translationService';
-import faqData from '../faq/faqData'; // Importiamo le FAQ in italiano
 
-/**
- * Recupera la risposta alle FAQ e la traduce solo se necessario
- * @param {string} query - Domanda dell'utente
- * @param {string} userLang - Lingua dell'utente
- * @returns {Promise<string>} - Risposta nella lingua dell'utente
- */
-export const getFAQResponse = async (query, userLang) => {
-  // Normalizziamo la domanda per evitare problemi con maiuscole/minuscole/spazi
-  const normalizedQuery = query.trim().toLowerCase();
+const findBestMatch = (userQuery) => {
+  // Normalizza la query dell'utente
+  const query = userQuery.toLowerCase().trim();
 
-  // Cerchiamo la risposta nella FAQ
-  const response = faqData[normalizedQuery] || "Mi dispiace, non ho una risposta a questa domanda.";
-
-  // Se la lingua dell'utente è già italiano, restituiamo direttamente la risposta
-  if (userLang === 'IT') {
-    return response;
+  // Cerca in tutte le categorie di FAQ
+  for (const [category, data] of Object.entries(faqData)) {
+    // Cerca tra tutte le questions nella categoria
+    for (const qa of data.questions) {
+      // Controlla le parole chiave o il testo della domanda
+      if (qa.tags?.some(tag => query.includes(tag.toLowerCase())) || 
+          query.includes(qa.q.toLowerCase())) {
+        return qa.a;
+      }
+    }
   }
 
-  // Altrimenti traduciamo la risposta nella lingua dell'utente
-  return await translateTextIfNeeded(response, userLang);
+  return 'Mi dispiace, non ho trovato una risposta specifica alla tua domanda. Puoi provare a riformularla o chiedermi di un argomento specifico come check-in, servizi, o attività.';
+};
+
+export const getFAQResponse = async (query, targetLang = 'IT') => {
+  // Trova la risposta in italiano
+  const response = findBestMatch(query);
+  
+  // Se necessario, traduci la risposta
+  if (targetLang !== 'IT') {
+    return await translateTextIfNeeded(response, targetLang);
+  }
+  
+  return response;
 };

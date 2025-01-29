@@ -14,36 +14,36 @@ const App = () => {
   const [userLang, setUserLang] = useState('it');
   const messagesEndRef = useRef(null);
 
-  // Funzione per scorrere automaticamente fino al fondo dei messaggi
+  // Funzione per lo scrolling della chat
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    const lang = detectUserLanguage();
+    const lang = detectUserLanguage();  // Rileva la lingua dell'utente
     setUserLang(lang);
 
-    // Messaggio di benvenuto di Lumia
+    // Messaggio di benvenuto
     const welcomeMessage = `✨ Ciao! Sono Lumia, la tua guida tra le stelle alpine dell'Hotel Galassia. Come una stella che brilla nel firmamento della Val Maira, sono qui per illuminare il tuo soggiorno con magia e meraviglia. Come posso aiutarti?`;
     setMessages(prev => [...prev, { type: 'bot', content: welcomeMessage }]);
-  }, []);
+  }, []); 
 
   useEffect(() => {
-    scrollToBottom();
+    scrollToBottom();  // Scroll automatico per nuove risposte
   }, [messages]);
 
-  // Gestione della query dell'utente
+  // Gestione della richiesta dell'utente
   const handleUserQuery = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Mostra il messaggio dell'utente nella chat
+    // Mostra il messaggio dell'utente
     setMessages(prev => [...prev, { type: 'user', content: input }]);
 
-    // Ottieni la risposta dalle FAQ (chiamato tramite il servizio)
+    // Ottieni la risposta dalle FAQ
     const response = await getFAQResponse(input, userLang);
 
-    // Mostra la risposta nella chat
+    // Mostra la risposta del bot
     setMessages(prev => [...prev, { type: 'bot', content: response }]);
     setInput('');
   };
@@ -63,7 +63,7 @@ const App = () => {
         {/* Sezione viabilità */}
         <TrafficInfo lang={userLang} />
 
-        {/* Chat */}
+        {/* Sezione chat */}
         {messages.map((message, index) => (
           <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[90%] p-3 rounded-lg ${message.type === 'user' ? 'bg-amber-700 text-white' : 'bg-white shadow-sm'}`}>

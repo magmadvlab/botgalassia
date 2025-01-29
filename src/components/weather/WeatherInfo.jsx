@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { fetchWeatherData, formatWeatherMessage } from '../../services/weatherService';
 
-const WeatherInfo = ({ lang = 'it', addMessageToChat }) => {
+const WeatherInfo = ({ lang, addMessageToChat }) => {
+  const [weatherLoaded, setWeatherLoaded] = useState(false); // Evita duplicazioni
+
   useEffect(() => {
     const fetchWeather = async () => {
       try {
         const weatherData = await fetchWeatherData(lang);
         const message = formatWeatherMessage(weatherData, lang);
-        addMessageToChat(prevMessages => [...prevMessages, { type: 'bot', content: message }]);
+
+        if (!weatherLoaded) {
+          addMessageToChat(prev => [...prev, { type: 'bot', content: message }]);
+          setWeatherLoaded(true); // Segnala che il messaggio è stato inviato
+        }
       } catch (error) {
-        console.error('Errore meteo:', error);
-        addMessageToChat(prevMessages => [...prevMessages, { type: 'bot', content: "⚠️ Errore nel recupero del meteo. Riprova più tardi!" }]);
+        console.error('Errore nel recupero del meteo:', error);
       }
     };
 
     fetchWeather();
-  }, [lang, addMessageToChat]);
+  }, [lang, weatherLoaded, addMessageToChat]);
 
   return null;
 };

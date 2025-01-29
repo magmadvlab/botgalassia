@@ -120,7 +120,7 @@ const App = () => {
           <Map className="w-5 h-5 mr-2" /> Ottieni Indicazioni
         </button>
 
-        {/* Form per la chat */}
+         {/* Form per la chat */}
         <form className="flex space-x-2" onSubmit={handleUserQuery}>
           <input
             type="text"

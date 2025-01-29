@@ -25,10 +25,6 @@ const App = () => {
     const welcomeMessage = `Ciao! Sono Lumia ✨, l'assistente virtuale dell'Hotel Galassia. Sono qui per aiutarti. Come posso assisterti?`;
     setMessages(prev => [...prev, { type: 'bot', content: welcomeMessage }]);
 
-    // Recupera e mostra il meteo iniziale
-    handleWeatherQuery();
-  }, []);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };

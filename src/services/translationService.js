@@ -1,5 +1,7 @@
+// src/services/translationService.js
+
 const DEEPL_CONFIG = {
-  API_KEY: 'your-deepl-api-key', // Sostituisci con la tua API key
+  API_KEY: 'eaf0a2da-8984-4977-964a-d5b0155a3ceb:fx',
   BASE_URL: 'https://api-free.deepl.com/v2',
   SUPPORTED_LANGUAGES: ['IT', 'EN', 'FR', 'DE', 'ES', 'PT', 'RO']
 };
@@ -9,10 +11,9 @@ const DEEPL_CONFIG = {
  * @returns {string} Codice lingua (IT, EN, etc.)
  */
 export const detectUserLanguage = () => {
-  const browserLang = navigator.language || navigator.userLanguage; // Rileva lingua del browser
-  const lang = browserLang.split('-')[0].toUpperCase(); // Es. "it-IT" diventa "IT"
-
-  return DEEPL_CONFIG.SUPPORTED_LANGUAGES.includes(lang) ? lang : 'EN'; // Default a EN
+  const browserLang = navigator.language || navigator.userLanguage;
+  const lang = browserLang.split('-')[0].toUpperCase();
+  return DEEPL_CONFIG.SUPPORTED_LANGUAGES.includes(lang) ? lang : 'EN';
 };
 
 /**
@@ -32,10 +33,9 @@ export const needsTranslation = (currentLang, targetLang) => {
  * @returns {Promise<string>} Testo tradotto
  */
 export const translateTextIfNeeded = async (text, targetLang) => {
-  if (targetLang === 'IT') {
-    return text; // Se l'utente usa già ITALIANO, niente traduzione
-  }
-
+  // Se non c'è testo o è già in italiano, non tradurre
+  if (!text || targetLang === 'IT') return text;
+  
   try {
     const response = await fetch(`${DEEPL_CONFIG.BASE_URL}/translate`, {
       method: 'POST',
@@ -45,18 +45,56 @@ export const translateTextIfNeeded = async (text, targetLang) => {
       },
       body: JSON.stringify({
         text: [text],
-        target_lang: targetLang
+        target_lang: targetLang,
+        preserve_formatting: true
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Errore nella traduzione: ${response.status} ${response.statusText}`);
+      console.error(`Errore DeepL: ${response.status} ${response.statusText}`);
+      return text; // In caso di errore, ritorna il testo originale
     }
 
     const data = await response.json();
     return data.translations[0].text;
   } catch (error) {
     console.error('Errore di traduzione:', error);
-    return text; // In caso di errore, restituisce il testo originale
+    return text; // In caso di errore, ritorna il testo originale
+  }
+};
+
+/**
+ * Traduce array di testi in batch
+ * @param {string[]} texts - Array di testi da tradurre
+ * @param {string} targetLang - Lingua di destinazione
+ * @returns {Promise<string[]>} Array di testi tradotti
+ */
+export const translateBatch = async (texts, targetLang) => {
+  if (!texts?.length || targetLang === 'IT') return texts;
+
+  try {
+    const response = await fetch(`${DEEPL_CONFIG.BASE_URL}/translate`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `DeepL-Auth-Key ${DEEPL_CONFIG.API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text: texts,
+        target_lang: targetLang,
+        preserve_formatting: true
+      })
+    });
+
+    if (!response.ok) {
+      console.error(`Errore DeepL batch: ${response.status} ${response.statusText}`);
+      return texts;
+    }
+
+    const data = await response.json();
+    return data.translations.map(t => t.text);
+  } catch (error) {
+    console.error('Errore traduzione batch:', error);
+    return texts;
   }
 };

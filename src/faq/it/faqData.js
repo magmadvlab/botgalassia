@@ -1,27 +1,33 @@
-import { activities_it } from './it/activities_it';
-import { checkinFAQ_IT as checkin_IT } from './it/checkin_it';
-import { checkoutFAQ_IT as checkout_IT } from './it/checkout_it';
-import { diningFAQ_IT as dining_IT } from './it/dining_it';
-import { emergencyFAQ_IT as emergency_IT } from './it/emergency_it';
-import { petsFAQ_IT as pets_IT } from './it/pets_it';
-import { skiFAQ_IT as ski_IT } from './it/ski_it';
-import { techServicesFAQ_IT as techServices_IT } from './it/tech_services_it';
-import { transportFAQ_IT as transport_IT } from './it/transport_it';
-import { wellnessFAQ_IT as wellness_IT } from './it/wellness_it';
+// Importa i dati FAQ in italiano
+import { activitiesFAQ_IT } from './activities_it';
+import { checkinFAQ_IT } from './checkin_it';
+import { checkoutFAQ_IT } from './checkout_it';
+import { diningFAQ_IT } from './dining_it';
+import { emergencyFAQ_IT } from './emergency_it';
+import { petsFAQ_IT } from './pets_it';
+import { skiFAQ_IT } from './ski_it';
+import { techServicesFAQ_IT } from './tech_services_it';
+import { transportFAQ_IT } from './transport_it';
+import { wellnessFAQ_IT } from './wellness_it';
 
+// Oggetto che contiene tutti i dati FAQ
 const faqData = {
-  activities: activities_it,
-  checkin: checkin_IT,
-  checkout: checkout_IT,
-  dining: dining_IT,
-  emergency: emergency_IT,
-  pets: pets_IT,
-  ski: ski_IT,
-  techServices: techServices_IT,
-  transport: transport_IT,
-  wellness: wellness_IT,
+  activities: activitiesFAQ_IT,
+  checkin: checkinFAQ_IT,
+  checkout: checkoutFAQ_IT,
+  dining: diningFAQ_IT,
+  emergency: emergencyFAQ_IT,
+  pets: petsFAQ_IT,
+  ski: skiFAQ_IT,
+  techServices: techServicesFAQ_IT,
+  transport: transportFAQ_IT,
+  wellness: wellnessFAQ_IT,
 };
 
-console.log('FAQ Data:', faqData); // Debug per verificare il contenuto
+// Debug log per verificare il contenuto
+if (process.env.NODE_ENV === 'development') {
+  console.log('FAQ Data:', faqData);
+}
 
+// Esporta l'oggetto faqData come default
 export default faqData;

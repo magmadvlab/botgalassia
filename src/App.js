@@ -14,6 +14,11 @@ const App = () => {
   const [userLang, setUserLang] = useState('it');
   const messagesEndRef = useRef(null);
 
+  // Funzione per scorrere automaticamente fino al fondo dei messaggi
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   useEffect(() => {
     const lang = detectUserLanguage();
     setUserLang(lang);
@@ -21,16 +26,13 @@ const App = () => {
     // Messaggio di benvenuto di Lumia
     const welcomeMessage = `✨ Ciao! Sono Lumia, la tua guida tra le stelle alpine dell'Hotel Galassia. Come una stella che brilla nel firmamento della Val Maira, sono qui per illuminare il tuo soggiorno con magia e meraviglia. Come posso aiutarti?`;
     setMessages(prev => [...prev, { type: 'bot', content: welcomeMessage }]);
-  }, []); 
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
+  // Gestione della query dell'utente
   const handleUserQuery = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -38,7 +40,7 @@ const App = () => {
     // Mostra il messaggio dell'utente nella chat
     setMessages(prev => [...prev, { type: 'user', content: input }]);
 
-    // Ottieni la risposta dalla FAQ
+    // Ottieni la risposta dalle FAQ (chiamato tramite il servizio)
     const response = await getFAQResponse(input, userLang);
 
     // Mostra la risposta nella chat

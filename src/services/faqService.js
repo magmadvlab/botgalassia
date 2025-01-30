@@ -1,16 +1,53 @@
 // src/services/faqService.js
 
 import Fuse from 'fuse.js';
-import faqData from '../faq/it/faqData';  // Percorso corretto
-import { translateTextIfNeeded } from './translationService';
+import faqData from '../faq/faqData';
 
-// Controlliamo se i dati delle FAQ sono stati caricati correttamente
-console.log("Dati FAQ caricati:", faqData);
+// Sinonimi e trasformazioni per migliorare la ricerca
+const transformations = {
+  'wifi': ['wi-fi', 'wi fi', 'internet', 'rete'],
+  'piscina': ['nuotare', 'bagno', 'vasca', 'spa', 'wellness'],
+  'check-in': ['check in', 'checkin', 'registrazione', 'arrivo'],
+  'check-out': ['check out', 'checkout', 'partenza', 'uscita'],
+  'navetta': ['shuttle', 'bus', 'transfer', 'trasporto'],
+  'parcheggio': ['garage', 'posto auto', 'box auto'],
+  'skibox': ['ski box', 'deposito sci', 'porta sci'],
+  'ristorante': ['mangiare', 'ristorazione', 'cena', 'pranzo'],
+  'animale': ['pet', 'cane', 'gatto', 'animali'],
+  'piano -1': ['sotterraneo', 'sotto', 'basement'],
+  'arrivare': ['raggiungere', 'andare', 'trovare'],
+  'prenotare': ['riservare', 'richiedere', 'bisogna prenotare']
+};
 
-// Prepara la lista di domande e tag
+const pluralSingular = {
+  'emergenze': 'emergenza',
+  'attività': 'attività',
+  'servizi': 'servizio',
+  'animali': 'animale'
+};
+
+const expandInput = (userInput) => {
+  let expandedInput = userInput.toLowerCase();
+  
+  Object.entries(transformations).forEach(([key, values]) => {
+    values.forEach(value => {
+      if (expandedInput.includes(value.toLowerCase())) {
+        expandedInput = expandedInput.replace(value.toLowerCase(), key);
+      }
+    });
+  });
+
+  Object.entries(pluralSingular).forEach(([plural, singular]) => {
+    if (expandedInput.includes(plural)) {
+      expandedInput = expandedInput.replace(plural, singular);
+    }
+  });
+  
+  return expandedInput;
+};
+
 const prepareFAQList = () => {
   const faqs = [];
-
   for (const [category, data] of Object.entries(faqData)) {
     for (const [question, qData] of Object.entries(data.questions)) {
       faqs.push({
@@ -24,41 +61,23 @@ const prepareFAQList = () => {
   return faqs;
 };
 
-// Configurazione di Fuse.js per la ricerca fuzzy
 const faqList = prepareFAQList();
 const fuse = new Fuse(faqList, {
   keys: ['question', 'tags'],
-  threshold: 0.3, // Più basso = più preciso, più alto = più tollerante
+  threshold: 0.3,
 });
 
-export const getFAQResponse = async (query, targetLang = 'IT') => {
-  try {
-    console.log("🔍 Domanda ricevuta:", query);
+export const getFAQResponse = async (query) => {
+  console.log("🔍 Domanda ricevuta:", query);
+  
+  const processedInput = expandInput(query.toLowerCase().trim());
+  const result = fuse.search(processedInput);
 
-    // Normalizziamo la query
-    const normalizedQuery = query.toLowerCase().trim();
-
-    // Cerchiamo una corrispondenza con Fuse.js
-    const result = fuse.search(normalizedQuery);
-
-    // Stampiamo tutte le risposte trovate per il debug
-    console.log("📌 Risultati trovati:", result.map(r => r.item.question));
-
-    if (result.length > 0) {
-      const bestMatch = result[0].item.answer;
-      console.log("✅ Risposta selezionata:", bestMatch);
-
-      // Se la lingua richiesta è diversa dall'italiano, traduciamo
-      if (targetLang !== 'IT') {
-        return await translateTextIfNeeded(bestMatch, targetLang);
-      }
-      return bestMatch;
-    }
-
-    console.warn("⚠️ Nessuna corrispondenza trovata per:", query);
-    return "Mi dispiace, non ho trovato una risposta specifica alla tua domanda. Puoi provare a riformularla?";
-  } catch (error) {
-    console.error('❌ Errore nella ricerca FAQ:', error);
-    return 'Mi scuso, ma al momento non riesco a processare la tua richiesta. Puoi riprovare?';
+  console.log("📌 Risultati trovati:", result.map(r => r.item.question));
+  
+  if (result.length > 0) {
+    return result[0].item.answer;
   }
+
+  return "Mi dispiace, non ho trovato una risposta specifica alla tua domanda. Puoi provare a riformularla?";
 };

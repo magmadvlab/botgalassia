@@ -1,70 +1,13 @@
-// src/services/faqService.js
-
-import Fuse from 'fuse.js';
-import faqData from '../faq/it/faqData';
-
-// Sinonimi e trasformazioni per migliorare la ricerca
-const transformations = {
-  'wifi': ['wi-fi', 'wi fi', 'internet', 'rete'],
-  'piscina': ['nuotare', 'bagno', 'vasca', 'spa', 'wellness'],
-  'check-in': ['check in', 'checkin', 'registrazione', 'arrivo'],
-  'check-out': ['check out', 'checkout', 'partenza', 'uscita'],
-  'navetta': ['shuttle', 'bus', 'transfer', 'trasporto'],
-  'parcheggio': ['garage', 'posto auto', 'box auto'],
-  'skibox': ['ski box', 'deposito sci', 'porta sci'],
-  'ristorante': ['mangiare', 'ristorazione', 'cena', 'pranzo'],
-  'animale': ['pet', 'cane', 'gatto', 'animali'],
-  'piano -1': ['sotterraneo', 'sotto', 'basement'],
-  'arrivare': ['raggiungere', 'andare', 'trovare'],
-  'prenotare': ['riservare', 'richiedere', 'bisogna prenotare']
-};
-
-const pluralSingular = {
-  'emergenze': 'emergenza',
-  'attività': 'attività',
-  'servizi': 'servizio',
-  'animali': 'animale'
-};
-
-const expandInput = (userInput) => {
-  let expandedInput = userInput.toLowerCase();
-  
-  Object.entries(transformations).forEach(([key, values]) => {
-    values.forEach(value => {
-      if (expandedInput.includes(value.toLowerCase())) {
-        expandedInput = expandedInput.replace(value.toLowerCase(), key);
-      }
-    });
-  });
-
-  Object.entries(pluralSingular).forEach(([plural, singular]) => {
-    if (expandedInput.includes(plural)) {
-      expandedInput = expandedInput.replace(plural, singular);
-    }
-  });
-  
-  return expandedInput;
-};
-
-const prepareFAQList = () => {
-  const faqs = [];
-  for (const [category, data] of Object.entries(faqData)) {
-    for (const [question, qData] of Object.entries(data.questions)) {
-      faqs.push({
-        question,
-        answer: qData.answer,
-        tags: qData.tags || [],
-        category,
-      });
-    }
-  }
-  return faqs;
-};
-
-const faqList = prepareFAQList();
 const fuse = new Fuse(faqList, {
-  keys: ['question', 'tags'],
-  threshold: 0.3,
+  keys: [
+    { name: 'tags', weight: 3 },     // Dare più peso ai tags
+    { name: 'category', weight: 2 },  // Poi alla categoria
+    { name: 'question', weight: 1 }   // E infine alla domanda
+  ],
+  threshold: 0.2,                     // Rendere il matching più stringente
+  includeScore: true,                 // Include i punteggi per filtraggio
+  ignoreLocation: true,               // Ignora la posizione delle parole
+  useExtendedSearch: true            // Abilita la ricerca estesa
 });
 
 export const getFAQResponse = async (query) => {
@@ -72,16 +15,40 @@ export const getFAQResponse = async (query) => {
   
   const processedInput = expandInput(query.toLowerCase().trim());
   console.log("🔎 Input processato:", processedInput);
+  
+  // Identifica la categoria dalla domanda
+  const categoryKeywords = {
+    dining: ['ristorante', 'mangiare', 'pranzo', 'cena', 'colazione', 'bar'],
+    // ... altre categorie
+  };
 
-  const result = fuse.search(processedInput);
+  let detectedCategory = null;
+  for (const [category, keywords] of Object.entries(categoryKeywords)) {
+    if (keywords.some(keyword => processedInput.includes(keyword))) {
+      detectedCategory = category;
+      break;
+    }
+  }
 
- console.log("📋 FAQ disponibili:", faqList.map(f => f.question));
-console.log("📌 Risultati trovati:", result.map(r => r.item.question));
+  const results = fuse.search(processedInput);
+  console.log("📌 Risultati non filtrati:", results.map(r => ({
+    question: r.item.question,
+    score: r.score,
+    category: r.item.category
+  })));
 
+  // Filtra i risultati per categoria se rilevata
+  let filteredResults = results;
+  if (detectedCategory) {
+    filteredResults = results.filter(r => 
+      r.item.category === detectedCategory && r.score < 0.3
+    );
+  }
 
-  if (result.length > 0) {
-    console.log("✅ Risposta scelta:", result[0].item.question, "->", result[0].item.answer);
-    return result[0].item.answer;
+  if (filteredResults.length > 0) {
+    const bestMatch = filteredResults[0];
+    console.log("✅ Risposta scelta:", bestMatch.item.question, "->", bestMatch.item.answer);
+    return bestMatch.item.answer;
   }
 
   console.warn("⚠️ Nessuna corrispondenza trovata per:", query);

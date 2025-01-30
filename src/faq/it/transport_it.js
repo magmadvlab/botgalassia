@@ -1,4 +1,4 @@
-export const transportFAQ_IT = {
+export const transport_it = {
   title: 'Trasporti e Navetta',
   keywords: [
     'navetta', 'trasporto', 'bus', 'parcheggio', 'auto', 'taxi', 'mezzi', 

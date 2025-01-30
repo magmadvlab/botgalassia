@@ -1,7 +1,7 @@
 // src/services/faqService.js
 
 import Fuse from 'fuse.js';
-import faqData from '../faq/faqData';
+import faqData from '../faq/it/faqData';
 
 // Sinonimi e trasformazioni per migliorare la ricerca
 const transformations = {

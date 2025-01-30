@@ -1,4 +1,4 @@
-export const techservices_it = {
+export const tech_services_it = {
   title: 'Wi-Fi e Servizi Tecnologici',
   keywords: [
     'wifi', 'wi-fi', 'wi fi', 'internet', 'tv', 'televisione', 'connessione', 

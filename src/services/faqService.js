@@ -71,12 +71,14 @@ export const getFAQResponse = async (query) => {
   console.log("🔍 Domanda ricevuta:", query);
   
   const processedInput = expandInput(query.toLowerCase().trim());
+  console.log("🔎 Input processato:", processedInput);
+
   const result = fuse.search(processedInput);
 
   console.log("📌 Risultati trovati:", result.map(r => r.item.question));
 
   if (result.length > 0) {
-    console.log("✅ Risposta scelta:", result[0].item.question);
+    console.log("✅ Risposta scelta:", result[0].item.question, "->", result[0].item.answer);
     return result[0].item.answer;
   }
 

@@ -1,4 +1,4 @@
-export const skiFAQ_IT = {
+export const ski_it = {
   title: 'Servizi Sci e Sport',
   keywords: [
     // Attrezzatura e deposito

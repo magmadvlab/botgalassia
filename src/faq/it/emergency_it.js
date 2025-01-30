@@ -1,4 +1,4 @@
-export const emergencyFAQ_IT = {
+export const emergency_it = {
   title: 'Emergenze e Assistenza',
   keywords: [
     'emergenza', 'medico', 'farmacia', 'aiuto', 'assistenza', 'reception', 

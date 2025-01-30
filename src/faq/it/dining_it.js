@@ -1,4 +1,4 @@
-export const diningFAQ_IT = {
+export const dining_it = {
   title: 'Ristorazione',
   keywords: [
     'ristorante', 'colazione', 'pranzo', 'cena', 'mangiare',

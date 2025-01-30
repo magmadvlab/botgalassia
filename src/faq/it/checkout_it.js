@@ -1,4 +1,4 @@
-export const checkoutFAQ_IT = {
+export const checkout_it = {
   title: 'Check-out',
   keywords: [
     'check-out', 'checkout', 'orario', 'ora', 'quando', 'tardi', 'ritardo', 'uscita', 'fine', 'partenza', 

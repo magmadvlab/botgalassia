@@ -1,13 +1,13 @@
 // src/services/faqService.js
 
 import Fuse from 'fuse.js';
-import faqData from '../faq/it/faqData'; // Percorso corretto
+import faqData from '../faq/it/faqData';  // Percorso corretto
 import { translateTextIfNeeded } from './translationService';
 
-// Controllo che i dati delle FAQ siano stati caricati correttamente
+// Controlliamo se i dati delle FAQ sono stati caricati correttamente
 console.log("Dati FAQ caricati:", faqData);
 
-// Prepariamo un array con tutte le domande e i tag
+// Prepara la lista di domande e tag
 const prepareFAQList = () => {
   const faqs = [];
 
@@ -21,11 +21,10 @@ const prepareFAQList = () => {
       });
     }
   }
-
   return faqs;
 };
 
-// Configuriamo Fuse.js per una ricerca fuzzy
+// Configurazione di Fuse.js per la ricerca fuzzy
 const faqList = prepareFAQList();
 const fuse = new Fuse(faqList, {
   keys: ['question', 'tags'],
@@ -34,7 +33,7 @@ const fuse = new Fuse(faqList, {
 
 export const getFAQResponse = async (query, targetLang = 'IT') => {
   try {
-    console.log(" Domanda ricevuta:", query);
+    console.log("🔍 Domanda ricevuta:", query);
 
     // Normalizziamo la query
     const normalizedQuery = query.toLowerCase().trim();
@@ -42,17 +41,17 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
     // Cerchiamo una corrispondenza con Fuse.js
     const result = fuse.search(normalizedQuery);
 
-    console.log(" Risultati trovati:", result.map(r => r.item.question)); // Debug
+    // Stampiamo tutte le risposte trovate per il debug
+    console.log("📌 Risultati trovati:", result.map(r => r.item.question));
 
     if (result.length > 0) {
       const bestMatch = result[0].item.answer;
       console.log("✅ Risposta selezionata:", bestMatch);
 
-      // Se la lingua richiesta è diversa dall'italiano, traduciamo la risposta
+      // Se la lingua richiesta è diversa dall'italiano, traduciamo
       if (targetLang !== 'IT') {
         return await translateTextIfNeeded(bestMatch, targetLang);
       }
-
       return bestMatch;
     }
 

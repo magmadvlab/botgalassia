@@ -74,10 +74,12 @@ export const getFAQResponse = async (query) => {
   const result = fuse.search(processedInput);
 
   console.log("📌 Risultati trovati:", result.map(r => r.item.question));
-  
+
   if (result.length > 0) {
+    console.log("✅ Risposta scelta:", result[0].item.question);
     return result[0].item.answer;
   }
 
+  console.warn("⚠️ Nessuna corrispondenza trovata per:", query);
   return "Mi dispiace, non ho trovato una risposta specifica alla tua domanda. Puoi provare a riformularla?";
 };

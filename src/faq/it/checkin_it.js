@@ -1,4 +1,4 @@
-export const checkinFAQ_IT = {
+export const checkin_it = {
   title: 'Check-in',
   keywords: [
     'check-in', 'checkin', 'orario', 'ora', 'quando', 'presto', 'tempo', 'inizio', 

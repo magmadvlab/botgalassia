@@ -34,6 +34,31 @@ const fuse = new Fuse(faqList, {
 
 export const getFAQResponse = async (query, targetLang = 'IT') => {
   try {
+    console.log("🔍 Domanda ricevuta:", query);
+
+    // Normalizziamo la query
+    const normalizedQuery = query.toLowerCase().trim();
+
+    // Cerchiamo una corrispondenza con Fuse.js
+    const result = fuse.search(normalizedQuery);
+
+    console.log("📌 Risultati trovati:", result.map(r => r.item.question)); // Debug
+
+    if (result.length > 0) {
+      const bestMatch = result[0].item.answer;
+      console.log("✅ Risposta selezionata:", bestMatch);
+      return bestMatch;
+    }
+
+    console.warn("⚠️ Nessuna corrispondenza trovata per:", query);
+    return "Mi dispiace, non ho trovato una risposta specifica alla tua domanda. Puoi provare a riformularla?";
+  } catch (error) {
+    console.error('❌ Errore nella ricerca FAQ:', error);
+    return 'Mi scuso, ma al momento non riesco a processare la tua richiesta. Puoi riprovare?';
+  }
+};
+
+  try {
     console.log("Domanda ricevuta:", query);
 
     // Normalizziamo la query

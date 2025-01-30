@@ -1,4 +1,4 @@
-export const petsFAQ_IT = {
+export const pets_it = {
   title: 'Animali',
   keywords: [
     'animali', 'animale', 'cani', 'cane', 'gatti', 'gatto', 'pet', 'domestici', 

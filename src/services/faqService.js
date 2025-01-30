@@ -1,50 +1,63 @@
 // src/services/faqService.js
 
+import Fuse from 'fuse.js';
 import faqData from '../faq/it/faqData';  // Percorso corretto
 import { translateTextIfNeeded } from './translationService';
 
-const findBestMatch = (userQuery) => {
-  // Normalizza la query dell'utente
-  const query = userQuery.toLowerCase().trim();
+// Controllo che i dati delle FAQ siano stati caricati correttamente
+console.log("Dati FAQ caricati:", faqData);
 
-  // Cerca in tutte le categorie di FAQ
-  for (const [category, data] of Object.entries(faqData)) {
-    // Prima controlla se la query contiene parole chiave della categoria
-    if (data.keywords?.some(keyword => query.includes(keyword.toLowerCase()))) {
-      // Cerca tra le domande di questa categoria
-      for (const [question, qData] of Object.entries(data.questions)) {
-        // Controlla se la query corrisponde ai tag o alla domanda
-        if (qData.tags?.some(tag => query.includes(tag.toLowerCase())) ||
-            query.includes(question.toLowerCase())) {
-          return qData.answer;
-        }
-      }
-    }
-  }
+// Prepariamo un array con tutte le domande e i tag
+const prepareFAQList = () => {
+  const faqs = [];
 
-  // Se non trova corrispondenze esatte, cerca in tutti i tag
   for (const [category, data] of Object.entries(faqData)) {
     for (const [question, qData] of Object.entries(data.questions)) {
-      if (qData.tags?.some(tag => query.includes(tag.toLowerCase()))) {
-        return qData.answer;
-      }
+      faqs.push({
+        question,
+        answer: qData.answer,
+        tags: qData.tags || [],
+        category,
+      });
     }
   }
-
-  return 'Mi dispiace, non ho trovato una risposta specifica alla tua domanda. Puoi provare a riformularla o chiedermi di argomenti come check-in, servizi, o attività.';
+  
+  return faqs;
 };
+
+// Configuriamo Fuse.js per una ricerca fuzzy
+const faqList = prepareFAQList();
+const fuse = new Fuse(faqList, {
+  keys: ['question', 'tags'],
+  threshold: 0.3, // Più basso = più preciso, più alto = più tollerante
+});
 
 export const getFAQResponse = async (query, targetLang = 'IT') => {
   try {
-    // Trova la risposta in italiano
-    const response = findBestMatch(query);
-    
-    // Se necessario, traduci la risposta
-    if (targetLang !== 'IT') {
-      return await translateTextIfNeeded(response, targetLang);
+    console.log("Domanda ricevuta:", query);
+
+    // Normalizziamo la query
+    const normalizedQuery = query.toLowerCase().trim();
+
+    // Cerchiamo una corrispondenza con Fuse.js
+    const result = fuse.search(normalizedQuery);
+
+    // Se troviamo una corrispondenza, restituiamo la risposta
+    if (result.length > 0) {
+      const bestMatch = result[0].item.answer;
+      console.log("Risposta trovata:", bestMatch);
+
+      // Se la lingua richiesta è diversa dall'italiano, traduciamo la risposta
+      if (targetLang !== 'IT') {
+        return await translateTextIfNeeded(bestMatch, targetLang);
+      }
+
+      return bestMatch;
     }
-    
-    return response;
+
+    // Se nessuna corrispondenza viene trovata
+    console.warn("Nessuna corrispondenza trovata per:", query);
+    return "Mi dispiace, non ho trovato una risposta specifica alla tua domanda. Puoi provare a riformularla o chiedermi di argomenti come check-in, servizi, o attività.";
   } catch (error) {
     console.error('Errore nella ricerca FAQ:', error);
     return 'Mi scuso, ma al momento non riesco a processare la tua richiesta. Puoi riprovare?';

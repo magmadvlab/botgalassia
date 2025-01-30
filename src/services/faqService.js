@@ -75,7 +75,9 @@ export const getFAQResponse = async (query) => {
 
   const result = fuse.search(processedInput);
 
-  console.log("📌 Risultati trovati:", result.map(r => r.item.question));
+ console.log("📋 FAQ disponibili:", faqList.map(f => f.question));
+console.log("📌 Risultati trovati:", result.map(r => r.item.question));
+
 
   if (result.length > 0) {
     console.log("✅ Risposta scelta:", result[0].item.question, "->", result[0].item.answer);

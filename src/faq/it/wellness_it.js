@@ -1,4 +1,4 @@
-export const wellnessFAQ_IT = {
+export const wellness_it = {
  title: 'Wellness e Relax',
  keywords: ['piscina', 'nuotare', 'bagno', 'wellness', 'spa', 'idromassaggio', 'relax', 'cuffia', 'prenotazione', 'come arrivare', 'come andare', 'piano', 'ascensore', 'piano -1', 'arrivo', 'raggiungere', 'dove si trova', 'dove andare', 'ciabatte', 'costume', 'orari', 'spogliatoio'],
  questions: {

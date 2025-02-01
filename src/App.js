@@ -5,7 +5,7 @@ import faqData from './faq/it/faqData';
 
 // Importazione dei servizi aggiuntivi
 import { fetchWeatherData, formatWeatherMessage } from './services/weatherService';
-import { fetchTrafficUpdates } from './services/trafficService';
+import { fetchRoadNews } from './services/trafficService';
 import { detectUserLanguage, translateTextIfNeeded } from './services/translationService';
 import { GOOGLE_MAPS_URL } from './services/mapService';
 
@@ -142,29 +142,33 @@ const App = () => {
       </main>
 
       <footer className="bg-white p-3 flex flex-col space-y-2">
-        {/* Pulsante per Viabilità */}
-        <button
-          onClick={() => fetchTrafficUpdates()}
-          className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 flex items-center justify-center"
-        >
-          <MapPin className="w-5 h-5 mr-2" /> Verifica Viabilità
-        </button>
+  {/* Pulsante per Viabilità */}
+  <button
+    onClick={async () => {
+      const trafficUpdates = await fetchRoadNews();
+      setMessages(prev => [...prev, ...trafficUpdates.map(update => ({ type: 'bot', content: update.description }))]);
+    }}
+    className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 flex items-center justify-center"
+  >
+    <MapPin className="w-5 h-5 mr-2" /> Verifica Viabilità
+  </button>
 
-        {/* Pulsante per Google Maps */}
-        <button
-          onClick={() => window.open(GOOGLE_MAPS_URL, '_blank')}
-          className="bg-blue-500 text-white p-3 rounded-lg hover:opacity-90 flex items-center justify-center"
-        >
-          <Map className="w-5 h-5 mr-2" /> Ottieni Indicazioni
-        </button>
+  {/* Pulsante per Google Maps */}
+  <button
+    onClick={() => window.open(GOOGLE_MAPS_URL, '_blank')}
+    className="bg-blue-500 text-white p-3 rounded-lg hover:opacity-90 flex items-center justify-center"
+  >
+    <Map className="w-5 h-5 mr-2" /> Ottieni Indicazioni
+  </button>
 
-        <form className="flex space-x-2" onSubmit={handleSubmit}>
-          <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Fai una domanda..." className="flex-1 p-3 border border-gray-200 rounded-lg text-sm" />
-          <button type="submit" className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90">
-            <Send className="w-5 h-5" />
-          </button>
-        </form>
-      </footer>
+  <form className="flex space-x-2" onSubmit={handleSubmit}>
+    <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Fai una domanda..." className="flex-1 p-3 border border-gray-200 rounded-lg text-sm" />
+    <button type="submit" className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90">
+      <Send className="w-5 h-5" />
+    </button>
+  </form>
+</footer>
+
     </div>
   );
 };

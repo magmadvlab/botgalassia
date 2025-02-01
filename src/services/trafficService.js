@@ -71,13 +71,13 @@ export const fetchRoadNews = async () => {
         }))
       : [{
           title: 'Nessun problema di viabilità rilevato.',
-          description: '🔹 Fonte: [Provincia Cuneo](https://notizie.provincia.cuneo.it)\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni. L'Hotel Galassia non è responsabile dell'accuratezza delle informazioni.'
+          description: "🔹 Fonte: [Provincia Cuneo](https://notizie.provincia.cuneo.it)\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni. L'Hotel Galassia non è responsabile dell'accuratezza delle informazioni."
         }];
   } catch (error) {
     console.error('Errore nel recupero della viabilità:', error);
     return [{
       title: '⚠️ Attenzione',
-      description: 'Potrebbe esserci stato un cambiamento nella struttura del sito ufficiale. Consulta direttamente la fonte: [Provincia Cuneo](https://notizie.provincia.cuneo.it)\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni. L'Hotel Galassia non è responsabile dell'accuratezza delle informazioni.'
+      description: "Potrebbe esserci stato un cambiamento nella struttura del sito ufficiale. Consulta direttamente la fonte: [Provincia Cuneo](https://notizie.provincia.cuneo.it)\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni. L'Hotel Galassia non è responsabile dell'accuratezza delle informazioni."
     }];
   }
 };

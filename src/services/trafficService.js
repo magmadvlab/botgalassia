@@ -1,4 +1,3 @@
-
 // src/services/trafficService.js
 
 // Costanti per il rate limiting e timeout
@@ -13,7 +12,7 @@ export const ROADS_OF_INTEREST = [
 
 export const VIABILITY_URL = 'https://notizie.provincia.cuneo.it';
 
-// Ottimizzazione: Utilizzo di Set per ricerche O(1) invece di array
+// Parole chiave per identificare problemi alla viabilità
 const PROBLEM_KEYWORDS = new Set([
     'chius', 'interruz', 'bloccat', 'lavori', 'cantier', 
     'neve', 'ghiaccio', 'frana', 'smottamento', 'incidente', 
@@ -27,54 +26,18 @@ const RELEVANT_LOCATIONS = new Set([
 ]);
 
 /**
- * Controlla se una notizia è rilevante per la viabilità di Prato Nevoso
+ * Controlla se il testo contiene avvisi di viabilità rilevanti
  * @param {string} text - Il testo da analizzare
- * @returns {boolean} - True se la notizia è rilevante
+ * @returns {boolean} - True se viene rilevato un problema
  */
 const isRelevantAlert = (text) => {
     if (!text) return false;
-    
     const lowerText = text.toLowerCase();
-    
-    // Ottimizzazione: prima controlla le location che sono meno frequenti
-    const hasRelevantLocation = Array.from(RELEVANT_LOCATIONS).some(location => 
-        lowerText.includes(location)
-    );
-    
-    if (!hasRelevantLocation) return false;
-    
-    // Solo se la location è rilevante, controlla le keywords
-    return Array.from(PROBLEM_KEYWORDS).some(keyword => 
-        lowerText.includes(keyword)
-    );
+    return Array.from(PROBLEM_KEYWORDS).some(keyword => lowerText.includes(keyword));
 };
 
 /**
- * Estrae il testo da un elemento del DOM in modo sicuro
- * @param {Element} parent - Elemento DOM padre
- * @param {string} selector - Selettore CSS
- * @returns {string} - Testo estratto o stringa vuota
- */
-const safeQuerySelector = (parent, selector) => {
-    try {
-        return parent.querySelector(selector)?.textContent?.trim() || '';
-    } catch {
-        return '';
-    }
-};
-
-/**
- * Crea un oggetto notizia standard
- * @param {Object} params - Parametri della notizia
- * @returns {Object} - Oggetto notizia formattato
- */
-const createNewsItem = ({ title, content }) => ({
-    title,
-    description: `${content}\n\n🔹 Fonte: [Provincia Cuneo](${VIABILITY_URL})\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni. L'Hotel Galassia non è responsabile dell'accuratezza delle informazioni.`
-});
-
-/**
- * Recupera le notizie sulla viabilità da Provincia di Cuneo
+ * Recupera le notizie sulla viabilità dalla pagina della Provincia di Cuneo
  * @returns {Promise<Array>} Array di notizie filtrate
  */
 export const fetchRoadNews = async () => {
@@ -105,41 +68,25 @@ export const fetchRoadNews = async () => {
         const text = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
+        const pageText = doc.body.textContent || '';
 
-        const newsItems = Array.from(doc.querySelectorAll('.feed-item'));
-
-        if (!newsItems.length) {
-            throw new Error('Struttura della pagina cambiata');
+        if (isRelevantAlert(pageText)) {
+            return [{
+                title: '⚠️ Avviso viabilità',
+                description: `Potrebbero esserci problemi sulle strade locali. Consulta direttamente la fonte: [Provincia Cuneo](${VIABILITY_URL})\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni.`
+            }];
         }
 
-        const filteredAlerts = newsItems
-            .map(item => ({
-                title: safeQuerySelector(item, '.feed-item-title a'),
-                date: safeQuerySelector(item, '.feed-item-date'),
-                content: safeQuerySelector(item, '.feed-item-body')
-            }))
-            .filter(item => isRelevantAlert(`${item.title} ${item.content}`))
-            .map(createNewsItem);
-
-        const result = filteredAlerts.length > 0 
-            ? filteredAlerts
-            : [{
-                title: 'Nessun problema di viabilità rilevato.',
-                description: `🔹 Fonte: [Provincia Cuneo](${VIABILITY_URL})\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni. L'Hotel Galassia non è responsabile dell'accuratezza delle informazioni.`
-            }];
-
-        // Aggiorna la cache
-        cachedNews = result;
-        lastFetchTime = now;
-
-        return result;
+        return [{
+            title: '✅ Situazione strade regolare',
+            description: `Non si registrano particolari disagi sulle arterie stradali, ma è buona norma contattare il 112 per aggiornamenti.`
+        }];
 
     } catch (error) {
         console.error('Errore nel recupero della viabilità:', error);
-        
         return [{
             title: '⚠️ Attenzione',
-            description: `Potrebbe esserci stato un cambiamento nella struttura del sito ufficiale. Consulta direttamente la fonte: [Provincia Cuneo](${VIABILITY_URL})\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni. L'Hotel Galassia non è responsabile dell'accuratezza delle informazioni.`
+            description: `Non è stato possibile recuperare le informazioni sulla viabilità. Consulta direttamente la fonte: [Provincia Cuneo](${VIABILITY_URL})\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni.`
         }];
     }
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, Send, MapPin, Map } from 'lucide-react';
 import logo from './logo-hotel-galassia-prato-nevoso-01.png';
-import faqData from './faq/faqData';
+import faqData from './faq/it/faqData';
 
 // Importazione dei servizi aggiuntivi
 import { fetchWeatherData, formatWeatherMessage } from './services/weatherService';

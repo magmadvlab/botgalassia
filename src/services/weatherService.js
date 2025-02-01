@@ -1,7 +1,7 @@
 // src/services/weatherService.js
 
 const WEATHER_CONFIG = {
-  API_KEY: "980c870dc62110aa459671a67531a14e",
+  API_KEY: process.env.OPENWEATHER_API_KEY,
   LAT: 44.2537,
   LON: 7.7915,
   UNITS: "metric"
@@ -22,7 +22,7 @@ export const fetchWeatherData = async (lang = 'it') => {
     return data;
   } catch (error) {
     console.error('Weather service error:', error);
-    throw error;
+    return null;
   }
 };
 
@@ -33,27 +33,32 @@ export const fetchWeatherData = async (lang = 'it') => {
  * @returns {string} Formatted message
  */
 export const formatWeatherMessage = (weatherData, lang = 'it') => {
+  if (!weatherData) {
+    return lang === 'it' ?
+      "❗ Errore nel recupero delle informazioni meteo. Verifica le condizioni su un sito affidabile." :
+      "❗ Error fetching weather information. Please check a reliable weather source.";
+  }
+  
   const temp = Math.round(weatherData.main.temp);
-  const conditions = weatherData.weather[0].description;
+  const conditions = weatherData.weather[0].description.toLowerCase();
   const date = new Date();
   const options = { weekday: 'long', day: 'numeric', month: 'long' };
   const dateString = date.toLocaleDateString(lang === 'it' ? 'it-IT' : 'en-US', options);
 
-  // Messages templates based on conditions
   const messages = {
     it: {
-      snow: `❄️ ${dateString} ⛄ Che meraviglia, sta nevicando a Prato Nevoso! La temperatura è di ${temp}°C. È il momento perfetto per una fantastica giornata sugli sci! 🎿 🏂`,
-      sunny: `🌞 ${dateString} Splendida giornata di sole a Prato Nevoso con ${temp}°C. Le piste ti aspettano per un'avventura indimenticabile! ⛷️ 🏔️`,
-      cloudy: `⛅ ${dateString} A Prato Nevoso il cielo è coperto e ci sono ${temp}°C. Una giornata perfetta per scoprire la magia della montagna! 🗻 ✨`,
-      rain: `🌧️ ${dateString} Oggi pioggia a Prato Nevoso e ${temp}°C. Un'occasione perfetta per rilassarsi nel nostro accogliente hotel! ☕ 🏡`,
-      default: `🌤️ ${dateString} A Prato Nevoso ci sono ${conditions} e ${temp}°C. La magia della montagna ti aspetta per un'esperienza unica! 🏔️ ✨`
+      snow: `❄️ ${dateString} ⛄ Nevicata in corso a Prato Nevoso! Temperatura: ${temp}°C. Ottima giornata per sciare! 🎿`,
+      sunny: `🌞 ${dateString} Giornata soleggiata a Prato Nevoso, ${temp}°C. Perfetto per le piste! ⛷️`,
+      cloudy: `⛅ ${dateString} Cielo coperto a Prato Nevoso, ${temp}°C. Atmosfera perfetta per un'escursione! 🏔️`,
+      rain: `🌧️ ${dateString} Pioggia a Prato Nevoso, ${temp}°C. Rilassati nel nostro hotel accogliente! ☕`,
+      default: `🌤️ ${dateString} A Prato Nevoso il meteo è ${conditions} con ${temp}°C. Goditi la montagna! 🏔️`
     },
     en: {
-      snow: `❄️ ${dateString} ⛄ Amazing, it's snowing in Prato Nevoso! The temperature is ${temp}°C. Perfect time for an incredible day of skiing! 🎿 🏂`,
-      sunny: `🌞 ${dateString} Beautiful sunny day in Prato Nevoso with ${temp}°C. The slopes are waiting for your unforgettable adventure! ⛷️ 🏔️`,
-      cloudy: `⛅ ${dateString} In Prato Nevoso it's cloudy with ${temp}°C. A perfect day to discover the mountain magic! 🗻 ✨`,
-      rain: `🌧️ ${dateString} Today it's raining in Prato Nevoso with ${temp}°C. Perfect time to relax in our cozy hotel! ☕ 🏡`,
-      default: `🌤️ ${dateString} In Prato Nevoso we have ${conditions} and ${temp}°C. The mountain magic awaits you for a unique experience! 🏔️ ✨`
+      snow: `❄️ ${dateString} ⛄ Snowfall in Prato Nevoso! Temperature: ${temp}°C. Perfect day for skiing! 🎿`,
+      sunny: `🌞 ${dateString} Sunny day in Prato Nevoso, ${temp}°C. The slopes are waiting! ⛷️`,
+      cloudy: `⛅ ${dateString} Cloudy in Prato Nevoso, ${temp}°C. A great day for exploring! 🏔️`,
+      rain: `🌧️ ${dateString} Rainy day in Prato Nevoso, ${temp}°C. Cozy up in the hotel! ☕`,
+      default: `🌤️ ${dateString} In Prato Nevoso, the weather is ${conditions} with ${temp}°C. Enjoy the mountains! 🏔️`
     }
   };
 

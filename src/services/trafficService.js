@@ -1,65 +1,85 @@
-// Constants
+// src/services/TrafficService.js
+
 export const ROADS_OF_INTEREST = [
   'SP327', 'SS28', 'SP37', 'SP164', 'SP183', 'SP232'
 ];
 
-export const RSS_URL = 'https://www.provincia.cuneo.it/aggregator/sources/4';
+export const VIABILITY_URL = 'https://notizie.provincia.cuneo.it';
 
 /**
- * Categorizes the type of traffic update
+ * Parole chiave per identificare problemi alla viabilità
  */
-export const categorizeUpdate = (title) => {
-  const lowerTitle = title.toLowerCase();
-  if (lowerTitle.includes('neve') || lowerTitle.includes('gelo')) return 'WEATHER';
-  if (lowerTitle.includes('incidente')) return 'ACCIDENT';
-  if (lowerTitle.includes('lavori')) return 'ROADWORK';
-  if (lowerTitle.includes('chiusura') || lowerTitle.includes('interruzione')) return 'CLOSURE';
-  return 'OTHER';
-};
+const PROBLEM_KEYWORDS = [
+  'chius', 'interruz', 'bloccat', 'lavori', 'cantier', 'neve', 'ghiaccio', 'frana', 'smottamento',
+  'incidente', 'senso unico', 'semaforo', 'deviazione'
+];
 
 /**
- * Finds affected roads in update text
+ * Località rilevanti per Prato Nevoso
  */
-export const findAffectedRoads = (title, description) => {
-  const text = `${title} ${description}`.toLowerCase();
-  return ROADS_OF_INTEREST.filter(road => 
-    text.includes(road.toLowerCase())
+const RELEVANT_LOCATIONS = [
+  'prato nevoso', 'frabosa soprana', 'frabosa sottana', 'mondovì',
+  'provinciale 37', 'sp 37', 'provinciale 243', 'sp 243', 'artesina', 'valle ellero'
+];
+
+/**
+ * Controlla se una notizia è rilevante per la viabilità di Prato Nevoso
+ */
+const isRelevantAlert = (text) => {
+  const lowerText = text.toLowerCase();
+  return (
+    RELEVANT_LOCATIONS.some(location => lowerText.includes(location)) &&
+    PROBLEM_KEYWORDS.some(keyword => lowerText.includes(keyword))
   );
 };
 
 /**
- * Fetches and parses traffic updates
+ * Recupera le notizie sulla viabilità da Provincia di Cuneo
  */
-export const fetchTrafficUpdates = async () => {
+export const fetchRoadNews = async () => {
   try {
-    const response = await fetch(RSS_URL);
+    const response = await fetch(VIABILITY_URL);
+    if (!response.ok) throw new Error('Errore nel caricamento della viabilità');
+    
     const text = await response.text();
     const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(text, "text/xml");
-    const items = xmlDoc.getElementsByTagName("item");
+    const doc = parser.parseFromString(text, 'text/html');
     
-    const updates = [];
+    const newsItems = Array.from(doc.querySelectorAll('.feed-item'));
     
-    for(let i = 0; i < items.length; i++) {
-      const title = items[i].getElementsByTagName("title")[0].textContent;
-      const description = items[i].getElementsByTagName("description")[0].textContent;
-      const pubDate = items[i].getElementsByTagName("pubDate")[0].textContent;
-      
-      if (ROADS_OF_INTEREST.some(road => title.includes(road) || description.includes(road))) {
-        updates.push({
-          id: i,
-          title,
-          description,
-          date: new Date(pubDate),
-          type: categorizeUpdate(title),
-          affectedRoads: findAffectedRoads(title, description)
-        });
-      }
+    if (newsItems.length === 0) {
+      throw new Error('Struttura della pagina cambiata: impossibile trovare aggiornamenti sulla viabilità. Controlla la fonte ufficiale.');
     }
     
-    return updates;
+    const filteredAlerts = newsItems
+      .map(item => {
+        const title = item.querySelector('.feed-item-title a')?.textContent || '';
+        const date = item.querySelector('.feed-item-date')?.textContent || '';
+        const content = item.querySelector('.feed-item-body')?.textContent || '';
+        
+        return {
+          title,
+          date,
+          content,
+          isRelevant: isRelevantAlert(title + ' ' + content)
+        };
+      })
+      .filter(item => item.isRelevant);
+    
+    return filteredAlerts.length > 0
+      ? filteredAlerts.map(alert => ({
+          title: alert.title,
+          description: `${alert.content}\n\n🔹 Fonte: [Provincia Cuneo](https://notizie.provincia.cuneo.it)\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni. L'Hotel Galassia non è responsabile dell'accuratezza delle informazioni.`
+        }))
+      : [{
+          title: 'Nessun problema di viabilità rilevato.',
+          description: '🔹 Fonte: [Provincia Cuneo](https://notizie.provincia.cuneo.it)\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni. L'Hotel Galassia non è responsabile dell'accuratezza delle informazioni.'
+        }];
   } catch (error) {
-    console.error('Error fetching traffic updates:', error);
-    throw new Error('Failed to fetch traffic updates');
+    console.error('Errore nel recupero della viabilità:', error);
+    return [{
+      title: '⚠️ Attenzione',
+      description: 'Potrebbe esserci stato un cambiamento nella struttura del sito ufficiale. Consulta direttamente la fonte: [Provincia Cuneo](https://notizie.provincia.cuneo.it)\n⚠️ Si consiglia di guidare con prudenza e di contattare il numero di emergenza 112 per ulteriori informazioni. L'Hotel Galassia non è responsabile dell'accuratezza delle informazioni.'
+    }];
   }
 };

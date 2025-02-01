@@ -6,7 +6,7 @@ import { translateTextIfNeeded } from './translationService';
 // Configurazione della ricerca fuzzy
 const fuseOptions = {
   keys: [
-    { name: 'tags', weight: 3 },     // Maggiore peso ai tag
+    { name: 'tags', weight: 4 },     // Maggiore peso ai tag
     { name: 'category', weight: 2 }, // Poi alla categoria
     { name: 'question', weight: 1 }  // Infine alla domanda
   ],

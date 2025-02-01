@@ -51,20 +51,18 @@ export const fetchRoadNews = async () => {
       throw new Error('Struttura della pagina cambiata: impossibile trovare aggiornamenti sulla viabilità. Controlla la fonte ufficiale.');
     }
     
-    const filteredAlerts = newsItems
-      .map(item => {
-        const title = item.querySelector('.feed-item-title a')?.textContent || '';
-        const date = item.querySelector('.feed-item-date')?.textContent || '';
-        const content = item.querySelector('.feed-item-body')?.textContent || '';
-        
-        return {
-          title,
-          date,
-          content,
-          isRelevant: isRelevantAlert(title + ' ' + content)
-        };
-      })
-      .filter(item => item.isRelevant);
+    const filteredAlerts = newsItems.map(item => {
+      const title = item.querySelector('.feed-item-title a')?.textContent || '';
+      const date = item.querySelector('.feed-item-date')?.textContent || '';
+      const content = item.querySelector('.feed-item-body')?.textContent || '';
+      
+      return {
+        title,
+        date,
+        content,
+        isRelevant: isRelevantAlert(title + ' ' + content)
+      };
+    }).filter(item => item.isRelevant);
     
     return filteredAlerts.length > 0
       ? filteredAlerts.map(alert => ({

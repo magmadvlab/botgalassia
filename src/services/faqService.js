@@ -10,7 +10,7 @@ const fuseOptions = {
     { name: 'category', weight: 2 }, // Poi alla categoria
     { name: 'question', weight: 1 }  // Infine alla domanda
   ],
-  threshold: 0.25,  // Sensibilità della ricerca (più basso = più preciso)
+  threshold: 0.1,  // Sensibilità della ricerca (più basso = più preciso)
   includeScore: true,
   ignoreLocation: true,
   useExtendedSearch: true

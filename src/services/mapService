@@ -8,11 +8,7 @@ const HOTEL_ADDRESS = "Via Malanotte, 6, 12083 Frabosa Sottana CN";
  * @returns {string} URL di Google Maps con l'indirizzo dell'hotel
  */
 export const getGoogleMapsDirections = (startLocation = '') => {
-  let baseUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(HOTEL_ADDRESS)}`;
-  
-  if (startLocation) {
-    baseUrl += `&origin=${encodeURIComponent(startLocation)}`;
-  }
+  let baseUrl = `https://www.google.com/maps/dir/${encodeURIComponent(startLocation)}/${encodeURIComponent(HOTEL_ADDRESS)}`; // Corrected URL
 
   return baseUrl;
 };

@@ -1,5 +1,3 @@
-// src/services/faqService.js
-
 import Fuse from 'fuse.js';
 import faqData from '../faq/it/faqData';
 import { expandInput } from './textProcessingService'; // Opzionale per sinonimi
@@ -45,15 +43,22 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
   const processedInput = expandInput(query.toLowerCase().trim()); // Normalizzazione input (opzionale)
   console.log("🔎 Input processato:", processedInput);
 
+  // Nuova logica: cerca sia nei tags che nella domanda stessa
   const results = fuse.search(processedInput);
   console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, score: r.score })));
 
-  if (results.length > 0 && results[0].score < 0.3) {
+  if (results.length > 0 && results[0].score < 0.4) { // Aumento leggero del threshold
     const bestMatch = results[0].item;
     console.log("✅ Risposta scelta:", bestMatch.question, "->", bestMatch.answer);
 
     // Traduzione se necessario
     return targetLang !== 'IT' ? await translateTextIfNeeded(bestMatch.answer, targetLang) : bestMatch.answer;
+  }
+
+  // Se nessun risultato preciso, cerca nelle domande direttamente
+  const fallbackMatch = allQuestions.find(q => q.question.toLowerCase().includes(processedInput));
+  if (fallbackMatch) {
+    return targetLang !== 'IT' ? await translateTextIfNeeded(fallbackMatch.answer, targetLang) : fallbackMatch.answer;
   }
 
   console.warn("⚠️ Nessuna corrispondenza trovata per:", query);

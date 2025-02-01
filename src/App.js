@@ -7,7 +7,7 @@ import faqData from './faq/it/faqData';
 import { fetchWeatherData, formatWeatherMessage } from './services/weatherService';
 import { fetchRoadNews } from './services/trafficService';
 import { detectUserLanguage, translateTextIfNeeded } from './services/translationService';
-import { GOOGLE_MAPS_URL } from './services/mapService';
+import { GOOGLE_MAPS_URL } from './services/mapsService';
 
 const App = () => {
   const [messages, setMessages] = useState([

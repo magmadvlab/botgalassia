@@ -1,56 +1,61 @@
-const fuse = new Fuse(faqList, {
-  keys: [
-    { name: 'tags', weight: 3 },     // Dare più peso ai tags
-    { name: 'category', weight: 2 },  // Poi alla categoria
-    { name: 'question', weight: 1 }   // E infine alla domanda
-  ],
-  threshold: 0.2,                     // Rendere il matching più stringente
-  includeScore: true,                 // Include i punteggi per filtraggio
-  ignoreLocation: true,               // Ignora la posizione delle parole
-  useExtendedSearch: true            // Abilita la ricerca estesa
-});
+// src/services/faqService.js
 
-export const getFAQResponse = async (query) => {
+import Fuse from 'fuse.js';
+import faqData from '../faq/it/faqData';
+import { expandInput } from './textProcessingService'; // Opzionale per sinonimi
+import { translateTextIfNeeded } from './translationService';
+
+// Configurazione della ricerca fuzzy
+const fuseOptions = {
+  keys: [
+    { name: 'tags', weight: 3 },     // Maggiore peso ai tag
+    { name: 'category', weight: 2 }, // Poi alla categoria
+    { name: 'question', weight: 1 }  // Infine alla domanda
+  ],
+  threshold: 0.3,  // Sensibilità della ricerca (più basso = più preciso)
+  includeScore: true,
+  ignoreLocation: true,
+  useExtendedSearch: true
+};
+
+// Creazione dell'oggetto Fuse con tutte le FAQ combinate
+const allQuestions = Object.values(faqData).flatMap(category =>
+  Object.entries(category.questions).map(([question, data]) => ({
+    question,
+    answer: data.answer,
+    tags: data.tags,
+    category: category.title
+  }))
+);
+
+const fuse = new Fuse(allQuestions, fuseOptions);
+
+/**
+ * Trova la miglior risposta alla domanda dell'utente
+ * @param {string} query - Domanda dell'utente
+ * @returns {string} - Risposta trovata
+ */
+export const getFAQResponse = async (query, targetLang = 'IT') => {
+  if (!query || query.trim().length === 0) {
+    return "Non ho capito la tua domanda. Prova con parole chiave come 'piscina', 'check-in' o 'navetta'.";
+  }
+
   console.log("🔍 Domanda ricevuta:", query);
   
-  const processedInput = expandInput(query.toLowerCase().trim());
+  const processedInput = expandInput(query.toLowerCase().trim()); // Normalizzazione input (opzionale)
   console.log("🔎 Input processato:", processedInput);
-  
-  // Identifica la categoria dalla domanda
-  const categoryKeywords = {
-    dining: ['ristorante', 'mangiare', 'pranzo', 'cena', 'colazione', 'bar'],
-    // ... altre categorie
-  };
-
-  let detectedCategory = null;
-  for (const [category, keywords] of Object.entries(categoryKeywords)) {
-    if (keywords.some(keyword => processedInput.includes(keyword))) {
-      detectedCategory = category;
-      break;
-    }
-  }
 
   const results = fuse.search(processedInput);
-  console.log("📌 Risultati non filtrati:", results.map(r => ({
-    question: r.item.question,
-    score: r.score,
-    category: r.item.category
-  })));
+  console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, score: r.score })));
 
-  // Filtra i risultati per categoria se rilevata
-  let filteredResults = results;
-  if (detectedCategory) {
-    filteredResults = results.filter(r => 
-      r.item.category === detectedCategory && r.score < 0.3
-    );
-  }
+  if (results.length > 0 && results[0].score < 0.3) {
+    const bestMatch = results[0].item;
+    console.log("✅ Risposta scelta:", bestMatch.question, "->", bestMatch.answer);
 
-  if (filteredResults.length > 0) {
-    const bestMatch = filteredResults[0];
-    console.log("✅ Risposta scelta:", bestMatch.item.question, "->", bestMatch.item.answer);
-    return bestMatch.item.answer;
+    // Traduzione se necessario
+    return targetLang !== 'IT' ? await translateTextIfNeeded(bestMatch.answer, targetLang) : bestMatch.answer;
   }
 
   console.warn("⚠️ Nessuna corrispondenza trovata per:", query);
-  return "Mi dispiace, non ho trovato una risposta specifica alla tua domanda. Puoi provare a riformularla?";
+  return "Mi dispiace, non ho trovato una risposta specifica. Prova a riformulare la domanda.";
 };

@@ -33,7 +33,6 @@ export const needsTranslation = (currentLang, targetLang) => {
  * @returns {Promise<string>} Testo tradotto
  */
 export const translateTextIfNeeded = async (text, targetLang) => {
-  // Se non c'è testo o è già in italiano, non tradurre
   if (!text || targetLang === 'IT') return text;
   
   try {
@@ -52,14 +51,14 @@ export const translateTextIfNeeded = async (text, targetLang) => {
 
     if (!response.ok) {
       console.error(`Errore DeepL: ${response.status} ${response.statusText}`);
-      return text; // In caso di errore, ritorna il testo originale
+      return text; 
     }
 
     const data = await response.json();
     return data.translations[0].text;
   } catch (error) {
     console.error('Errore di traduzione:', error);
-    return text; // In caso di errore, ritorna il testo originale
+    return text; 
   }
 };
 

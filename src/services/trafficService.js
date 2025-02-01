@@ -1,4 +1,4 @@
-// src/services/TrafficService.js
+// src/services/trafficService.js
 
 export const ROADS_OF_INTEREST = [
   'SP327', 'SS28', 'SP37', 'SP164', 'SP183', 'SP232'

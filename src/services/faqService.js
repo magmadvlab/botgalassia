@@ -94,41 +94,48 @@ console.log("🔎 Input processato dopo normalizzazione:", processedInput);
   const results = fuse.search(processedInput);
   console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, score: r.score })));
 
- if (results.length > 0 && results[0].score < 0.25) {
-  const bestMatch = results[0].item;
-  console.log("✅ Risposta scelta (Accettata):", bestMatch.question, "->", bestMatch.answer);
+if (results.length > 0) {
+  console.log("📌 Risultati trovati:", results.map((r, index) => ({
+    posizione: index + 1,
+    domanda: r.item.question,
+    punteggio: r.score
+  })));
+
+  // Se il punteggio del miglior risultato è inferiore a 0.25, accettiamo la risposta
+  if (results[0].score < 0.25) {
+    const bestMatch = results[0].item;
+    console.log("✅ Risposta scelta (Accettata):", bestMatch.question, "->", bestMatch.answer);
 
     return {
       answer: bestMatch.answer,
       questionMatched: bestMatch.question,
       suggestions: []
     };
+  } else {
+    console.log("⚠️ Nessun risultato con punteggio abbastanza basso, cerchiamo nei TAG...");
   }
+}
 
-  // Se nessun risultato preciso, cerca nelle domande direttamente
-  const fallbackMatch = allQuestions.find(q => q.question.toLowerCase().includes(processedInput));
-  if (fallbackMatch) {
-    return {
-      answer: fallbackMatch.answer,
-      questionMatched: fallbackMatch.question,
-      suggestions: []
-    };
-  }
+// Se nessuna risposta ha un punteggio sufficiente, cerchiamo nei TAG
+const tagMatch = allQuestions.find(q =>
+  q.tags && q.tags.some(tag => processedInput.includes(tag))
+);
 
-  // Log della domanda non trovata
-  fetch('/log-missing-question', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      question: query,
-      timestamp: new Date().toISOString()
-    })
-  }).catch(console.error);
-
-  console.warn("⚠️ Nessuna corrispondenza trovata per:", query);
+if (tagMatch) {
+  console.log("✅ Risposta trovata grazie ai TAG:", tagMatch.question);
   return {
-    answer: "Mi dispiace, non ho trovato una risposta specifica. Prova a riformulare la domanda.",
-    questionMatched: null,
-    suggestions: ['piscina', 'check-in', 'colazione', 'navetta']
+    answer: tagMatch.answer,
+    questionMatched: tagMatch.question,
+    suggestions: []
   };
+}
+
+// Se ancora nessuna corrispondenza, forniamo un messaggio generico
+console.log("❌ Nessuna corrispondenza trovata.");
+return {
+  answer: "Mi dispiace, non ho trovato una risposta precisa. Prova a riformulare la domanda.",
+  questionMatched: null,
+  suggestions: ['piscina', 'check-in', 'colazione', 'navetta']
+};
+
 };

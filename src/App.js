@@ -30,17 +30,11 @@ const App = () => {
     const userMessage = { type: 'user', content: input };
     setMessages((prev) => [...prev, userMessage]);
 
-    const response = await getFAQResponse(input, userLang);
-    const botResponse = { type: 'bot', content: response.answer };
-    
-    setMessages((prev) => [...prev, botResponse]);
-    
-    if (response.suggestions.length > 0) {
-      setMessages((prev) => [...prev, { type: 'bot', content: `Non ho trovato una risposta precisa. Prova a chiedere di: ${response.suggestions.join(', ')}` }]);
-    }
+    const { answer } = await getFAQResponse(input, userLang);
+    setMessages((prev) => [...prev, { type: 'bot', content: answer }]);
 
     setInput('');
-  };
+};
 
   return (
     <div className="fixed inset-0 flex flex-col bg-gray-50">

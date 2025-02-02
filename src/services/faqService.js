@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js';
 import faqData from '../faq/it/faqData';
-import { expandInput } from './textProcessingService'; // Opzionale per sinonimi
+import { expandInput } from './textProcessingService'; // Gestione sinonimi
 import { translateTextIfNeeded } from './translationService';
 
 // Configurazione della ricerca fuzzy
@@ -10,7 +10,7 @@ const fuseOptions = {
     { name: 'category', weight: 2 }, // Poi alla categoria
     { name: 'question', weight: 1 }  // Infine alla domanda
   ],
-  threshold: 0.1,  // Sensibilità della ricerca (più basso = più preciso)
+  threshold: 0.2,  // Maggiore precisione riducendo il range di errore
   includeScore: true,
   ignoreLocation: true,
   useExtendedSearch: true
@@ -40,14 +40,14 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
 
   console.log("🔍 Domanda ricevuta:", query);
   
-  const processedInput = expandInput(query.toLowerCase().trim()); // Normalizzazione input (opzionale)
+  const processedInput = expandInput(query.toLowerCase().trim()); // Normalizzazione input
   console.log("🔎 Input processato:", processedInput);
 
-  // Nuova logica: cerca sia nei tags che nella domanda stessa
+  // Ricerca fuzzy nei tag e nelle domande
   const results = fuse.search(processedInput);
   console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, score: r.score })));
 
-  if (results.length > 0 && results[0].score < 0.4) { // Aumento leggero del threshold
+  if (results.length > 0 && results[0].score < 0.3) { // Controllo con soglia precisa
     const bestMatch = results[0].item;
     console.log("✅ Risposta scelta:", bestMatch.question, "->", bestMatch.answer);
 

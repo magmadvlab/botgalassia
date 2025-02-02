@@ -105,16 +105,16 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
 
   // Miglioriamo la ricerca nei TAG selezionando il miglior match possibile
   const tagMatches = allQuestions
-  .map(q => ({
-    question: q.question,
-    answer: q.answer,
-    tags: q.tags,
-    score: q.tags 
-      ? q.tags.reduce((acc, tag) => acc + (processedInput.includes(tag) ? 3 : 0), 0) 
-      : 0
-  }));
-  .filter(q => q.score > 2) // 🔹 Consideriamo solo match con almeno 2 tag corrispondenti
-  .sort((a, b) => b.score - a.score);
+    .map(q => ({
+      question: q.question,
+      answer: q.answer,
+      tags: q.tags,
+      score: q.tags 
+        ? q.tags.reduce((acc, tag) => acc + (processedInput.includes(tag) ? 3 : 0), 0) 
+        : 0
+    }))
+    .filter(q => q.score > 2) // 🔹 Consideriamo solo match con almeno 2 tag corrispondenti
+    .sort((a, b) => b.score - a.score);
 
   if (tagMatches.length > 0) {
     const bestTagMatch = tagMatches[0];

@@ -51,7 +51,7 @@ const fuseOptions = {
     { name: 'category', weight: 2 },
     { name: 'question', weight: 1 }
   ],
-  threshold: 0.5,
+  threshold: 0.1,
   includeScore: true,
   ignoreLocation: true,
   useExtendedSearch: true

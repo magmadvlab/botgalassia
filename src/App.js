@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send } from 'lucide-react';
+import { Send, MapPin, Map } from 'lucide-react'; // Import missing icons
 import logo from './logo-hotel-galassia-prato-nevoso-01.png';
 import { getFAQResponse } from './services/faqService';
 import { fetchWeatherData, formatWeatherMessage } from './services/weatherService';
@@ -23,9 +23,7 @@ const App = () => {
         const weatherData = await fetchWeatherData(userLang);
         const weatherMessage = formatWeatherMessage(weatherData, userLang);
         const trafficUpdates = await fetchRoadNews();
-        const trafficMessage = trafficUpdates.map(update => update.description).join("
-
-");
+        const trafficMessage = trafficUpdates.map(update => update.description).join("<br/>"); // Use <br/> for line breaks in HTML
 
         setMessages(prev => [
           ...prev,
@@ -55,7 +53,7 @@ const App = () => {
     setMessages((prev) => [...prev, { type: 'bot', content: answer }]);
 
     setInput('');
-};
+  };
 
   return (
     <div className="fixed inset-0 flex flex-col bg-gray-50">
@@ -70,7 +68,7 @@ const App = () => {
         {messages.map((message, index) => (
           <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[90%] p-3 rounded-lg ${message.type === 'user' ? 'bg-[#B8860B] text-white' : 'bg-white shadow-sm'}`}>
-              <div className="text-sm">{message.content}</div>
+              <div className="text-sm" dangerouslySetInnerHTML={{ __html: message.content }}></div> {/* Use dangerouslySetInnerHTML for HTML content */}
             </div>
           </div>
         ))}

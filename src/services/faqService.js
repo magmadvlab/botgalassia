@@ -105,14 +105,14 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
 
   // Miglioriamo la ricerca nei TAG selezionando il miglior match possibile
   const tagMatches = allQuestions
-    .map(q => ({
-      question: q.question,
-      answer: q.answer,
-      tags: q.tags,
-      score: q.tags ? q.tags.filter(tag => processedInput.includes(tag)).length : 0
-    }))
-    .filter(q => q.score > 0)
-    .sort((a, b) => b.score - a.score);
+  .map(q => ({
+    question: q.question,
+    answer: q.answer,
+    tags: q.tags,
+    score: q.tags ? q.tags.reduce((acc, tag) => acc + (processedInput.includes(tag) ? 2 : 0), 0) : 0
+  }))
+  .filter(q => q.score > 0)
+  .sort((a, b) => b.score - a.score);
 
   if (tagMatches.length > 0) {
     const bestTagMatch = tagMatches[0];

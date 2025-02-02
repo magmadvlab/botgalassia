@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ThumbsUp, ThumbsDown, Send, MapPin, Map } from 'lucide-react';
+import { Send } from 'lucide-react';
 import logo from './logo-hotel-galassia-prato-nevoso-01.png';
 import { getFAQResponse } from './services/faqService';
 import { fetchWeatherData, formatWeatherMessage } from './services/weatherService';
@@ -16,8 +16,7 @@ const App = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    const lang = detectUserLanguage();
-    setUserLang(lang);
+    setUserLang(detectUserLanguage());
   }, []);
 
   useEffect(() => {
@@ -37,11 +36,7 @@ const App = () => {
     setMessages((prev) => [...prev, botResponse]);
     
     if (response.suggestions.length > 0) {
-      const suggestionMessage = {
-        type: 'bot',
-        content: `Non ho trovato una risposta precisa. Prova a chiedere di: ${response.suggestions.join(', ')}`
-      };
-      setMessages((prev) => [...prev, suggestionMessage]);
+      setMessages((prev) => [...prev, { type: 'bot', content: `Non ho trovato una risposta precisa. Prova a chiedere di: ${response.suggestions.join(', ')}` }]);
     }
 
     setInput('');

@@ -31,11 +31,15 @@ const fuse = new Fuse(allQuestions, fuseOptions);
 /**
  * Trova la miglior risposta alla domanda dell'utente
  * @param {string} query - Domanda dell'utente
- * @returns {string} - Risposta trovata
+ * @returns {object} - Oggetto contenente risposta, domanda trovata e suggerimenti
  */
 export const getFAQResponse = async (query, targetLang = 'IT') => {
   if (!query || query.trim().length === 0) {
-    return "Non ho capito la tua domanda. Prova con parole chiave come 'piscina', 'check-in' o 'navetta'.";
+    return {
+      answer: "Non ho capito la tua domanda. Prova con parole chiave come 'piscina', 'check-in' o 'navetta'.",
+      questionMatched: null,
+      suggestions: []
+    };
   }
 
   console.log("🔍 Domanda ricevuta:", query);
@@ -51,16 +55,30 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
     const bestMatch = results[0].item;
     console.log("✅ Risposta scelta:", bestMatch.question, "->", bestMatch.answer);
 
-    // Traduzione se necessario
-    return targetLang !== 'IT' ? await translateTextIfNeeded(bestMatch.answer, targetLang) : bestMatch.answer;
+    const translatedAnswer = targetLang !== 'IT' ? await translateTextIfNeeded(bestMatch.answer, targetLang) : bestMatch.answer;
+    return {
+      answer: translatedAnswer,
+      questionMatched: bestMatch.question,
+      suggestions: []
+    };
   }
 
   // Se nessun risultato preciso, cerca nelle domande direttamente
   const fallbackMatch = allQuestions.find(q => q.question.toLowerCase().includes(processedInput));
   if (fallbackMatch) {
-    return targetLang !== 'IT' ? await translateTextIfNeeded(fallbackMatch.answer, targetLang) : fallbackMatch.answer;
+    const translatedAnswer = targetLang !== 'IT' ? await translateTextIfNeeded(fallbackMatch.answer, targetLang) : fallbackMatch.answer;
+    return {
+      answer: translatedAnswer,
+      questionMatched: fallbackMatch.question,
+      suggestions: []
+    };
   }
 
+  // Nessuna corrispondenza trovata, suggerisce parole chiave utili
   console.warn("⚠️ Nessuna corrispondenza trovata per:", query);
-  return "Mi dispiace, non ho trovato una risposta specifica. Prova a riformulare la domanda.";
+  return {
+    answer: "Mi dispiace, non ho trovato una risposta specifica. Prova a riformulare la domanda.",
+    questionMatched: null,
+    suggestions: ['piscina', 'check-in', 'colazione', 'navetta']
+  };
 };

@@ -1,22 +1,21 @@
 import Fuse from 'fuse.js';
-import faqData from '../faq/it/faqData';
-import { expandInput } from './textProcessingService'; // Gestione sinonimi
+import faqData from './faq/it/faqData';
+import { expandInput } from './textProcessingService';
 import { translateTextIfNeeded } from './translationService';
 
 // Configurazione della ricerca fuzzy
 const fuseOptions = {
   keys: [
-    { name: 'tags', weight: 4 },     // Maggiore peso ai tag
-    { name: 'category', weight: 2 }, // Poi alla categoria
-    { name: 'question', weight: 1 }  // Infine alla domanda
+    { name: 'tags', weight: 4 },
+    { name: 'category', weight: 2 },
+    { name: 'question', weight: 1 }
   ],
-  threshold: 0.2,  // Maggiore precisione riducendo il range di errore
+  threshold: 0.2,
   includeScore: true,
   ignoreLocation: true,
   useExtendedSearch: true
 };
 
-// Creazione dell'oggetto Fuse con tutte le FAQ combinate
 const allQuestions = Object.values(faqData).flatMap(category =>
   Object.entries(category.questions).map(([question, data]) => ({
     question,
@@ -43,15 +42,13 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
   }
 
   console.log("🔍 Domanda ricevuta:", query);
-  
-  const processedInput = expandInput(query.toLowerCase().trim()); // Normalizzazione input
+  const processedInput = expandInput(query.toLowerCase().trim());
   console.log("🔎 Input processato:", processedInput);
 
-  // Ricerca fuzzy nei tag e nelle domande
   const results = fuse.search(processedInput);
   console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, score: r.score })));
 
-  if (results.length > 0 && results[0].score < 0.3) { // Controllo con soglia precisa
+  if (results.length > 0 && results[0].score < 0.3) {
     const bestMatch = results[0].item;
     console.log("✅ Risposta scelta:", bestMatch.question, "->", bestMatch.answer);
 
@@ -74,7 +71,16 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
     };
   }
 
-  // Nessuna corrispondenza trovata, suggerisce parole chiave utili
+  // Log della domanda non trovata
+  fetch('/log-missing-question', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      question: query,
+      timestamp: new Date().toISOString()
+    })
+  }).catch(console.error);
+
   console.warn("⚠️ Nessuna corrispondenza trovata per:", query);
   return {
     answer: "Mi dispiace, non ho trovato una risposta specifica. Prova a riformulare la domanda.",

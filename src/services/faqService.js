@@ -1,7 +1,6 @@
 import Fuse from 'fuse.js';
 import faqData from '../faq/it/faqData';
 
-
 // Dizionario di sinonimi e trasformazioni input
 const transformations = {
   'wifi': ['wi-fi', 'wi fi', 'internet', 'rete'],
@@ -94,9 +93,8 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
     const bestMatch = results[0].item;
     console.log("✅ Risposta scelta:", bestMatch.question, "->", bestMatch.answer);
 
-    const translatedAnswer = bestMatch.answer;
     return {
-      answer: translatedAnswer,
+      answer: bestMatch.answer,
       questionMatched: bestMatch.question,
       suggestions: []
     };
@@ -105,9 +103,8 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
   // Se nessun risultato preciso, cerca nelle domande direttamente
   const fallbackMatch = allQuestions.find(q => q.question.toLowerCase().includes(processedInput));
   if (fallbackMatch) {
-    const translatedAnswer = fallbackMatch.answer;
     return {
-      answer: translatedAnswer,
+      answer: fallbackMatch.answer,
       questionMatched: fallbackMatch.question,
       suggestions: []
     };

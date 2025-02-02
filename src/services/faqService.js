@@ -51,7 +51,7 @@ const fuseOptions = {
     { name: 'category', weight: 2 },
     { name: 'question', weight: 1 }
   ],
-  threshold: 0.2,
+  threshold: 0.15,
   includeScore: true,
   ignoreLocation: true,
   useExtendedSearch: true
@@ -109,7 +109,13 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
     question: q.question,
     answer: q.answer,
     tags: q.tags,
-    score: q.tags ? q.tags.reduce((acc, tag) => acc + (processedInput.includes(tag) ? 2 : 0), 0) : 0
+    score: q.tags 
+      ? q.tags.reduce((acc, tag) => acc + (processedInput.includes(tag) ? 3 : 0), 0) 
+      : 0
+  }))
+  .filter(q => q.score > 2) // 🔹 Consideriamo solo match con almeno 2 tag corrispondenti
+  .sort((a, b) => b.score - a.score);
+
   }))
   .filter(q => q.score > 0)
   .sort((a, b) => b.score - a.score);

@@ -137,7 +137,7 @@ if (tagMatches.length > 0) {
     suggestions: []
   };
 }
-📌 Cosa cambia con questa modifica?
+// Cosa cambia con questa modifica?
 
 
 if (tagMatch) {

@@ -65,6 +65,7 @@ const allQuestions = Object.values(faqData).flatMap(category =>
     category: category.title
   }))
 );
+console.log("📋 Tutte le FAQ caricate:", allQuestions);
 
 const fuse = new Fuse(allQuestions, fuseOptions);
 

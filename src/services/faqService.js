@@ -68,7 +68,6 @@ const allQuestions = Object.values(faqData).flatMap(category =>
 console.log("📋 Tutte le FAQ caricate:", allQuestions);
 console.log("📋 Domande disponibili nel chatbot:\n", allQuestions.map(q => q.question).join("\n"));
 
-
 const fuse = new Fuse(allQuestions, fuseOptions);
 
 /**
@@ -87,22 +86,13 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
 
   console.log("🔍 Domanda ricevuta:", query);
   console.log("🔍 Input originale:", query);
-const processedInput = expandInput(query.toLowerCase().trim());
-console.log("🔎 Input processato dopo normalizzazione:", processedInput);
-
+  const processedInput = expandInput(query.toLowerCase().trim());
+  console.log("🔎 Input processato dopo normalizzazione:", processedInput);
 
   const results = fuse.search(processedInput);
   console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, score: r.score })));
 
-if (results.length > 0) {
-  console.log("📌 Risultati trovati:", results.map((r, index) => ({
-    posizione: index + 1,
-    domanda: r.item.question,
-    punteggio: r.score
-  })));
-
-  // Se il punteggio del miglior risultato è inferiore a 0.25, accettiamo la risposta
-  if (results[0].score < 0.25) {
+  if (results.length > 0 && results[0].score < 0.25) {
     const bestMatch = results[0].item;
     console.log("✅ Risposta scelta (Accettata):", bestMatch.question, "->", bestMatch.answer);
 
@@ -111,50 +101,34 @@ if (results.length > 0) {
       questionMatched: bestMatch.question,
       suggestions: []
     };
-  } else {
-    console.log("⚠️ Nessun risultato con punteggio abbastanza basso, cerchiamo nei TAG...");
   }
-}
 
-// 🔥 Miglioriamo la ricerca nei TAG selezionando il miglior match possibile
-const tagMatches = allQuestions
-  .map(q => ({
-    question: q.question,
-    answer: q.answer,
-    tags: q.tags,
-    score: q.tags ? q.tags.filter(tag => processedInput.includes(tag)).length : 0 // Conta quanti TAG combaciano
-  }))
-  .filter(q => q.score > 0) // Consideriamo solo quelli che hanno almeno 1 TAG in comune
-  .sort((a, b) => b.score - a.score); // Ordiniamo in base al numero di TAG che combaciano
+  // Miglioriamo la ricerca nei TAG selezionando il miglior match possibile
+  const tagMatches = allQuestions
+    .map(q => ({
+      question: q.question,
+      answer: q.answer,
+      tags: q.tags,
+      score: q.tags ? q.tags.filter(tag => processedInput.includes(tag)).length : 0
+    }))
+    .filter(q => q.score > 0)
+    .sort((a, b) => b.score - a.score);
 
-if (tagMatches.length > 0) {
-  const bestTagMatch = tagMatches[0]; // Prendiamo il miglior risultato
-  console.log("✅ Miglior risultato trovato con TAG:", bestTagMatch.question);
+  if (tagMatches.length > 0) {
+    const bestTagMatch = tagMatches[0];
+    console.log("✅ Miglior risultato trovato con TAG:", bestTagMatch.question);
 
+    return {
+      answer: bestTagMatch.answer,
+      questionMatched: bestTagMatch.question,
+      suggestions: []
+    };
+  }
+
+  console.log("❌ Nessuna corrispondenza trovata.");
   return {
-    answer: bestTagMatch.answer,
-    questionMatched: bestTagMatch.question,
-    suggestions: []
+    answer: "Mi dispiace, non ho trovato una risposta precisa. Prova a riformulare la domanda.",
+    questionMatched: null,
+    suggestions: ['piscina', 'check-in', 'colazione', 'navetta']
   };
-}
-// Cosa cambia con questa modifica?
-
-
-if (tagMatch) {
-  console.log("✅ Risposta trovata grazie ai TAG:", tagMatch.question);
-  return {
-    answer: tagMatch.answer,
-    questionMatched: tagMatch.question,
-    suggestions: []
-  };
-}
-
-// Se ancora nessuna corrispondenza, forniamo un messaggio generico
-console.log("❌ Nessuna corrispondenza trovata.");
-return {
-  answer: "Mi dispiace, non ho trovato una risposta precisa. Prova a riformulare la domanda.",
-  questionMatched: null,
-  suggestions: ['piscina', 'check-in', 'colazione', 'navetta']
-};
-
 };

@@ -83,8 +83,10 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
   }
 
   console.log("🔍 Domanda ricevuta:", query);
-  const processedInput = expandInput(query.toLowerCase().trim());
-  console.log("🔎 Input processato:", processedInput);
+  console.log("🔍 Input originale:", query);
+const processedInput = expandInput(query.toLowerCase().trim());
+console.log("🔎 Input processato dopo normalizzazione:", processedInput);
+
 
   const results = fuse.search(processedInput);
   console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, score: r.score })));

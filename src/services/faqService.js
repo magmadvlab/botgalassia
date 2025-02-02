@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js';
-import faqData from './faq/it/faqData';
+import faqData from '../faq/it/faqData';
 import { expandInput } from './textProcessingService';
 import { translateTextIfNeeded } from './translationService';
 

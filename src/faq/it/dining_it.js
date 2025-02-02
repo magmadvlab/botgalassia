@@ -30,11 +30,11 @@ export const dining_it = {
   questions: {
     // SEZIONE COLAZIONE
     'Dove viene servita la colazione?': {
-      answer: 'Vi aspettiamo nella nostra accogliente sala al piano terra per la colazione. La sala è luminosa con belle vetrate che si affacciano sulle montagne. Il buffet è organizzato in modo pratico: troverete l'angolo dei cereali e yogurt, la zona del pane e dei dolci freschi, e il nostro addetto al bar che prepara caffè e cappuccini come piacciono a voi.',
+      answer: 'Vi aspettiamo nella nostra accogliente sala al piano terra per la colazione. La sala è luminosa con belle vetrate che si affacciano sulle montagne. Il buffet è organizzato in modo pratico: troverete l\'angolo dei cereali e yogurt, la zona del pane e dei dolci freschi, e il nostro addetto al bar che prepara caffè e cappuccini come piacciono a voi.',
       tags: ['colazione', 'prima colazione', 'buffet colazione', 'sala colazioni', 'colazione hotel', 'breakfast', 'dove si fa colazione']
     },
     'Quali sono gli orari della colazione?': {
-      answer: 'Serviamo la colazione dalle 07:30 alle 09:30. Vi consigliamo di venire presto per iniziare con calma la vostra giornata sulla neve. Il buffet viene costantemente rifornito fino all'orario di chiusura.',
+      answer: 'Serviamo la colazione dalle 07:30 alle 09:30. Vi consigliamo di venire presto per iniziare con calma la vostra giornata sulla neve. Il buffet viene costantemente rifornito fino all\'orario di chiusura.',
       tags: ['colazione', 'orari colazione', 'orario breakfast', 'colazione mattino', 'quando colazione', 'orario colazione hotel']
     },
 

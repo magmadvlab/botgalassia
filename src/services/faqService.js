@@ -112,7 +112,7 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
     score: q.tags 
       ? q.tags.reduce((acc, tag) => acc + (processedInput.includes(tag) ? 3 : 0), 0) 
       : 0
-  }))
+  }));
   .filter(q => q.score > 2) // 🔹 Consideriamo solo match con almeno 2 tag corrispondenti
   .sort((a, b) => b.score - a.score);
 

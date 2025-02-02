@@ -66,6 +66,8 @@ const allQuestions = Object.values(faqData).flatMap(category =>
   }))
 );
 console.log("📋 Tutte le FAQ caricate:", allQuestions);
+console.log("📋 Domande disponibili nel chatbot:\n", allQuestions.map(q => q.question).join("\n"));
+
 
 const fuse = new Fuse(allQuestions, fuseOptions);
 

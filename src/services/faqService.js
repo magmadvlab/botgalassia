@@ -1,7 +1,49 @@
 import Fuse from 'fuse.js';
 import faqData from '../faq/it/faqData';
-import { expandInput } from './textProcessingService';
-import { translateTextIfNeeded } from './translationService';
+
+
+// Dizionario di sinonimi e trasformazioni input
+const transformations = {
+  'wifi': ['wi-fi', 'wi fi', 'internet', 'rete'],
+  'piscina': ['nuotare', 'bagno', 'vasca', 'spa', 'wellness'],
+  'check-in': ['check in', 'checkin', 'registrazione', 'arrivo'],
+  'check-out': ['check out', 'checkout', 'partenza', 'uscita'],
+  'navetta': ['shuttle', 'bus', 'transfer', 'trasporto'],
+  'parcheggio': ['garage', 'posto auto', 'box auto'],
+  'skibox': ['ski box', 'deposito sci', 'porta sci'],
+  'ristorante': ['mangiare', 'ristorazione', 'cena', 'pranzo'],
+  'animale': ['pet', 'cane', 'gatto', 'animali'],
+  'piano -1': ['sotterraneo', 'sotto', 'basement'],
+  'arrivare': ['raggiungere', 'andare', 'trovare'],
+  'prenotare': ['riservare', 'richiedere', 'bisogna prenotare']
+};
+
+const pluralSingular = {
+  'emergenze': 'emergenza',
+  'attività': 'attività',
+  'servizi': 'servizio',
+  'animali': 'animale'
+};
+
+const expandInput = (userInput) => {
+  let expandedInput = userInput.toLowerCase();
+  
+  Object.entries(transformations).forEach(([key, values]) => {
+    values.forEach(value => {
+      if (expandedInput.includes(value.toLowerCase())) {
+        expandedInput = expandedInput.replace(value.toLowerCase(), key);
+      }
+    });
+  });
+
+  Object.entries(pluralSingular).forEach(([plural, singular]) => {
+    if (expandedInput.includes(plural)) {
+      expandedInput = expandedInput.replace(plural, singular);
+    }
+  });
+  
+  return expandedInput;
+};
 
 // Configurazione della ricerca fuzzy
 const fuseOptions = {
@@ -52,7 +94,7 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
     const bestMatch = results[0].item;
     console.log("✅ Risposta scelta:", bestMatch.question, "->", bestMatch.answer);
 
-    const translatedAnswer = targetLang !== 'IT' ? await translateTextIfNeeded(bestMatch.answer, targetLang) : bestMatch.answer;
+    const translatedAnswer = bestMatch.answer;
     return {
       answer: translatedAnswer,
       questionMatched: bestMatch.question,
@@ -63,7 +105,7 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
   // Se nessun risultato preciso, cerca nelle domande direttamente
   const fallbackMatch = allQuestions.find(q => q.question.toLowerCase().includes(processedInput));
   if (fallbackMatch) {
-    const translatedAnswer = targetLang !== 'IT' ? await translateTextIfNeeded(fallbackMatch.answer, targetLang) : fallbackMatch.answer;
+    const translatedAnswer = fallbackMatch.answer;
     return {
       answer: translatedAnswer,
       questionMatched: fallbackMatch.question,

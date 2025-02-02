@@ -4,47 +4,24 @@ import logo from './logo-hotel-galassia-prato-nevoso-01.png';
 import { getFAQResponse } from './services/faqService';
 import { fetchWeatherData, formatWeatherMessage } from './services/weatherService';
 import { fetchRoadNews } from './services/trafficService';
-import { detectUserLanguage, translateTextIfNeeded } from './services/translationService';
+import { detectUserLanguage } from './services/translationService';
 import { GOOGLE_MAPS_URL } from './services/mapsService';
 
 const App = () => {
   const [messages, setMessages] = useState([
-    { type: 'bot', content: 'Ciao, sono Lunaria ✨, l'assistente virtuale dell'Hotel Galassia. Sono qui per guidarti tra le stelle alpine e rispondere a tutte le tue domande sul soggiorno. Come posso aiutarti?' }
+    { type: 'bot', content: "Ciao, sono Lunaria ✨, l'assistente virtuale dell'Hotel Galassia. Sono qui per guidarti tra le stelle alpine e rispondere a tutte le tue domande sul soggiorno. Come posso aiutarti?" }
   ]);
   const [input, setInput] = useState('');
   const [userLang, setUserLang] = useState('it');
   const messagesEndRef = useRef(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   useEffect(() => {
     const lang = detectUserLanguage();
     setUserLang(lang);
-
-    const loadWeatherAndTraffic = async () => {
-      try {
-        const weatherData = await fetchWeatherData(lang);
-        const weatherMessage = formatWeatherMessage(weatherData, lang);
-        const trafficUpdates = await fetchRoadNews();
-        const trafficMessage = trafficUpdates.map(update => update.description).join("\n\n");
-
-        setMessages(prev => [
-          ...prev,
-          { type: 'bot', content: weatherMessage },
-          { type: 'bot', content: trafficMessage }
-        ]);
-      } catch (error) {
-        console.error("Errore nel caricamento dei dati meteo/viabilità:", error);
-      }
-    };
-
-    loadWeatherAndTraffic();
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const handleSubmit = async (e) => {
@@ -52,10 +29,21 @@ const App = () => {
     if (!input.trim()) return;
 
     const userMessage = { type: 'user', content: input };
-    const responseContent = await getFAQResponse(input, userLang);
-    const response = { type: 'bot', content: responseContent };
+    setMessages((prev) => [...prev, userMessage]);
 
-    setMessages((prev) => [...prev, userMessage, response]);
+    const response = await getFAQResponse(input, userLang);
+    const botResponse = { type: 'bot', content: response.answer };
+    
+    setMessages((prev) => [...prev, botResponse]);
+    
+    if (response.suggestions.length > 0) {
+      const suggestionMessage = {
+        type: 'bot',
+        content: `Non ho trovato una risposta precisa. Prova a chiedere di: ${response.suggestions.join(', ')}`
+      };
+      setMessages((prev) => [...prev, suggestionMessage]);
+    }
+
     setInput('');
   };
 
@@ -80,23 +68,6 @@ const App = () => {
       </main>
 
       <footer className="bg-white p-3 flex flex-col space-y-2">
-        <button
-          onClick={async () => {
-            const trafficUpdates = await fetchRoadNews();
-            setMessages(prev => [...prev, ...trafficUpdates.map(update => ({ type: 'bot', content: update.description }))]);
-          }}
-          className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90 flex items-center justify-center"
-        >
-          <MapPin className="w-5 h-5 mr-2" /> Verifica Viabilità
-        </button>
-
-        <button
-          onClick={() => window.open(GOOGLE_MAPS_URL, '_blank')}
-          className="bg-blue-500 text-white p-3 rounded-lg hover:opacity-90 flex items-center justify-center"
-        >
-          <Map className="w-5 h-5 mr-2" /> Ottieni Indicazioni
-        </button>
-
         <form className="flex space-x-2" onSubmit={handleSubmit}>
           <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Fai una domanda..." className="flex-1 p-3 border border-gray-200 rounded-lg text-sm" />
           <button type="submit" className="bg-[#B8860B] text-white p-3 rounded-lg hover:opacity-90">

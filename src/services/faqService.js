@@ -116,10 +116,6 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
   .filter(q => q.score > 2) // 🔹 Consideriamo solo match con almeno 2 tag corrispondenti
   .sort((a, b) => b.score - a.score);
 
-  }))
-  .filter(q => q.score > 0)
-  .sort((a, b) => b.score - a.score);
-
   if (tagMatches.length > 0) {
     const bestTagMatch = tagMatches[0];
     console.log("✅ Miglior risultato trovato con TAG:", bestTagMatch.question);

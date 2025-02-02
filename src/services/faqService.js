@@ -116,10 +116,29 @@ if (results.length > 0) {
   }
 }
 
-// Se nessuna risposta ha un punteggio sufficiente, cerchiamo nei TAG
-const tagMatch = allQuestions.find(q =>
-  q.tags && q.tags.some(tag => processedInput.includes(tag))
-);
+// 🔥 Miglioriamo la ricerca nei TAG selezionando il miglior match possibile
+const tagMatches = allQuestions
+  .map(q => ({
+    question: q.question,
+    answer: q.answer,
+    tags: q.tags,
+    score: q.tags ? q.tags.filter(tag => processedInput.includes(tag)).length : 0 // Conta quanti TAG combaciano
+  }))
+  .filter(q => q.score > 0) // Consideriamo solo quelli che hanno almeno 1 TAG in comune
+  .sort((a, b) => b.score - a.score); // Ordiniamo in base al numero di TAG che combaciano
+
+if (tagMatches.length > 0) {
+  const bestTagMatch = tagMatches[0]; // Prendiamo il miglior risultato
+  console.log("✅ Miglior risultato trovato con TAG:", bestTagMatch.question);
+
+  return {
+    answer: bestTagMatch.answer,
+    questionMatched: bestTagMatch.question,
+    suggestions: []
+  };
+}
+📌 Cosa cambia con questa modifica?
+
 
 if (tagMatch) {
   console.log("✅ Risposta trovata grazie ai TAG:", tagMatch.question);

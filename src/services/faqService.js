@@ -94,9 +94,9 @@ console.log("🔎 Input processato dopo normalizzazione:", processedInput);
   const results = fuse.search(processedInput);
   console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, score: r.score })));
 
-  if (results.length > 0 && results[0].score < 0.3) {
-    const bestMatch = results[0].item;
-    console.log("✅ Risposta scelta:", bestMatch.question, "->", bestMatch.answer);
+ if (results.length > 0 && results[0].score < 0.25) {
+  const bestMatch = results[0].item;
+  console.log("✅ Risposta scelta (Accettata):", bestMatch.question, "->", bestMatch.answer);
 
     return {
       answer: bestMatch.answer,

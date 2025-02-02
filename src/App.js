@@ -16,7 +16,8 @@ const App = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    setUserLang(detectUserLanguage());
+  setUserLang('it'); // FORZIAMO la lingua in ITALIANO
+});
 
     const fetchData = async () => {
       try {

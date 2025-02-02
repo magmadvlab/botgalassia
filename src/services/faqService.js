@@ -47,11 +47,11 @@ const expandInput = (userInput) => {
 // Configurazione della ricerca fuzzy
 const fuseOptions = {
   keys: [
-    { name: 'tags', weight: 4 },
+    { name: 'tags', weight: 6 },
     { name: 'category', weight: 2 },
     { name: 'question', weight: 1 }
   ],
-  threshold: 0.2,
+  threshold: 0.4,
   includeScore: true,
   ignoreLocation: true,
   useExtendedSearch: true

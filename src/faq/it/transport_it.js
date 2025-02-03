@@ -24,22 +24,22 @@ export const transport_it = {
         ' ℹ️ **Biglietti e info** alle casse impianti.',
       tags: ['piste', 'impianti', 'funivia', 'seggiovia', 'come arrivare alle piste']
     },
-    'C'è un servizio di taxi?': {
-      answer: '🚖 **Sì! La reception può chiamare un taxi per te:** +39 0174 334183.',
+    'C\'è un servizio di taxi?': {
+      answer: ' **No! La reception non può chiamare un taxi per te ma puoi chiedere in reception di un servizio sostitutivo che a volte è disponibile:** +39 0174 334183.',
       tags: ['taxi', 'servizio taxi', 'prenotare taxi', 'chiamare taxi']
     },
     'Dove posso trovare una mappa di Prato Nevoso?': {
-      answer: '🗺️ **Trova la mappa presso l'Ufficio Turistico o online:** [link a una mappa online]',
+      answer: '️ **Trova la mappa presso l\'Ufficio Turistico o online:** [link a una mappa online]',
       tags: ['mappa', 'prato nevoso mappa', 'cartina prato nevoso']
     },
-    'Quali sono i contatti dell'ufficio turistico?': {
+    'Quali sono i contatti dell\'ufficio turistico?': {
       answer: 'ℹ️ **Ufficio Turistico:**\n' +
-        ' 📞 **Telefono:** [numero di telefono]\n' +
-        ' 🌐 **Sito web:** [indirizzo sito web]',
+        '  **Telefono:** [numero di telefono]\n' +
+        '  **Sito web:** [indirizzo sito web]',
       tags: ['ufficio turistico', 'contatti ufficio turistico']
     },
     'Come arrivo a Prato Nevoso da [città]?': {
-      answer: '🚗 **Da [città] a Prato Nevoso:**\n' +
+      answer: ' **Da [città] a Prato Nevoso:**\n' +
         '• **In auto:** Segui le indicazioni autostradali fino a Mondovì e poi prosegui verso Prato Nevoso.\n' +
         '• **In treno + bus:** Scendi a Mondovì e prendi il bus per Prato Nevoso.\n' +
         ' ℹ️ Controlla orari e disponibilità in anticipo.',
@@ -54,21 +54,21 @@ export const transport_it = {
     },
     'A che ora parte la prima navetta per la Conca?': {
       answer: '⏰ **Prima Navetta per la Conca:**\n' +
-        ' 🚌 **Partenza:** 08:30',
+        '  **Partenza:** 08:30',
       tags: ['navetta orari', 'prima navetta', 'quando parte la navetta']
     },
     'Come posso raggiungere la stazione degli autobus?': {
-      answer: '🚌 **Puoi prendere la navetta gratuita o un taxi fino alla stazione degli autobus.**',
+      answer: ' **Puoi prendere la navetta gratuita o un taxi fino alla stazione degli autobus.**',
       tags: ['stazione autobus', 'bus station', 'navetta stazione', 'taxi stazione']
     },
-    'C'è un bus per l'aeroporto di Cuneo?': {
-      answer: '✈️ **Non esiste un bus diretto per l'aeroporto di Cuneo.**\n' +
-        ' 🚍 **Opzione:** Prendere la navetta per Mondovì e da lì un autobus per l'aeroporto.',
+    'C\'è un bus per l\'aeroporto di Cuneo?': {
+      answer: '✈️ **Non esiste un bus diretto per l\'aeroporto di Cuneo.**\n' +
+        '  **Opzione:** Prendere la navetta per Mondovì e da lì un autobus per l\'aeroporto.',
       tags: ['bus aeroporto cuneo', 'navetta aeroporto', 'trasporto aeroporto cuneo']
     },
     'Come faccio a scendere in Conca?': {
-      answer: '🚌 **Puoi prendere la navetta gratuita per la Conca.**\n' +
-        ' 🚶‍♂️ **Oppure puoi raggiungerla a piedi in circa 10 minuti.**',
+      answer: ' **Puoi prendere la navetta gratuita per la Conca.**\n' +
+        ' ‍♂️ **Oppure puoi raggiungerla a piedi in circa 10 minuti.**',
       tags: ['scendere in conca', 'navetta conca', 'come vado in conca']
     }
   }

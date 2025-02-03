@@ -1,4 +1,4 @@
-// Importazione dei dati FAQ dall'italiano
+// Importazioni dei dati FAQ dall'italiano
 import { activities_it } from './activities_it';
 import { checkin_it } from './checkin_it';
 import { checkout_it } from './checkout_it';
@@ -10,7 +10,7 @@ import { tech_services_it } from './tech_services_it';
 import { transport_it } from './transport_it';
 import { wellness_it } from './wellness_it';
 
-// Configurazione dei dati FAQ come oggetto per categorie
+// Configurazione dei dati FAQ
 const faqData = {
     activities: activities_it,
     checkin: checkin_it,
@@ -24,14 +24,4 @@ const faqData = {
     wellness: wellness_it
 };
 
-// 🔹 Converte `faqData` in un array compatibile con Fuse.js
-const faqList = Object.entries(faqData).flatMap(([category, questions]) =>
-  Object.entries(questions.questions).map(([question, data]) => ({
-    question,   // La domanda originale
-    answer: data.answer,  // La risposta corrispondente
-    tags: data.tags, // Parole chiave per la ricerca fuzzy
-    category    // Assegna la categoria (es. "dining", "checkin", ecc.)
-  }))
-);
-
-export default faqList;
+export default faqData;

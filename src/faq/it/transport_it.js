@@ -8,78 +8,93 @@ export const transport_it = {
     'bus navetta', 'navetta hotel', 'navetta gratuita', 'dove prendo la navetta', 'quando passa la navetta',
 
     // Espansione per "arrivare in Conca" e "arrivare in centro"
-    'conca', 'prato nevoso', 'centro', 'centro paese', 'paese', 'città', 'come arrivo in conca',
-    'come arrivo giù in conca', 'come arrivo in centro', 'come raggiungo la conca', 'come vado in conca',
-    'come vado in centro', 'come si arriva in centro', 'come raggiungere il centro', 'per andare in centro',
-    'per raggiungere la conca', 'per arrivare al centro', 'voglio andare in conca', 'come vado giù al centro',
-    'come posso scendere in conca', 'dove prendo il bus per la conca', 'navetta per il centro', 'navetta per la conca',
-    'scendere giù', 'come scendere in conca', 'come scendere al centro', 'come scendo giù', 'come arrivo giù in conca',
-    'come scendo a prato nevoso', 'giù a prato nevoso', 'giù al centro', 'giù in conca', 'scendere a prato nevoso',
-    'scendere alle piste', 'come scendo agli impianti',
+    'conca', 'prato nevoso', 'centro', 'centro paese', 'paese', 'città', 
+    'come arrivo in conca', 'come arrivo giù in conca', 'come arrivo in centro', 
+    'come raggiungo la conca', 'come vado in conca', 'come vado in centro', 
+    'come si arriva in centro', 'come raggiungere il centro', 'per andare in centro',
+    'per raggiungere la conca', 'per arrivare al centro', 'voglio andare in conca', 
+    'come vado giù al centro', 'come posso scendere in conca', 'dove prendo il bus per la conca', 
+    'navetta per il centro', 'navetta per la conca', 'scendere giù', 'come scendere in conca', 
+    'come scendere al centro', 'come scendo giù', 'come arrivo giù in conca',
+    'come scendo a prato nevoso', 'giù a prato nevoso', 'giù al centro', 'giù in conca', 
+    'scendere a prato nevoso', 'scendere alle piste', 'come scendo agli impianti',
+    'arrivare in conca', 'arrivare al centro', 'andare in conca', 'andare al centro',
+    'raggiungere la conca', 'raggiungere il centro', 'spostarsi in conca', 'spostarsi in centro',
+    'conca prato nevoso', 'centro prato nevoso', 'prato nevoso conca', 'prato nevoso centro',
 
     // Sinonimi per "parcheggio"
     'parcheggio', 'auto', 'sosta', 'posto auto', 'box', 'garage', 'parcheggio coperto', 'garage auto',
     'parcheggio hotel', 'dove parcheggiare', 'dove lasciare l\'auto', 'posto auto', 'parcheggio riservato',
     'parcheggio gratuito', 'costo parcheggio', 'esiste un garage', 'garage disponibile', 'dove metto la macchina',
+    'parcheggiare a prato nevoso', 'parcheggio conca', 'parcheggio centro', 'parcheggio vicino',
 
     // Destinazioni
     'stazione', 'aeroporto', 'monte', 'piste', 'impianti di risalita', 'come andare alle piste', 
-    'come arrivo agli impianti',
+    'come arrivo agli impianti', 'raggiungere le piste', 'andare agli impianti', 'impianti prato nevoso',
+    'funivia', 'seggiovia',
 
     // Sinonimi per "orari" e costi
     'orari', 'a che ora', 'quando parte', 'quando arriva', 'orario servizio', 'orari trasporto', 'costo trasporto',
-    'quanto costa', 'tariffe', 'prezzo biglietto', 'biglietto bus', 'prenotazione navetta', 'devo prenotare la navetta'
+    'quanto costa', 'tariffe', 'prezzo biglietto', 'biglietto bus', 'prenotazione navetta', 'devo prenotare la navetta',
+    'orari navetta conca', 'orari navetta centro', 'costo navetta', 'navetta gratuita o a pagamento',
+
+    // Varie
+    'mappa', 'indicazioni', 'informazioni', 'contatti', 'telefono', 'email', 'sito web', 'aiuto', 'assistenza',
+    'come arrivare a prato nevoso', 'trasporti prato nevoso', 'navette prato nevoso', 'bus prato nevoso',
+    'taxi prato nevoso', 'parcheggi prato nevoso', 'orari prato nevoso', 'costi prato nevoso'
   ],
   questions: {
-    'Come arrivo in conca?': {
-      answer: '🚐 **Navetta gratuita per la Conca di Prato Nevoso!**\n' +
-        '- **Mattino**: 08:30 - 12:30\n' +
-        '- **Pomeriggio**: 14:30 - 17:30\n' +
-        '📍 La navetta collega l\'hotel alla Conca.\n' +
-        '📞 **Prenota in reception al +39 0174 334183.**',
-      tags: ['conca', 'come arrivo in conca', 'navetta conca', 'bus per conca', 'come vado in conca',
-             'come raggiungo la conca', 'dove prendo la navetta per la conca', 'quando parte la navetta per la conca',
-             'come arrivo giù in conca', 'come scendo in conca', 'voglio scendere in conca', 'scendere giù']
+    // ... (le tue domande esistenti)
+
+    'Come arrivo alle piste?': {
+      answer: '⛷️ **Raggiungi le piste facilmente!**\n' +
+        ' **Funivia e seggiovie** ti portano in quota.\n' +
+        ' **Partenza** vicino alla Conca e al Villaggio.\n' +
+        'ℹ️ **Biglietti e info** alle casse impianti.',
+      tags: ['piste', 'impianti', 'funivia', 'seggiovia', 'come arrivare alle piste', 'raggiungere le piste',
+        'andare alle piste', 'impianti prato nevoso', 'come scendo alle piste', 'come salgo alle piste']
     },
-    'Come arrivo in centro?': {
-      answer: '🏙 **Vuoi andare in centro?**\n' +
-        '🚐 **Navetta gratuita disponibile:**\n' +
-        '- **Mattino**: 08:30 - 12:30\n' +
-        '- **Pomeriggio**: 14:30 - 17:30\n' +
-        '📞 **Per prenotare la navetta, contatta la reception al +39 0174 334183.**',
-      tags: ['centro', 'come arrivo in centro', 'bus per il centro', 'come vado in centro', 
-             'come raggiungere il centro', 'per andare in centro', 'voglio andare in centro', 
-             'come posso scendere in centro', 'navetta per il centro', 'scendere in centro', 
-             'giù in centro', 'come arrivo giù in centro', 'scendere giù in paese']
+    'C'è un servizio di taxi?': {
+      answer: ' **Certo!**\n' +
+        ' **La reception può chiamare un taxi per te:** +39 0174 334183.',
+      tags: ['taxi', 'servizio taxi', 'prenotare taxi', 'chiamare taxi', 'taxi prato nevoso', 'come prendere un taxi']
     },
-    'Come funziona la navetta?': {
-      answer: '🚐 **La navetta è gratuita** per gli ospiti dell\'hotel e collega l\'hotel con la conca di Prato Nevoso.\n' +
-        '🕒 **Orari**:\n' +
-        '- **08:30 - 12:30**\n' +
-        '- **14:30 - 17:30**\n' +
-        '📞 **Prenotazioni presso la reception al +39 0174 334183**.',
-      tags: ['navetta', 'come funziona', 'servizio navetta', 'trasporto', 'orari', 'prenotazione', 
-             'shuttle', 'orario navetta', 'quando parte la navetta', 'quando c\'è la navetta']
+    'Dove posso trovare una mappa di Prato Nevoso?': {
+      answer: '️ **Trova la mappa!**\n' +
+        ' **Ufficio turistico** in centro.\n' +
+        'ℹ️ **Oppure online:** [link a una mappa online]',
+      tags: ['mappa', 'prato nevoso mappa', 'cartina prato nevoso', 'dove trovare la mappa', 'informazioni prato nevoso']
     },
-    'Dove posso parcheggiare?': {
-      answer: '🚗 **Parcheggi disponibili:**\n' +
-        '- **Parcheggio esterno gratuito**\n' +
-        '- **Parcheggio coperto a pagamento** (15€ al giorno)\n' +
-        '📞 **Prenotazioni in reception.**',
-      tags: ['parcheggio', 'auto', 'dove lasciare l\'auto', 'dove parcheggiare', 'posto auto', 
-             'garage', 'parcheggio gratuito', 'c\'è parcheggio coperto']
+    'Quali sono i contatti dell\'ufficio turistico?': {
+      answer: 'ℹ️ **Contatti Ufficio Turistico:**\n' +
+        ' **Telefono:** [numero di telefono]\n' +
+        ' **Sito web:** [indirizzo sito web]',
+      tags: ['ufficio turistico', 'contatti ufficio turistico', 'telefono ufficio turistico', 'informazioni turistiche']
     },
-    'Come raggiungere l\'hotel in auto?': {
-      answer: '🚗 **Indicazioni Stradali:**\n' +
-        '- **Da Torino**: Autostrada A6 Torino-Savona, uscita Mondovì, seguire indicazioni per Prato Nevoso.\n' +
-        '- **Da Genova**: A10, poi A6 verso Torino, uscita Mondovì, seguire per Prato Nevoso.',
-      tags: ['auto', 'strada', 'come arrivare in macchina', 'come si arriva all\'hotel in auto', 
-             'indicazioni hotel', 'direzione Prato Nevoso']
+    'Come arrivo a Prato Nevoso da [città]?': {
+      answer: ' **Da [città] a Prato Nevoso:**\n' +
+        '• **In auto:** [indicazioni stradali dettagliate]\n' +
+        '• **In treno + bus:** [informazioni su treni e autobus]\n' +
+        '• **Altre opzioni:** [taxi, transfer, ecc.]',
+      tags: ['come arrivare a prato nevoso', 'prato nevoso da [città]', 'trasporti prato nevoso', 'collegamenti prato nevoso']
     },
-    'Posso prenotare un taxi?': {
-      answer: '🚕 **Sì! La reception può prenotare un taxi per te.**\n📞 **Chiamaci al +39 0174 334183.**',
-      tags: ['taxi', 'trasporto', 'prenotare taxi', 'c\'è un servizio taxi', 'come chiamo un taxi', 
-             'posso avere un taxi', 'taxi hotel']
-    }
-  }
-};
+    'Quanto costa il parcheggio?': {
+      answer: '🅿️ **Costi Parcheggio:**\n' +
+        '• **Esterno gratuito**\n' +
+        '• **Coperto a pagamento:** 15€ al giorno\n' +
+        'ℹ️ **Prenotazioni in reception.**',
+      tags: ['parcheggio costo', 'parcheggio tariffe', 'quanto costa parcheggiare', 'prezzo parcheggio', 'parcheggio prato nevoso costo']
+    },
+    'A che ora parte la prima navetta per la Conca?': {
+      answer: '⏰ **Prima Navetta per la Conca:**\n' +
+        '• **Mattina:** 08:30',
+      tags: ['navetta orari', 'orario navetta conca', 'prima navetta', 'quando parte la navetta', 'a che ora parte la navetta']
+    },
+        'Come posso raggiungere la stazione degli autobus?':{
+            answer: ' **La stazione degli autobus è facilmente raggiungibile dal centro.**\n'+
+                    'Puoi prendere la navetta gratuita o un taxi.',
+            tags: ['stazione autobus','bus station','come arrivare alla stazione','raggiungere la stazione','navetta stazione','taxi stazione']
+        },
+        'C\'è un bus che collega Prato Nevoso con l\'aeroporto di Cuneo?':{
+            answer: ' **No, al momento non esiste un collegamento diretto in autobus tra Prato Nevoso e l\'aeroporto di Cuneo.**\n'+
+                    'Tuttavia, puoi raggiungere la stazione di Mondovì con la navetta e da lì prendere un autobus per l\'aeroporto.',

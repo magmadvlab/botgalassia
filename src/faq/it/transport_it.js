@@ -1,70 +1,94 @@
 export const transport_it = {
   title: 'Trasporti e Navetta',
   keywords: [
-    'navetta', 'trasporto', 'bus', 'parcheggio', 'auto', 'taxi', 'mezzi', 
-    'arrivare', 'arrivo', 'andare', 'raggiungere', 'spostarsi', 'muoversi', 'partire', 
-    'centro', 'paese', 'città', 'conca', 'hotel', 'albergo', 'prato nevoso', 
-    'come', 'dove', 'quando', 'quale', 'quanto', 'prenotazione', 'orari', 
-    'costi', 'reception', 'telefono', 'garage', 'coperto', 'esterno', 
-    'custodito', 'box', 'posto auto', 'aeroporto', 'stazione', 'transfer', 'shuttle',
-    'dove sta', 'come arrivo', 'navetta gratuita', 'orari navetta', 
-    'parcheggio gratuito', 'esiste un garage?', 'c\'è un garage?', 
-    'garage auto', 'parcheggio riparato', 'auto al coperto'
+    // Sinonimi per "navetta" e trasporti
+    'navetta', 'shuttle', 'bus', 'pulmino', 'trasporto', 'transfer', 'mezzi', 'mezzo', 
+    'collegamento', 'spostarsi', 'muoversi', 'come arrivo', 'come posso arrivare', 'come andare', 
+    'come si arriva', 'come raggiungere', 'come spostarsi', 'come faccio a arrivare', 
+    'bus navetta', 'navetta hotel', 'navetta gratuita', 'dove prendo la navetta', 'quando passa la navetta',
+    
+    // Sinonimi per "parcheggio"
+    'parcheggio', 'auto', 'sosta', 'posto auto', 'box', 'garage', 'parcheggio coperto', 'garage auto', 
+    'parcheggio hotel', 'dove parcheggiare', 'dove lasciare l\'auto', 'posto auto', 'parcheggio riservato',
+    'parcheggio gratuito', 'costo parcheggio', 'esiste un garage', 'garage disponibile', 'dove metto la macchina',
+
+    // Destinazioni
+    'conca', 'prato nevoso', 'centro', 'centro paese', 'paese', 'città', 'stazione', 'aeroporto', 
+    'monte', 'piste', 'impianti di risalita', 'come arrivo alla conca', 'come arrivo al centro', 
+    'come andare alle piste', 'come arrivo agli impianti',
+
+    // Sinonimi per "orari" e costi
+    'orari', 'a che ora', 'quando parte', 'quando arriva', 'orario servizio', 'orari trasporto', 'costo trasporto', 
+    'quanto costa', 'tariffe', 'prezzo biglietto', 'biglietto bus', 'prenotazione navetta', 'devo prenotare la navetta'
   ],
   questions: {
     'Come arrivo in centro?': {
-      answer: 'L\'hotel offre un servizio navetta gratuito da e per la conca di Prato Nevoso. Il servizio è attivo tutti i giorni dalle 08:30 alle 12:30 e dalle 14:30 alle 17:30. Per prenotazioni, contattate la reception al +39 0174 334183.',
-      tags: ['centro', 'navetta', 'trasporto', 'arrivo', 'come arrivo in centro?', 'navetta centro?', 'dove prendo la navetta?']
+      answer: 'L\'hotel offre un **servizio navetta gratuito** da e per la **conca di Prato Nevoso**. Il servizio è attivo tutti i giorni:\n' +
+        '- **Mattino**: 08:30 - 12:30\n' +
+        '- **Pomeriggio**: 14:30 - 17:30\n' +
+        '📞 **Per prenotare, contatta la reception al +39 0174 334183**.',
+      tags: ['centro', 'conca', 'navetta', 'bus', 'shuttle', 'trasporto', 'muoversi', 'navetta centro', 
+             'dove prendo la navetta', 'orari navetta', 'navetta per il paese', 'andare al centro']
     },
     'Come funziona la navetta?': {
-      answer: 'La navetta è un servizio gratuito dell\'hotel, attivo dalle 08:30 alle 12:30 e dalle 14:30 alle 17:30. Collega l\'hotel con la conca di Prato Nevoso. Contattate la reception al +39 0174 334183 per prenotare.',
-      tags: ['navetta', 'funzionamento', 'orari', 'prenotazione', 'come funziona la navetta?', 'navetta gratuita?']
+      answer: '🚐 **La navetta è gratuita** per gli ospiti dell\'hotel e collega l\'hotel con la conca di Prato Nevoso.\n' +
+        '🕒 **Orari**:\n' +
+        '- **08:30 - 12:30**\n' +
+        '- **14:30 - 17:30**\n' +
+        '📞 **Prenotazioni presso la reception al +39 0174 334183**.',
+      tags: ['navetta', 'come funziona', 'servizio navetta', 'trasporto', 'orari', 'prenotazione', 
+             'shuttle', 'orario navetta', 'quando parte la navetta', 'quando c\'è la navetta']
     },
     'Quali sono gli orari della navetta?': {
-      answer: 'La navetta opera in due fasce orarie:\n' +
-        '- Mattino: 08:30-12:30\n' +
-        '- Pomeriggio: 14:30-17:30. Contattate la reception per prenotazioni e dettagli.',
-      tags: ['navetta', 'orari', 'tempi', 'quando parte la navetta?', 'orari servizio navetta?', 'quando c\'è la navetta?']
+      answer: '🚌 **Orari Navetta:**\n' +
+        '- **Mattino**: 08:30 - 12:30\n' +
+        '- **Pomeriggio**: 14:30 - 17:30\n' +
+        '📞 **Per prenotazioni, contatta la reception al +39 0174 334183**.',
+      tags: ['orari navetta', 'quando parte', 'quando arriva', 'a che ora c\'è la navetta', 
+             'quando posso prendere la navetta', 'orario trasporto']
     },
     'La navetta è gratuita?': {
-      answer: 'Sì, il servizio navetta è gratuito per tutti gli ospiti dell\'hotel.',
-      tags: ['navetta', 'costi', 'gratuito', 'navetta gratuita?', 'devo pagare la navetta?', 'quanto costa la navetta?']
+      answer: '✅ **Sì, il servizio navetta è gratuito** per tutti gli ospiti dell\'hotel.',
+      tags: ['navetta', 'costi', 'gratuito', 'quanto costa la navetta', 'c\'è un costo per la navetta', 
+             'devo pagare la navetta', 'navetta gratuita', 'prezzo navetta']
     },
     'Dove posso parcheggiare?': {
-      answer: 'L\'hotel offre:\n' +
-        '- Parcheggio esterno gratuito\n' +
-        '- Parcheggio coperto a pagamento (15€ al giorno), ideale per proteggere l\'auto da neve e intemperie.',
-      tags: ['parcheggio', 'auto', 'opzioni', 'coperto', 'dove parcheggiare?', 'parcheggio gratuito?', 'c\'è parcheggio coperto?']
+      answer: '🚗 **Parcheggi disponibili:**\n' +
+        '- **Parcheggio esterno gratuito**\n' +
+        '- **Parcheggio coperto a pagamento** (15€ al giorno)\n' +
+        '📞 **Prenotazioni in reception.**',
+      tags: ['parcheggio', 'auto', 'dove lasciare l\'auto', 'dove parcheggiare', 'posto auto', 
+             'garage', 'parcheggio gratuito', 'c\'è parcheggio coperto']
     },
     'Esiste un garage?': {
-      answer: 'Sì, l\'hotel dispone di un garage coperto al costo di 15€ al giorno. Questo spazio garantisce la protezione del vostro veicolo da neve e gelo, permettendovi di ripartire facilmente in qualsiasi condizione meteorologica.',
-      tags: ['garage', 'coperto', 'parcheggio coperto', 'c\'è un garage?', 'esiste un garage?', 'garage auto', 'parcheggio riparato', 'auto al coperto', 'prezzo garage?']
+      answer: '🏠 **Sì, abbiamo un garage coperto** disponibile a **15€ al giorno**. Protegge l\'auto da neve e gelo.',
+      tags: ['garage', 'parcheggio coperto', 'dove posso mettere la macchina', 'garage hotel', 
+             'esiste un garage', 'prezzo garage']
     },
-    'Quanto costa il parcheggio coperto?': {
-      answer: 'Il parcheggio coperto costa 15€ al giorno e offre protezione contro neve, gelo e intemperie.',
-      tags: ['parcheggio', 'coperto', 'costi', 'prezzo parcheggio coperto?', 'quanto costa il garage?', 'tariffe parcheggio?']
+    'Come raggiungere l\'hotel in auto?': {
+      answer: '🚗 **Indicazioni Stradali:**\n' +
+        '- **Da Torino**: Autostrada A6 Torino-Savona, uscita Mondovì, seguire indicazioni per Prato Nevoso.\n' +
+        '- **Da Genova**: A10, poi A6 verso Torino, uscita Mondovì, seguire per Prato Nevoso.',
+      tags: ['auto', 'strada', 'come arrivare in macchina', 'come si arriva all\'hotel in auto', 
+             'indicazioni hotel', 'direzione Prato Nevoso']
     },
-    'Il parcheggio è custodito?': {
-      answer: 'No, i parcheggi (esterno e coperto) non sono custoditi. Vi consigliamo di non lasciare oggetti di valore in auto.',
-      tags: ['parcheggio', 'custodia', 'sicurezza', 'parcheggio custodito?', 'il garage è custodito?', 'posso lasciare oggetti in auto?']
+    'Ci sono mezzi pubblici per arrivare in hotel?': {
+      answer: '🚆 **Trasporti pubblici:**\n' +
+        '- **Treno** fino a Mondovì 🚆\n' +
+        '- **Bus di linea** per Prato Nevoso 🚌\n' +
+        '📞 **Orari aggiornati disponibili in reception.**',
+      tags: ['mezzi pubblici', 'treno', 'bus', 'trasporto pubblico', 'c\'è un bus per l\'hotel', 
+             'come arrivare con i mezzi', 'autobus per Prato Nevoso']
     },
-    'Come si raggiunge l\'hotel in auto?': {
-      answer: 'Per raggiungere l\'hotel in auto:\n' +
-        '- Da Torino: Prendere l\'A6 Torino-Savona, uscire a Mondovì e seguire per Prato Nevoso.\n' +
-        '- Da Genova: Prendere l\'A10, immettersi sulla A6 direzione Torino, uscire a Mondovì e seguire per Prato Nevoso.',
-      tags: ['direzioni', 'auto', 'strada', 'come raggiungo l\'hotel?', 'indicazioni per arrivare in auto?', 'strade per Prato Nevoso?']
+    'Esiste un servizio transfer dall’aeroporto?': {
+      answer: '🚖 **No, non offriamo un transfer diretto.**\n📞 **Possiamo suggerire taxi o servizi alternativi.**',
+      tags: ['transfer', 'aeroporto', 'navetta aeroporto', 'come arrivare dall\'aeroporto', 
+             'taxi per l\'hotel', 'come raggiungere l\'hotel dall\'aeroporto']
     },
-    'Come arrivo in hotel con i mezzi pubblici?': {
-      answer: 'Raggiungete Mondovì in treno. Dalla stazione sono disponibili bus di linea per Prato Nevoso. Contattate la reception al +39 0174 334183 per gli orari aggiornati.',
-      tags: ['mezzi pubblici', 'treno', 'bus', 'come arrivare con i mezzi?', 'c\'è un bus per l\'hotel?', 'mezzi pubblici per Prato Nevoso?']
-    },
-    'Offrite un servizio transfer da aeroporto?': {
-      answer: 'No, non offriamo un transfer diretto. Contattate la reception per suggerimenti su taxi o altri mezzi disponibili.',
-      tags: ['transfer', 'aeroporto', 'c\'è un servizio transfer?', 'come arrivo dall\'aeroporto?', 'transfer aeroporto hotel?']
-    },
-    'È disponibile un servizio taxi?': {
-      answer: 'Sì, la reception può aiutarvi a prenotare un taxi locale. Contattate il +39 0174 334183 per assistenza.',
-      tags: ['taxi', 'prenotazione', 'dove trovo un taxi?', 'posso prenotare un taxi?', 'servizio taxi?']
+    'Posso prenotare un taxi?': {
+      answer: '🚕 **Sì! La reception può prenotare un taxi per te.**\n📞 **Chiamaci al +39 0174 334183.**',
+      tags: ['taxi', 'trasporto', 'prenotare taxi', 'c\'è un servizio taxi', 'come chiamo un taxi', 
+             'posso avere un taxi', 'taxi hotel']
     }
   }
 };

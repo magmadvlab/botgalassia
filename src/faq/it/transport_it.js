@@ -1,4 +1,4 @@
-export const hotel_transport = {
+export const transport_it = {
   title: 'Trasporti e Navetta - Hotel',
   keywords: [
     'navetta hotel', 'navetta gratuita', 'trasporti hotel', 'servizio navetta',
@@ -15,7 +15,7 @@ export const hotel_transport = {
       tags: ['come arrivo in conca', 'come arrivo in centro', 'come scendo a prato nevoso', 'come si va in conca', 
         'come arrivare in conca', 'per arrivare in conca', 'navetta gratuita conca', 'navetta hotel conca']
     },
-    'Cè un servizio di taxi?': {
+    'C'è un servizio di taxi?': {
       answer: "🚖 **Attualmente la reception non può prenotare un taxi direttamente.**\n" +
         " Tuttavia, puoi chiedere in reception informazioni su eventuali servizi sostitutivi disponibili al momento.\n" +
         " 📞 **Per assistenza, chiama:** +39 0174 334183.",

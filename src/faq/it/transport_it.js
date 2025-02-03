@@ -1,13 +1,11 @@
 export const transport_it = {
   title: 'Trasporti e Navetta',
   keywords: [
-    // Sinonimi per "navetta" e trasporti
     'navetta', 'shuttle', 'bus', 'pulmino', 'trasporto', 'transfer', 'mezzi', 'mezzo',
     'collegamento', 'spostarsi', 'muoversi', 'come arrivo', 'come posso arrivare', 'come andare',
     'come si arriva', 'come raggiungere', 'come spostarsi', 'come faccio ad arrivare',
     'bus navetta', 'navetta hotel', 'navetta gratuita', 'dove prendo la navetta', 'quando passa la navetta',
 
-    // Espansione per "arrivare in Conca" e "arrivare in centro"
     'conca', 'prato nevoso', 'centro', 'centro paese', 'paese', 'città', 
     'come arrivo in conca', 'come arrivo giù in conca', 'come arrivo in centro', 
     'come raggiungo la conca', 'come vado in conca', 'come vado in centro', 
@@ -22,30 +20,24 @@ export const transport_it = {
     'raggiungere la conca', 'raggiungere il centro', 'spostarsi in conca', 'spostarsi in centro',
     'conca prato nevoso', 'centro prato nevoso', 'prato nevoso conca', 'prato nevoso centro',
 
-    // Sinonimi per "parcheggio"
     'parcheggio', 'auto', 'sosta', 'posto auto', 'box', 'garage', 'parcheggio coperto', 'garage auto',
     'parcheggio hotel', 'dove parcheggiare', 'dove lasciare l\'auto', 'posto auto', 'parcheggio riservato',
     'parcheggio gratuito', 'costo parcheggio', 'esiste un garage', 'garage disponibile', 'dove metto la macchina',
     'parcheggiare a prato nevoso', 'parcheggio conca', 'parcheggio centro', 'parcheggio vicino',
 
-    // Destinazioni
     'stazione', 'aeroporto', 'monte', 'piste', 'impianti di risalita', 'come andare alle piste', 
     'come arrivo agli impianti', 'raggiungere le piste', 'andare agli impianti', 'impianti prato nevoso',
     'funivia', 'seggiovia',
 
-    // Sinonimi per "orari" e costi
     'orari', 'a che ora', 'quando parte', 'quando arriva', 'orario servizio', 'orari trasporto', 'costo trasporto',
     'quanto costa', 'tariffe', 'prezzo biglietto', 'biglietto bus', 'prenotazione navetta', 'devo prenotare la navetta',
     'orari navetta conca', 'orari navetta centro', 'costo navetta', 'navetta gratuita o a pagamento',
 
-    // Varie
     'mappa', 'indicazioni', 'informazioni', 'contatti', 'telefono', 'email', 'sito web', 'aiuto', 'assistenza',
     'come arrivare a prato nevoso', 'trasporti prato nevoso', 'navette prato nevoso', 'bus prato nevoso',
     'taxi prato nevoso', 'parcheggi prato nevoso', 'orari prato nevoso', 'costi prato nevoso'
   ],
   questions: {
-    // ... (le tue domande esistenti)
-
     'Come arrivo alle piste?': {
       answer: '⛷️ **Raggiungi le piste facilmente!**\n' +
         ' **Funivia e seggiovie** ti portano in quota.\n' +
@@ -54,7 +46,7 @@ export const transport_it = {
       tags: ['piste', 'impianti', 'funivia', 'seggiovia', 'come arrivare alle piste', 'raggiungere le piste',
         'andare alle piste', 'impianti prato nevoso', 'come scendo alle piste', 'come salgo alle piste']
     },
-    'C'è un servizio di taxi?': {
+    'C\'è un servizio di taxi?': {  // Template literal (backticks)
       answer: ' **Certo!**\n' +
         ' **La reception può chiamare un taxi per te:** +39 0174 334183.',
       tags: ['taxi', 'servizio taxi', 'prenotare taxi', 'chiamare taxi', 'taxi prato nevoso', 'come prendere un taxi']
@@ -65,7 +57,7 @@ export const transport_it = {
         'ℹ️ **Oppure online:** [link a una mappa online]',
       tags: ['mappa', 'prato nevoso mappa', 'cartina prato nevoso', 'dove trovare la mappa', 'informazioni prato nevoso']
     },
-    'Quali sono i contatti dell\'ufficio turistico?': {
+    'Quali sono i contatti dell\'ufficio turistico?': { // Template literal (backticks)
       answer: 'ℹ️ **Contatti Ufficio Turistico:**\n' +
         ' **Telefono:** [numero di telefono]\n' +
         ' **Sito web:** [indirizzo sito web]',
@@ -90,11 +82,15 @@ export const transport_it = {
         '• **Mattina:** 08:30',
       tags: ['navetta orari', 'orario navetta conca', 'prima navetta', 'quando parte la navetta', 'a che ora parte la navetta']
     },
-        'Come posso raggiungere la stazione degli autobus?':{
-            answer: ' **La stazione degli autobus è facilmente raggiungibile dal centro.**\n'+
-                    'Puoi prendere la navetta gratuita o un taxi.',
-            tags: ['stazione autobus','bus station','come arrivare alla stazione','raggiungere la stazione','navetta stazione','taxi stazione']
-        },
-        'C\'è un bus che collega Prato Nevoso con l\'aeroporto di Cuneo?':{
-            answer: ' **No, al momento non esiste un collegamento diretto in autobus tra Prato Nevoso e l\'aeroporto di Cuneo.**\n'+
-                    'Tuttavia, puoi raggiungere la stazione di Mondovì con la navetta e da lì prendere un autobus per l\'aeroporto.',
+    'Come posso raggiungere la stazione degli autobus?': {
+      answer: ' **La stazione degli autobus è facilmente raggiungibile dal centro.**\n' +
+        'Puoi prendere la navetta gratuita o un taxi.',
+      tags: ['stazione autobus', 'bus station', 'come arrivare alla stazione', 'raggiungere la stazione', 'navetta stazione', 'taxi stazione']
+    },
+    'C\'è un bus che collega Prato Nevoso con l\'aeroporto di Cuneo?': { // Template literal (backticks)
+      answer: ` **No, al momento non esiste un collegamento diretto in autobus tra Prato Nevoso e l'aeroporto di Cuneo.**\n` +
+        `Tuttavia, puoi raggiungere la stazione di Mondovì con la navetta e da lì prendere un autobus per l'aeroporto.`,
+      tags: ['bus aeroporto cuneo', 'collegamento aeroporto', 'navetta aeroporto', 'trasporto aeroporto cuneo'] // Added relevant tags
+    }
+  }
+};

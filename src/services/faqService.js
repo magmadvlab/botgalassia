@@ -7,21 +7,17 @@ const transformations = {
   'piscina': ['nuotare', 'bagno', 'vasca', 'spa', 'wellness'],
   'check-in': ['check in', 'checkin', 'registrazione', 'arrivo'],
   'check-out': ['check out', 'checkout', 'partenza', 'uscita'],
-  'navetta': ['shuttle', 'bus', 'transfer', 'trasporto'],
-  'parcheggio': ['garage', 'posto auto', 'box auto'],
+  'navetta': ['shuttle', 'bus', 'transfer', 'trasporto', 'mezzo', 'pullman'],
+  'parcheggio': ['garage', 'posto auto', 'box auto', 'sosta', 'stallo'],
   'skibox': ['ski box', 'deposito sci', 'porta sci'],
-  'ristorante': ['mangiare', 'ristorazione', 'cena', 'pranzo'],
-  'animale': ['pet', 'cane', 'gatto', 'animali'],
+  'ristorante': ['mangiare', 'ristorazione', 'cena', 'pranzo', 'dove si mangia'],
+  'animale': ['pet', 'cane', 'gatto', 'animali', 'amico a quattro zampe'],
   'piano -1': ['sotterraneo', 'sotto', 'basement'],
-  'arrivare': ['raggiungere', 'andare', 'trovare'],
-  'prenotare': ['riservare', 'richiedere', 'bisogna prenotare']
-};
-
-const pluralSingular = {
-  'emergenze': 'emergenza',
-  'attività': 'attività',
-  'servizi': 'servizio',
-  'animali': 'animale'
+  'arrivare': ['raggiungere', 'andare', 'trovare', 'scendere', 'giungere', 'entrare'],
+  'prenotare': ['riservare', 'richiedere', 'bisogna prenotare'],
+  'conca': ['prato nevoso conca', 'piazza dodero', 'bassa prato nevoso', 'come si va in conca', 'come scendere in conca'],
+  'centro': ['piazza dodero', 'centro prato nevoso', 'paese', 'parte centrale', 'zona centrale'],
+  'taxi': ['trasporto privato', 'ncc', 'auto con conducente']
 };
 
 const expandInput = (userInput) => {
@@ -34,12 +30,6 @@ const expandInput = (userInput) => {
       }
     });
   });
-
-  Object.entries(pluralSingular).forEach(([plural, singular]) => {
-    if (expandedInput.includes(plural)) {
-      expandedInput = expandedInput.replace(plural, singular);
-    }
-  });
   
   return expandedInput;
 };
@@ -47,34 +37,32 @@ const expandInput = (userInput) => {
 // Configurazione della ricerca fuzzy
 const fuseOptions = {
   keys: [
-    { name: 'tags', weight: 9 },
+    { name: 'tags', weight: 7 },  // 🔥 Aumentato da 5 → 7 per dare più importanza ai tag
     { name: 'category', weight: 2 },
     { name: 'question', weight: 1 }
   ],
-  threshold: 0.15,
+  threshold: 0.25,  // 🔧 Abbassato per migliorare il riconoscimento delle domande simili
   includeScore: true,
   ignoreLocation: true,
   useExtendedSearch: true
 };
 
-const allQuestions = Object.values(faqData).flatMap(category =>
-  Object.entries(category.questions).map(([question, data]) => ({
-    question,
-    answer: data.answer,
-    tags: data.tags,
-    category: category.title
-  }))
-);
-console.log("📋 Tutte le FAQ caricate:", allQuestions);
-console.log("📋 Domande disponibili nel chatbot:\n", allQuestions.map(q => q.question).join("\n"));
+// Caricare dinamicamente le domande
+const updateFAQData = () => {
+  const updatedQuestions = Object.values(faqData).flatMap(category =>
+    Object.entries(category.questions).map(([question, data]) => ({
+      question,
+      answer: data.answer,
+      tags: data.tags,
+      category: category.title
+    }))
+  );
+  fuse.setCollection(updatedQuestions);
+};
 
-const fuse = new Fuse(allQuestions, fuseOptions);
+const fuse = new Fuse([], fuseOptions);
+updateFAQData(); // Carica inizialmente i dati
 
-/**
- * Trova la miglior risposta alla domanda dell'utente
- * @param {string} query - Domanda dell'utente
- * @returns {object} - Oggetto contenente risposta, domanda trovata e suggerimenti
- */
 export const getFAQResponse = async (query, targetLang = 'IT') => {
   if (!query || query.trim().length === 0) {
     return {
@@ -85,7 +73,6 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
   }
 
   console.log("🔍 Domanda ricevuta:", query);
-  console.log("🔍 Input originale:", query);
   const processedInput = expandInput(query.toLowerCase().trim());
   console.log("🔎 Input processato dopo normalizzazione:", processedInput);
 
@@ -94,8 +81,7 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
 
   if (results.length > 0 && results[0].score < 0.25) {
     const bestMatch = results[0].item;
-    console.log("✅ Risposta scelta (Accettata):", bestMatch.question, "->", bestMatch.answer);
-
+    console.log("✅ Risposta scelta:", bestMatch.question, "->", bestMatch.answer);
     return {
       answer: bestMatch.answer,
       questionMatched: bestMatch.question,
@@ -103,23 +89,21 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
     };
   }
 
-  // Miglioriamo la ricerca nei TAG selezionando il miglior match possibile
-  const tagMatches = allQuestions
-    .map(q => ({
-      question: q.question,
-      answer: q.answer,
-      tags: q.tags,
-      score: q.tags 
-        ? q.tags.reduce((acc, tag) => acc + (processedInput.includes(tag) ? 3 : 0), 0) 
+  // Ricerca basata sui tag
+  const tagMatches = Object.values(faqData).flatMap(category =>
+    Object.entries(category.questions).map(([question, data]) => ({
+      question,
+      answer: data.answer,
+      tags: data.tags,
+      score: data.tags 
+        ? data.tags.reduce((acc, tag) => acc + (processedInput.includes(tag) ? 5 : 0), 0) // 🔥 Aumentato a 5
         : 0
     }))
-    .filter(q => q.score > 2) // 🔹 Consideriamo solo match con almeno 2 tag corrispondenti
-    .sort((a, b) => b.score - a.score);
+  ).filter(q => q.score > 3).sort((a, b) => b.score - a.score);
 
   if (tagMatches.length > 0) {
     const bestTagMatch = tagMatches[0];
     console.log("✅ Miglior risultato trovato con TAG:", bestTagMatch.question);
-
     return {
       answer: bestTagMatch.answer,
       questionMatched: bestTagMatch.question,

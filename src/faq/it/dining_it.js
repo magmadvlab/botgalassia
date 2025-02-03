@@ -37,7 +37,7 @@ export const dining_it = {
       tags: ['cena', 'orari cena', 'orario cena hotel', 'quando cena', 'orario dinner', 'a che ora è la cena', 'quando si mangia']
     },
     'Dove si trova il ristorante?': {
-      answer: 'Il ristorante si trova al piano terra dell’hotel, vicino alla reception. È facilmente accessibile ed è aperto per colazione, pranzo e cena.',
+      answer: 'Il ristorante si trova al piano terra dell’hotel. È facilmente accessibile ed è aperto per colazione e cena.',
       tags: ['ristorante', 'sala ristorante', 'dove si trova il ristorante', 'come si arriva al ristorante', 'dov\'è la sala ristorante', 'dov\'è il ristorante', 'dove si cena', 'posizione ristorante', 'dove mangio', 'dove si mangia']
     }
   }

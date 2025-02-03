@@ -20,6 +20,25 @@ const transformations = {
   'taxi': ['trasporto privato', 'ncc', 'auto con conducente']
 };
 
+const categoryPriorityMap = {
+  'Trasporti e Navetta - Hotel': ['arrivare', 'trasporti', 'spostarsi', 'raggiungere', 'navetta', 'bus', 'conca', 'centro', 'taxi'],
+  'Piscina e Wellness': ['piscina', 'spa', 'benessere', 'wellness'],
+  'Parcheggio e Auto': ['parcheggio', 'garage', 'auto', 'posto auto', 'sosta'],
+  'Attività e Eventi': ['sciare', 'attività', 'eventi', 'cose da fare']
+};
+
+const getCategoryScore = (query, category) => {
+  let score = 0;
+  if (categoryPriorityMap[category]) {
+    categoryPriorityMap[category].forEach(keyword => {
+      if (query.includes(keyword)) {
+        score += 5; // 🔥 Aumentiamo il punteggio se il termine chiave è nella categoria giusta
+      }
+    });
+  }
+  return score;
+};
+
 const expandInput = (userInput) => {
   let expandedInput = userInput.toLowerCase();
   
@@ -34,10 +53,9 @@ const expandInput = (userInput) => {
   return expandedInput;
 };
 
-// Configurazione della ricerca fuzzy
 const fuseOptions = {
   keys: [
-    { name: 'tags', weight: 7 },  // 🔥 Aumentato da 5 → 7 per dare più importanza ai tag
+    { name: 'tags', weight: 7 },  // 🔥 Aumentato per dare più importanza ai tag
     { name: 'category', weight: 2 },
     { name: 'question', weight: 1 }
   ],
@@ -47,7 +65,6 @@ const fuseOptions = {
   useExtendedSearch: true
 };
 
-// Caricare dinamicamente le domande
 const updateFAQData = () => {
   const updatedQuestions = Object.values(faqData).flatMap(category =>
     Object.entries(category.questions).map(([question, data]) => ({
@@ -61,7 +78,7 @@ const updateFAQData = () => {
 };
 
 const fuse = new Fuse([], fuseOptions);
-updateFAQData(); // Carica inizialmente i dati
+updateFAQData();
 
 export const getFAQResponse = async (query, targetLang = 'IT') => {
   if (!query || query.trim().length === 0) {
@@ -77,36 +94,24 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
   console.log("🔎 Input processato dopo normalizzazione:", processedInput);
 
   const results = fuse.search(processedInput);
-  console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, score: r.score })));
+  console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, category: r.item.category, score: r.score })));
 
-  if (results.length > 0 && results[0].score < 0.25) {
-    const bestMatch = results[0].item;
-    console.log("✅ Risposta scelta:", bestMatch.question, "->", bestMatch.answer);
+  if (results.length > 0) {
+    let bestResults = results.filter(r => r.score < 0.3);
+
+    bestResults = bestResults.map(result => ({
+      ...result,
+      categoryScore: getCategoryScore(processedInput, result.item.category)
+    }));
+
+    bestResults.sort((a, b) => (b.categoryScore - a.categoryScore) || (a.score - b.score));
+
+    const bestMatch = bestResults[0].item;
+    console.log("✅ Risposta scelta:", bestMatch.question, "dalla categoria", bestMatch.category);
+
     return {
       answer: bestMatch.answer,
       questionMatched: bestMatch.question,
-      suggestions: []
-    };
-  }
-
-  // Ricerca basata sui tag
-  const tagMatches = Object.values(faqData).flatMap(category =>
-    Object.entries(category.questions).map(([question, data]) => ({
-      question,
-      answer: data.answer,
-      tags: data.tags,
-      score: data.tags 
-        ? data.tags.reduce((acc, tag) => acc + (processedInput.includes(tag) ? 5 : 0), 0) // 🔥 Aumentato a 5
-        : 0
-    }))
-  ).filter(q => q.score > 3).sort((a, b) => b.score - a.score);
-
-  if (tagMatches.length > 0) {
-    const bestTagMatch = tagMatches[0];
-    console.log("✅ Miglior risultato trovato con TAG:", bestTagMatch.question);
-    return {
-      answer: bestTagMatch.answer,
-      questionMatched: bestTagMatch.question,
       suggestions: []
     };
   }

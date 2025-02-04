@@ -16,7 +16,6 @@ const fuseOptions = {
 
 // Dizionario di sinonimi e trasformazioni input
 const transformations = {
- const transformations = {
   'wifi': ['wi-fi', 'wi fi', 'internet', 'rete'],
   'piscina': ['nuotare', 'bagno', 'vasca', 'spa', 'wellness', "dov'è la piscina", "dove si trova la piscina", "come raggiungere la piscina"],
   'check-in': ['check in', 'checkin', 'registrazione', 'arrivo'],

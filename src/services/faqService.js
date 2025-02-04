@@ -16,6 +16,7 @@ const fuseOptions = {
 
 // Dizionario di sinonimi e trasformazioni input
 const transformations = {
+ const transformations = {
   'wifi': ['wi-fi', 'wi fi', 'internet', 'rete'],
   'piscina': ['nuotare', 'bagno', 'vasca', 'spa', 'wellness', "dov'è la piscina", "dove si trova la piscina", "come raggiungere la piscina"],
   'check-in': ['check in', 'checkin', 'registrazione', 'arrivo'],
@@ -28,9 +29,6 @@ const transformations = {
   'piano -1': ['sotterraneo', 'sotto', 'basement'],
   'arrivare': ['raggiungere', 'andare', 'trovare', 'scendere', 'giungere', 'entrare'],
   'prenotare': ['riservare', 'richiedere', 'bisogna prenotare'],
-  'conca': ['prato nevoso conca', 'piazza dodero', 'bassa prato nevoso', 'come si va in conca', 'come scendere in conca', 'navetta per conca', 'bus per conca', 'dove si trova la conca'],
-  'centro': ['piazza dodero', 'centro prato nevoso', 'paese', 'parte centrale', 'zona centrale'],
-  'taxi': ['trasporto privato', 'ncc', 'auto con conducente']
 };
 
 const categoryPriorityMap = {

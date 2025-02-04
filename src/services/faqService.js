@@ -15,7 +15,9 @@ const transformations = {
   'piano -1': ['sotterraneo', 'sotto', 'basement'],
   'arrivare': ['raggiungere', 'andare', 'trovare', 'scendere', 'giungere', 'entrare'],
   'prenotare': ['riservare', 'richiedere', 'bisogna prenotare'],
-  'conca': ['prato nevoso conca', 'piazza dodero', 'bassa prato nevoso', 'come si va in conca', 'come scendere in conca'],
+  const transformations = {
+  'conca': ['prato nevoso conca', 'piazza dodero', 'bassa prato nevoso', 'come si va in conca', 'come scendere in conca', 'navetta per conca', 'bus per conca', 'dove si trova la conca'],
+  'navetta': ['shuttle', 'bus', 'transfer', 'trasporto', 'mezzo', 'pullman', 'servizio navetta', 'come arrivo in conca', 'trasporto per conca']
   'centro': ['piazza dodero', 'centro prato nevoso', 'paese', 'parte centrale', 'zona centrale'],
   'taxi': ['trasporto privato', 'ncc', 'auto con conducente']
 };

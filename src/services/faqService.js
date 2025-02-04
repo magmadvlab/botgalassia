@@ -4,7 +4,7 @@ import faqData from '../faq/it/faqData';
 // Dizionario di sinonimi e trasformazioni input
 const transformations = {
   'wifi': ['wi-fi', 'wi fi', 'internet', 'rete'],
-  'piscina': ['nuotare', 'bagno', 'vasca', 'spa', 'wellness'],
+  'piscina': ['nuotare', 'bagno', 'vasca', 'spa', 'wellness', "dov'è la piscina", "dove si trova la piscina", "come raggiungere la piscina"],
   'check-in': ['check in', 'checkin', 'registrazione', 'arrivo'],
   'check-out': ['check out', 'checkout', 'partenza', 'uscita'],
   'navetta': ['shuttle', 'bus', 'transfer', 'trasporto', 'mezzo', 'pullman'],
@@ -27,12 +27,25 @@ const categoryPriorityMap = {
   'Attività e Eventi': ['sciare', 'attività', 'eventi', 'cose da fare']
 };
 
+// Opzioni di ricerca di Fuse.js
+const fuseOptions = {
+  keys: [
+    { name: 'tags', weight: 7 },
+    { name: 'category', weight: 2 },
+    { name: 'question', weight: 1 }
+  ],
+  threshold: 0.20,
+  includeScore: true,
+  ignoreLocation: true,
+  useExtendedSearch: true
+};
+
 const getCategoryScore = (query, category) => {
   let score = 0;
   if (categoryPriorityMap[category]) {
     categoryPriorityMap[category].forEach(keyword => {
       if (query.includes(keyword)) {
-        score += 5; // 🔥 Aumentiamo il punteggio se il termine chiave è nella categoria giusta
+        score += 5;
       }
     });
   }
@@ -53,18 +66,10 @@ const expandInput = (userInput) => {
   return expandedInput;
 };
 
-const fuseOptions = {
-  keys: [
-    { name: 'tags', weight: 7 },  // 🔥 Aumentato per dare più importanza ai tag
-    { name: 'category', weight: 2 },
-    { name: 'question', weight: 1 }
-  ],
-  threshold: 0.20,  // 🔧 Abbassato per migliorare il riconoscimento delle domande simili
-  includeScore: true,
-  ignoreLocation: true,
-  useExtendedSearch: true
-};
+// Inizializziamo Fuse.js con una collezione vuota
+const fuse = new Fuse([], fuseOptions);
 
+// Funzione per aggiornare i dati delle FAQ in Fuse.js
 const updateFAQData = () => {
   const updatedQuestions = Object.values(faqData).flatMap(category =>
     Object.entries(category.questions).map(([question, data]) => ({
@@ -75,9 +80,11 @@ const updateFAQData = () => {
     }))
   );
   fuse.setCollection(updatedQuestions);
+  // Log per verificare se le domande sono caricate correttamente
+  console.log("📄 FAQ Caricate:", fuse.getIndex().docs.map(doc => doc.question));
 };
 
-const fuse = new Fuse([], fuseOptions);
+// Chiamata per caricare le FAQ al momento dell'avvio
 updateFAQData();
 
 export const getFAQResponse = async (query, targetLang = 'IT') => {
@@ -123,3 +130,6 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
     suggestions: ['piscina', 'check-in', 'colazione', 'navetta']
   };
 };
+
+// Esportiamo fuse e updateFAQData per poterli usare altrove
+export { fuse, updateFAQData };

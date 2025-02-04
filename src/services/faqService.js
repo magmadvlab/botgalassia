@@ -31,7 +31,7 @@ const transformations = {
 };
 
 const categoryPriorityMap = {
-  'Trasporti e Navetta - Hotel': ['arrivare', 'trasporti', 'spostarsi', 'raggiungere', 'navetta', 'bus', 'conca', 'centro', 'taxi', 'prato nevoso', 'dove si trova prato nevoso']
+  'Trasporti e Navetta - Hotel': ['arrivare', 'trasporti', 'spostarsi', 'raggiungere', 'navetta', 'bus', 'conca', 'centro', 'taxi', 'prato nevoso', 'dove si trova prato nevoso'],
   'Piscina e Wellness': ['piscina', 'spa', 'benessere', 'wellness'],
   'Parcheggio e Auto': ['parcheggio', 'garage', 'auto', 'posto auto', 'sosta'],
   'Attività e Eventi': ['sciare', 'attività', 'eventi', 'cose da fare']

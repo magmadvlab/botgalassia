@@ -8,7 +8,7 @@ const fuseOptions = {
     { name: 'category', weight: 2 },
     { name: 'question', weight: 1 }
   ],
-  threshold: 0.20,
+  threshold: 0.4,
   includeScore: true,
   ignoreLocation: true,
   useExtendedSearch: true
@@ -65,7 +65,6 @@ const expandInput = (userInput) => {
   
   return expandedInput;
 };
-
 const updateFAQData = () => {
   const updatedQuestions = Object.values(faqData).flatMap(category =>
     Object.entries(category.questions).map(([question, data]) => ({
@@ -75,8 +74,12 @@ const updateFAQData = () => {
       category: category.title
     }))
   );
+
   fuse.setCollection(updatedQuestions);
+
+  // 📌 Log per verificare se le FAQ sono indicizzate correttamente
   console.log("📄 FAQ Caricate:", fuse.getIndex().docs.map(doc => doc.question));
+  console.log("📄 FAQ Indicizzate:", JSON.stringify(updatedQuestions, null, 2));
 };
 
 // Chiamata per caricare le FAQ al momento dell'avvio

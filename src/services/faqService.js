@@ -28,6 +28,8 @@ const transformations = {
   'piano -1': ['sotterraneo', 'sotto', 'basement'],
   'arrivare': ['raggiungere', 'andare', 'trovare', 'scendere', 'giungere', 'entrare'],
   'prenotare': ['riservare', 'richiedere', 'bisogna prenotare'],
+  'centro': ['piazza dodero', 'centro prato nevoso', 'paese', 'parte centrale', 'zona centrale', 'come arrivare in centro', 'come si va in centro', 'come andare in centro', 'trasporto per il centro', 'raggiungere il centro']
+
 };
 
 const categoryPriorityMap = {

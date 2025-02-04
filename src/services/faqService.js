@@ -1,6 +1,19 @@
 import Fuse from 'fuse.js';
 import faqData from '../faq/it/faqData';
 
+// Configurazione delle opzioni di ricerca
+const fuseOptions = {
+  keys: [
+    { name: 'tags', weight: 7 },
+    { name: 'category', weight: 2 },
+    { name: 'question', weight: 1 }
+  ],
+  threshold: 0.20,
+  includeScore: true,
+  ignoreLocation: true,
+  useExtendedSearch: true
+};
+
 // Dizionario di sinonimi e trasformazioni input
 const transformations = {
   'wifi': ['wi-fi', 'wi fi', 'internet', 'rete'],
@@ -15,9 +28,7 @@ const transformations = {
   'piano -1': ['sotterraneo', 'sotto', 'basement'],
   'arrivare': ['raggiungere', 'andare', 'trovare', 'scendere', 'giungere', 'entrare'],
   'prenotare': ['riservare', 'richiedere', 'bisogna prenotare'],
-  const transformations = {
   'conca': ['prato nevoso conca', 'piazza dodero', 'bassa prato nevoso', 'come si va in conca', 'come scendere in conca', 'navetta per conca', 'bus per conca', 'dove si trova la conca'],
-  'navetta': ['shuttle', 'bus', 'transfer', 'trasporto', 'mezzo', 'pullman', 'servizio navetta', 'come arrivo in conca', 'trasporto per conca']
   'centro': ['piazza dodero', 'centro prato nevoso', 'paese', 'parte centrale', 'zona centrale'],
   'taxi': ['trasporto privato', 'ncc', 'auto con conducente']
 };
@@ -29,18 +40,8 @@ const categoryPriorityMap = {
   'Attività e Eventi': ['sciare', 'attività', 'eventi', 'cose da fare']
 };
 
-// Opzioni di ricerca di Fuse.js
-const fuseOptions = {
-  keys: [
-    { name: 'tags', weight: 7 },
-    { name: 'category', weight: 2 },
-    { name: 'question', weight: 1 }
-  ],
-  threshold: 0.20,
-  includeScore: true,
-  ignoreLocation: true,
-  useExtendedSearch: true
-};
+// Inizializziamo Fuse.js con una collezione vuota
+const fuse = new Fuse([], fuseOptions);
 
 const getCategoryScore = (query, category) => {
   let score = 0;
@@ -68,10 +69,6 @@ const expandInput = (userInput) => {
   return expandedInput;
 };
 
-// Inizializziamo Fuse.js con una collezione vuota
-const fuse = new Fuse([], fuseOptions);
-
-// Funzione per aggiornare i dati delle FAQ in Fuse.js
 const updateFAQData = () => {
   const updatedQuestions = Object.values(faqData).flatMap(category =>
     Object.entries(category.questions).map(([question, data]) => ({
@@ -82,14 +79,13 @@ const updateFAQData = () => {
     }))
   );
   fuse.setCollection(updatedQuestions);
-  // Log per verificare se le domande sono caricate correttamente
   console.log("📄 FAQ Caricate:", fuse.getIndex().docs.map(doc => doc.question));
 };
 
 // Chiamata per caricare le FAQ al momento dell'avvio
 updateFAQData();
 
-export const getFAQResponse = async (query, targetLang = 'IT') => {
+export const getFAQResponse = async (query) => {
   if (!query || query.trim().length === 0) {
     return {
       answer: "Non ho capito la tua domanda. Prova con parole chiave come 'piscina', 'check-in' o 'navetta'.",
@@ -115,14 +111,16 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
 
     bestResults.sort((a, b) => (b.categoryScore - a.categoryScore) || (a.score - b.score));
 
-    const bestMatch = bestResults[0].item;
-    console.log("✅ Risposta scelta:", bestMatch.question, "dalla categoria", bestMatch.category);
-
-    return {
-      answer: bestMatch.answer,
-      questionMatched: bestMatch.question,
-      suggestions: []
-    };
+    const bestMatch = bestResults[0]?.item;
+    
+    if (bestMatch) {
+      console.log("✅ Risposta scelta:", bestMatch.question, "dalla categoria", bestMatch.category);
+      return {
+        answer: bestMatch.answer,
+        questionMatched: bestMatch.question,
+        suggestions: []
+      };
+    }
   }
 
   console.log("❌ Nessuna corrispondenza trovata.");
@@ -133,5 +131,4 @@ export const getFAQResponse = async (query, targetLang = 'IT') => {
   };
 };
 
-// Esportiamo fuse e updateFAQData per poterli usare altrove
 export { fuse, updateFAQData };

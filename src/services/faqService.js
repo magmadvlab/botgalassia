@@ -8,7 +8,7 @@ const fuseOptions = {
     { name: 'category', weight: 2 },
     { name: 'question', weight: 1 }
   ],
-  threshold: 0.4,
+  threshold: 0.3, // Ridotto da 0.4 a 0.3 per migliorare la precisione
   includeScore: true,
   ignoreLocation: true,
   useExtendedSearch: true
@@ -25,48 +25,34 @@ const transformations = {
   'skibox': ['ski box', 'deposito sci', 'porta sci'],
   'ristorante': ['mangiare', 'ristorazione', 'cena', 'pranzo', 'dove si mangia'],
   'animale': ['pet', 'cane', 'gatto', 'animali', 'amico a quattro zampe'],
-  'piano -1': ['sotterraneo', 'sotto', 'basement'],
   'arrivare': ['raggiungere', 'andare', 'trovare', 'scendere', 'giungere', 'entrare'],
   'prenotare': ['riservare', 'richiedere', 'bisogna prenotare'],
   'centro': ['piazza dodero', 'centro prato nevoso', 'paese', 'parte centrale', 'zona centrale', 'come arrivare in centro', 'come si va in centro', 'come andare in centro', 'trasporto per il centro', 'raggiungere il centro']
-
 };
 
-const categoryPriorityMap = {
-  'Trasporti e Navetta - Hotel': ['arrivare', 'trasporti', 'spostarsi', 'raggiungere', 'navetta', 'bus', 'conca', 'centro', 'taxi', 'prato nevoso', 'dove si trova prato nevoso'],
-  'Piscina e Wellness': ['piscina', 'spa', 'benessere', 'wellness'],
-  'Parcheggio e Auto': ['parcheggio', 'garage', 'auto', 'posto auto', 'sosta'],
-  'Attività e Eventi': ['sciare', 'attività', 'eventi', 'cose da fare']
+// Mappatura delle intenzioni
+const intentMapping = [
+  { intent: "trasporto_navetta", patterns: ["come vado in", "come si arriva a", "per andare in", "raggiungere", "come si va in"] },
+  { intent: "info_piscina", patterns: ["dov'è la piscina", "dove si trova la piscina", "come raggiungere la piscina"] },
+  { intent: "attivita_conca", patterns: ["cosa fare in", "quali attività ci sono in", "cosa posso fare a", "eventi in"] }
+];
+
+const detectIntent = (query) => {
+  query = query.toLowerCase().trim();
+  
+  for (const { intent, patterns } of intentMapping) {
+    for (const pattern of patterns) {
+      if (query.includes(pattern)) {
+        return intent;
+      }
+    }
+  }
+  
+  return null;
 };
 
-// Inizializziamo Fuse.js con una collezione vuota
 const fuse = new Fuse([], fuseOptions);
 
-const getCategoryScore = (query, category) => {
-  let score = 0;
-  if (categoryPriorityMap[category]) {
-    categoryPriorityMap[category].forEach(keyword => {
-      if (query.includes(keyword)) {
-        score += 5;
-      }
-    });
-  }
-  return score;
-};
-
-const expandInput = (userInput) => {
-  let expandedInput = userInput.toLowerCase();
-  
-  Object.entries(transformations).forEach(([key, values]) => {
-    values.forEach(value => {
-      if (expandedInput.includes(value.toLowerCase())) {
-        expandedInput = expandedInput.replace(value.toLowerCase(), key);
-      }
-    });
-  });
-  
-  return expandedInput;
-};
 const updateFAQData = () => {
   const updatedQuestions = Object.values(faqData).flatMap(category =>
     Object.entries(category.questions).map(([question, data]) => ({
@@ -76,15 +62,10 @@ const updateFAQData = () => {
       category: category.title
     }))
   );
-
+  
   fuse.setCollection(updatedQuestions);
-
-  // 📌 Log per verificare se le FAQ sono indicizzate correttamente
-  console.log("📄 FAQ Caricate:", fuse.getIndex().docs.map(doc => doc.question));
-  console.log("📄 FAQ Indicizzate:", JSON.stringify(updatedQuestions, null, 2));
 };
 
-// Chiamata per caricare le FAQ al momento dell'avvio
 updateFAQData();
 
 export const getFAQResponse = async (query) => {
@@ -97,32 +78,38 @@ export const getFAQResponse = async (query) => {
   }
 
   console.log("🔍 Domanda ricevuta:", query);
-  const processedInput = expandInput(query.toLowerCase().trim());
-  console.log("🔎 Input processato dopo normalizzazione:", processedInput);
+  const processedInput = query.toLowerCase().trim();
 
-  const results = fuse.search(processedInput);
-  console.log("📌 Risultati trovati:", results.map(r => ({ question: r.item.question, category: r.item.category, score: r.score })));
+  const detectedIntent = detectIntent(processedInput);
+  console.log("📌 Intenzione rilevata:", detectedIntent);
 
+  let targetCategory = null;
+  if (detectedIntent === "trasporto_navetta") targetCategory = "Trasporti e Navetta - Hotel";
+  if (detectedIntent === "info_piscina") targetCategory = "Piscina e Wellness";
+  if (detectedIntent === "attivita_conca") targetCategory = "Attività e Eventi";
+
+  if (!targetCategory) {
+    console.log("❌ Nessuna intenzione chiara trovata.");
+    return {
+      answer: "Mi dispiace, non ho trovato una risposta precisa. Prova a riformulare la domanda.",
+      questionMatched: null,
+      suggestions: ['piscina', 'check-in', 'colazione', 'navetta']
+    };
+  }
+
+  console.log("🎯 Categoria selezionata:", targetCategory);
+  
+  const filteredFAQs = fuse.getIndex().docs.filter(faq => faq.category === targetCategory);
+  const categoryFuse = new Fuse(filteredFAQs, fuseOptions);
+  const results = categoryFuse.search(processedInput);
+  
   if (results.length > 0) {
-    let bestResults = results.filter(r => r.score < 0.3);
-
-    bestResults = bestResults.map(result => ({
-      ...result,
-      categoryScore: getCategoryScore(processedInput, result.item.category)
-    }));
-
-    bestResults.sort((a, b) => (b.categoryScore - a.categoryScore) || (a.score - b.score));
-
-    const bestMatch = bestResults[0]?.item;
-    
-    if (bestMatch) {
-      console.log("✅ Risposta scelta:", bestMatch.question, "dalla categoria", bestMatch.category);
-      return {
-        answer: bestMatch.answer,
-        questionMatched: bestMatch.question,
-        suggestions: []
-      };
-    }
+    const bestMatch = results[0]?.item;
+    return {
+      answer: bestMatch.answer,
+      questionMatched: bestMatch.question,
+      suggestions: []
+    };
   }
 
   console.log("❌ Nessuna corrispondenza trovata.");
